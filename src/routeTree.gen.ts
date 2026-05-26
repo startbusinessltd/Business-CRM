@@ -9,38 +9,220 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as FeaturesRouteImport } from './routes/features'
+import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ModulesWebsiteRouteImport } from './routes/modules.website'
+import { Route as ModulesSocialRouteImport } from './routes/modules.social'
+import { Route as ModulesLeadsRouteImport } from './routes/modules.leads'
+import { Route as ModulesFinanceRouteImport } from './routes/modules.finance'
+import { Route as ModulesEmployeesRouteImport } from './routes/modules.employees'
+import { Route as ModulesCallsRouteImport } from './routes/modules.calls'
 
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeaturesRoute = FeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomersRoute = CustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModulesWebsiteRoute = ModulesWebsiteRouteImport.update({
+  id: '/modules/website',
+  path: '/modules/website',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModulesSocialRoute = ModulesSocialRouteImport.update({
+  id: '/modules/social',
+  path: '/modules/social',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModulesLeadsRoute = ModulesLeadsRouteImport.update({
+  id: '/modules/leads',
+  path: '/modules/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModulesFinanceRoute = ModulesFinanceRouteImport.update({
+  id: '/modules/finance',
+  path: '/modules/finance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModulesEmployeesRoute = ModulesEmployeesRouteImport.update({
+  id: '/modules/employees',
+  path: '/modules/employees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModulesCallsRoute = ModulesCallsRouteImport.update({
+  id: '/modules/calls',
+  path: '/modules/calls',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/customers': typeof CustomersRoute
+  '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
+  '/modules/calls': typeof ModulesCallsRoute
+  '/modules/employees': typeof ModulesEmployeesRoute
+  '/modules/finance': typeof ModulesFinanceRoute
+  '/modules/leads': typeof ModulesLeadsRoute
+  '/modules/social': typeof ModulesSocialRoute
+  '/modules/website': typeof ModulesWebsiteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/customers': typeof CustomersRoute
+  '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
+  '/modules/calls': typeof ModulesCallsRoute
+  '/modules/employees': typeof ModulesEmployeesRoute
+  '/modules/finance': typeof ModulesFinanceRoute
+  '/modules/leads': typeof ModulesLeadsRoute
+  '/modules/social': typeof ModulesSocialRoute
+  '/modules/website': typeof ModulesWebsiteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/customers': typeof CustomersRoute
+  '/features': typeof FeaturesRoute
+  '/pricing': typeof PricingRoute
+  '/modules/calls': typeof ModulesCallsRoute
+  '/modules/employees': typeof ModulesEmployeesRoute
+  '/modules/finance': typeof ModulesFinanceRoute
+  '/modules/leads': typeof ModulesLeadsRoute
+  '/modules/social': typeof ModulesSocialRoute
+  '/modules/website': typeof ModulesWebsiteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/customers'
+    | '/features'
+    | '/pricing'
+    | '/modules/calls'
+    | '/modules/employees'
+    | '/modules/finance'
+    | '/modules/leads'
+    | '/modules/social'
+    | '/modules/website'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/customers'
+    | '/features'
+    | '/pricing'
+    | '/modules/calls'
+    | '/modules/employees'
+    | '/modules/finance'
+    | '/modules/leads'
+    | '/modules/social'
+    | '/modules/website'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/customers'
+    | '/features'
+    | '/pricing'
+    | '/modules/calls'
+    | '/modules/employees'
+    | '/modules/finance'
+    | '/modules/leads'
+    | '/modules/social'
+    | '/modules/website'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  CustomersRoute: typeof CustomersRoute
+  FeaturesRoute: typeof FeaturesRoute
+  PricingRoute: typeof PricingRoute
+  ModulesCallsRoute: typeof ModulesCallsRoute
+  ModulesEmployeesRoute: typeof ModulesEmployeesRoute
+  ModulesFinanceRoute: typeof ModulesFinanceRoute
+  ModulesLeadsRoute: typeof ModulesLeadsRoute
+  ModulesSocialRoute: typeof ModulesSocialRoute
+  ModulesWebsiteRoute: typeof ModulesWebsiteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/features': {
+      id: '/features'
+      path: '/features'
+      fullPath: '/features'
+      preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/customers': {
+      id: '/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +230,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/modules/website': {
+      id: '/modules/website'
+      path: '/modules/website'
+      fullPath: '/modules/website'
+      preLoaderRoute: typeof ModulesWebsiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modules/social': {
+      id: '/modules/social'
+      path: '/modules/social'
+      fullPath: '/modules/social'
+      preLoaderRoute: typeof ModulesSocialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modules/leads': {
+      id: '/modules/leads'
+      path: '/modules/leads'
+      fullPath: '/modules/leads'
+      preLoaderRoute: typeof ModulesLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modules/finance': {
+      id: '/modules/finance'
+      path: '/modules/finance'
+      fullPath: '/modules/finance'
+      preLoaderRoute: typeof ModulesFinanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modules/employees': {
+      id: '/modules/employees'
+      path: '/modules/employees'
+      fullPath: '/modules/employees'
+      preLoaderRoute: typeof ModulesEmployeesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/modules/calls': {
+      id: '/modules/calls'
+      path: '/modules/calls'
+      fullPath: '/modules/calls'
+      preLoaderRoute: typeof ModulesCallsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  CustomersRoute: CustomersRoute,
+  FeaturesRoute: FeaturesRoute,
+  PricingRoute: PricingRoute,
+  ModulesCallsRoute: ModulesCallsRoute,
+  ModulesEmployeesRoute: ModulesEmployeesRoute,
+  ModulesFinanceRoute: ModulesFinanceRoute,
+  ModulesLeadsRoute: ModulesLeadsRoute,
+  ModulesSocialRoute: ModulesSocialRoute,
+  ModulesWebsiteRoute: ModulesWebsiteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
