@@ -1,0 +1,17 @@
+[Unit]
+Description=Business CRM SSR application
+After=network.target
+
+[Service]
+Type=simple
+User=__DEPLOY_USER__
+WorkingDirectory=__DEPLOY_PATH__
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=__APP_PORT__
+ExecStart=/usr/bin/npm run serve:ssr
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
