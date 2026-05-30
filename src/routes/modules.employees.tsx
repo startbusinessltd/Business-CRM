@@ -4,10 +4,13 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/employees")({
   head: () => ({
     meta: [
-      { title: "Employee Management — StartBusiness.ltd" },
-      { name: "description", content: "Run your team with access profiles, tracking, performance, timesheets, attendance and partner onboarding." },
-      { property: "og:title", content: "Employee Management" },
-      { property: "og:description", content: "Run your team with clarity and accountability — in the same platform as your customers." },
+      { title: "Team & Permissions — Business CRM" },
+      {
+        name: "description",
+        content:
+          "Roles & permissions and employee management — Team & Permissions in Business CRM.",
+      },
+      { property: "og:title", content: "Team & Permissions" },
       { property: "og:image", content: IMG.employees },
     ],
   }),
@@ -18,58 +21,60 @@ function EmployeesModule() {
   return (
     <>
       <PageHero
-        eyebrow="Module 05 · Employee Management"
-        title={<>Run your team in the same place you run your business.</>}
-        lead="Access profiles, attendance, timesheets, performance and partner onboarding — all next to the customers and pipelines your team works on every day."
-        primary={{ to: "/pricing", label: "Start free trial" }}
-        secondary={{ to: "/features", label: "All features" }}
+        eyebrow="Team & permissions"
+        title={<>Control who sees what in the product.</>}
+        lead="Team & Permissions covers access profiles (roles & permissions) and My Team (employee management) — aligned with /access-profile and /employee-management in the Business CRM application."
+        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        secondary={{ to: "/services", label: "All services" }}
         image={IMG.employees}
       />
 
-      <StatStrip items={[
-        { n: "1 click", l: "Onboard a new hire" },
-        { n: "Live", l: "Attendance & timesheets" },
-        { n: "360°", l: "Performance reviews" },
-        { n: "Native", l: "Partner & vendor onboarding" },
-      ]} />
-
-      <FeatureRow
-        eyebrow="Access profiles"
-        title="The right people see the right things."
-        body="Build role profiles for sales, ops, finance, support and admin in minutes. Apply them to anyone — including external partners — without writing a single permission rule."
-        image={IMG.meeting}
-        bullets={[
-          "Role-based access across every module",
-          "SSO and 2FA built in",
-          "Audit log for every sensitive action",
-          "Partner / vendor profiles with limited scopes",
+      <StatStrip
+        items={[
+          { n: "RBAC", l: "Access profiles" },
+          { n: "Menu", l: "Package-aware" },
+          { n: "Team", l: "Employee CRUD" },
+          { n: "Partner", l: "Role support" },
         ]}
       />
 
       <FeatureRow
-        eyebrow="Tracking, timesheets & attendance"
-        title="A modern, respectful way to track work."
-        body="Lightweight check-in, mobile-friendly timesheets, shift planning and leave management. Designed to give managers clarity without spying on people."
+        eyebrow="Access profile"
+        title="Roles & permissions."
+        body="Define which routes and modules each role can open. Package and business-type menu configuration keeps partners and customers on the right plan."
+        image={IMG.meeting}
+        bullets={[
+          "Access profile editor",
+          "Module permissions from API",
+          "Super-admin vs CRM vs partner roles",
+          "Audit-friendly privilege model",
+        ]}
+      />
+
+      <FeatureRow
+        eyebrow="My team"
+        title="Employee management."
+        body="Invite teammates, assign roles, and maintain employee records next to the pipelines they work."
         image={IMG.dashboard}
         reverse
         bullets={[
-          "Mobile check-in with geo-tagging (opt-in)",
-          "Timesheets that auto-fill from CRM activity",
-          "Shift planner with overtime rules",
-          "Leave requests and approvals workflow",
+          "Employee management screens",
+          "Link users to access profiles",
+          "Works with sign-up & partner flows",
+          "Scoped to tenant package",
         ]}
       />
 
       <FeatureRow
-        eyebrow="Performance & partners"
-        title="Performance and partner onboarding, finally connected."
-        body="Set goals tied to real CRM outcomes, review them quarterly, and bring partners into the same platform without giving away the keys."
+        eyebrow="Partners"
+        title="Partner and white-label access."
+        body="Partners get tailored menus (sign-up list, white label) while admins retain full platform controls."
         image={IMG.handshake}
         bullets={[
-          "Goal setting linked to CRM metrics",
-          "Quarterly review templates and 1:1 notes",
-          "“Become a Partner” onboarding flow",
-          "Commission tracking for partners and reps",
+          "Partner role in menu-data",
+          "White label & partner signups",
+          "Demo booking for sales teams",
+          "Consistent with package type setup",
         ]}
       />
 

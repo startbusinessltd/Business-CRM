@@ -1,13 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { PLATFORM_STATS } from "@/lib/site-content";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — StartBusiness.ltd" },
-      { name: "description", content: "We build the operating system small and mid-size businesses use to run smarter — from leads and calls to employees and invoices." },
-      { property: "og:title", content: "About StartBusiness.ltd" },
-      { property: "og:description", content: "Our mission, our team and the goal behind one platform for the whole business." },
+      { title: "About — Business CRM" },
+      {
+        name: "description",
+        content:
+          "Business CRM helps Indian SMBs run websites, leads, calls, social, team access, and billing from one CRM platform.",
+      },
+      { property: "og:title", content: "About Business CRM" },
+      { property: "og:description", content: "One platform for websites, CRM, calls, social, and finance." },
       { property: "og:image", content: IMG.team },
     ],
   }),
@@ -18,64 +23,66 @@ function About() {
   return (
     <>
       <PageHero
-        eyebrow="About the company"
-        title={<>We exist so growing businesses don't drown in tools.</>}
-        lead="StartBusiness.ltd was founded by operators who got tired of stitching together a CRM, a dialer, a social inbox, an HR tool and an invoicing app. So we built one professional platform that does all of it — and added AI where it actually saves time."
-        primary={{ to: "/features", label: "See the platform" }}
-        secondary={{ to: "/contact", label: "Talk to the team" }}
+        eyebrow="About Business CRM"
+        title={<>One product for how Indian businesses actually work.</>}
+        lead="We built Business CRM so owners stop juggling a website tool, a spreadsheet for leads, a dialer app, social inboxes, HR sheets, and invoicing software. Everything in the Business CRM application — websites through finance — lives here."
+        primary={{ to: "/services", label: "See services" }}
+        secondary={{ to: "/contact", label: "Contact us" }}
         image={IMG.team}
       />
 
-      <StatStrip items={[
-        { n: "2,400+", l: "Businesses on platform" },
-        { n: "38", l: "Countries served" },
-        { n: "99.97%", l: "Uptime, last 12 months" },
-        { n: "ISO 27001", l: "Security certified" },
-      ]} />
+      <StatStrip items={[...PLATFORM_STATS.about]} />
 
       <section className="section">
         <div className="container-x">
           <div className="grid-2">
             <div>
               <span className="eyebrow">Our mission</span>
-              <h2 className="h-section" style={{ marginTop: 16 }}>One platform. The whole business.</h2>
+              <h2 className="h-section" style={{ marginTop: 16 }}>
+                From sign-up to invoice — one stack.
+              </h2>
               <p style={{ marginTop: 14, fontSize: 17 }}>
-                Most growing companies don't fail because they lack ambition — they fail because their tools don't talk to each other. We're building the system that ends that.
+                Most growing companies do not need more apps — they need the apps they already pay for
+                to share the same customers, leads, and payments. Business CRM is that shared
+                layer.
               </p>
               <p style={{ marginTop: 12, fontSize: 17 }}>
-                Our goal is simple: every leader should be able to see their pipeline, their team's day, their cash position and their customer conversations from one screen — and act on any of it in two clicks.
+                You pick an industry template, publish a site, capture leads in pipelines, track
+                calls on mobile, reply on WhatsApp and Instagram, control who sees what, and bill
+                with Razorpay-ready flows.
               </p>
             </div>
             <div className="media-frame" style={{ aspectRatio: "4/3" }}>
-              <img src={IMG.office} alt="Our office" loading="lazy" />
+              <img src={IMG.office} alt="Business CRM team" loading="lazy" />
             </div>
           </div>
         </div>
       </section>
 
       <FeatureRow
-        eyebrow="What we stand for"
-        title="Software that respects your team's time."
-        body="We believe enterprise software shouldn't feel like punishment. Every screen we ship is reviewed against three principles: it must be clear, it must be honest about what it does, and it must save the user time the same day they use it."
+        eyebrow="What we ship"
+        title="Software that matches the sidebar."
+        body="Marketing pages should not promise features the product does not have. Our website describes the same services you see after login: Website Type, Templates, Leads, Call Tracker, Social Hub, Team & Permissions, and Finance."
         image={IMG.meeting}
         bullets={[
-          "Clarity over cleverness in every workflow",
-          "AI used to remove busywork, not to perform tricks",
-          "Transparent pricing — no per-module surcharges",
-          "Customer support that actually answers in hours, not days",
+          "Transparent INR plans with a 10-day trial",
+          "Learning videos and in-app documentation",
+          "Partner list, white label, and demo booking for teams",
+          "Built-in AI assistant for day-to-day how-to questions",
         ]}
       />
 
       <FeatureRow
-        eyebrow="The team"
-        title="Operators, engineers and designers — in that order."
-        body="We're a remote-first team of 60+ across India, Europe and South-East Asia. Many of us ran sales, operations or finance before building software for it — and it shows in the product."
+        eyebrow="Who we serve"
+        title="SMBs, partners, and vertical templates."
+        body="Retail, clinics, agencies, ecommerce, insurance, salons, and more — each can start from a template classification in the app and grow into full CRM usage."
         image={IMG.handshake}
         reverse
         bullets={[
-          "Engineering led by ex-Atlassian and ex-Zoho leads",
-          "Customer success team with prior SMB ops experience",
-          "Design partners across professional services, retail and SaaS",
+          "Template library per business type",
+          "Super-admin and partner roles for resellers",
+          "Bengaluru-based team with India-first payments",
+          "Continuous delivery on develop branch across services",
         ]}
       />
 

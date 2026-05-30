@@ -12,4 +12,11 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  /** Port 5180 — Business CRM Angular shell iframe; salon-gold-ui uses 4300. */
+  vite: {
+    server: {
+      port: 5180,
+      strictPort: true,
+    },
+  },
 });

@@ -4,10 +4,13 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/website")({
   head: () => ({
     meta: [
-      { title: "Website Management — StartBusiness.ltd" },
-      { name: "description", content: "Launch and run your business website from one professional dashboard — templates, SEO, admin and publishing." },
-      { property: "og:title", content: "Website Management" },
-      { property: "og:description", content: "Your business website, finally connected to the rest of your operation." },
+      { title: "Website & Web Builder — Business CRM" },
+      {
+        name: "description",
+        content:
+          "Website type, templates, settings, form builder, SEO & GEO, website admin, and AI chat — in Business CRM.",
+      },
+      { property: "og:title", content: "Website & Web Builder" },
       { property: "og:image", content: IMG.website },
     ],
   }),
@@ -18,58 +21,60 @@ function WebsiteModule() {
   return (
     <>
       <PageHero
-        eyebrow="Module 01 · Website Management"
-        title={<>Your website, connected to the rest of your business.</>}
-        lead="Choose a professional template, edit it visually, and publish in minutes. Every form, every visitor and every signup flows directly into Leads — no Zapier, no developer required."
-        primary={{ to: "/pricing", label: "Start free trial" }}
-        secondary={{ to: "/features", label: "All features" }}
+        eyebrow="Website & web builder"
+        title={<>Templates, forms, and SEO — tied to your CRM.</>}
+        lead="Pick a website type and template classification, configure site settings, publish forms, and optimise SEO & GEO. Website admin controls who can edit and publish — the same flows as /website-type, /templates, and /form-builder in the app."
+        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        secondary={{ to: "/services", label: "All services" }}
         image={IMG.website}
       />
 
-      <StatStrip items={[
-        { n: "120+", l: "Professional templates" },
-        { n: "< 5 min", l: "From signup to live site" },
-        { n: "100/100", l: "Core Web Vitals (avg)" },
-        { n: "Built-in", l: "Forms → Leads pipeline" },
-      ]} />
+      <StatStrip
+        items={[
+          { n: "12+", l: "Business-type templates" },
+          { n: "Forms", l: "Builder → leads" },
+          { n: "SEO", l: "& GEO screens" },
+          { n: "AI", l: "In-app assistant" },
+        ]}
+      />
 
       <FeatureRow
         eyebrow="Templates"
-        title="A library built for serious businesses."
-        body="From professional services and clinics to agencies, retail and consultancies — every template is responsive, accessible and tuned for conversion out of the box."
+        title="Website type & template library."
+        body="Choose web types and template classifications for salon, ecommerce, insurance, startup, and more. Activate, publish, and assign the right site to each business type."
         image={IMG.laptop}
         bullets={[
-          "120+ templates across industries",
-          "Edit copy, colours and sections inline",
-          "Mobile, tablet and desktop preview",
-          "Custom domain & SSL in one click",
+          "Website type management",
+          "Template classification catalogue",
+          "Publish status per template",
+          "Default website per account",
         ]}
       />
 
       <FeatureRow
-        eyebrow="Website settings"
-        title="SEO, analytics and brand — without plugins."
-        body="Manage page titles, meta descriptions, Open Graph images, robots and sitemap from one panel. Your settings ship with the site automatically."
+        eyebrow="Forms & SEO"
+        title="Form builder and SEO & GEO."
+        body="Build lead-capture forms with the drag-and-drop form builder, then tune discoverability from SEO & GEO — without leaving Business CRM."
         image={IMG.analytics}
         reverse
         bullets={[
-          "Per-page SEO, OG and Twitter metadata",
-          "Built-in sitemap.xml and robots.txt",
-          "Live performance and visitor analytics",
-          "Native consent banner & privacy controls",
+          "Form builder with publish & embed",
+          "SEO & GEO configuration",
+          "Website settings panel",
+          "Submissions flow to leads",
         ]}
       />
 
       <FeatureRow
-        eyebrow="Website admin"
-        title="One admin panel for everyone on the team."
-        body="Invite designers, marketers or agency partners with role-based access. See every change, every publish and every revert in one timeline."
+        eyebrow="Admin & AI"
+        title="Website admin plus in-app guidance."
+        body="Super-admin and CRM roles manage website admin screens. Teams can use AI Chat to learn how to configure sites, forms, and templates."
         image={IMG.meeting}
         bullets={[
-          "Roles for editor, designer, admin and viewer",
-          "Full revision history with one-click rollback",
-          "Draft and scheduled publishing",
-          "Multi-site management from one workspace",
+          "Website admin for privileged roles",
+          "Role-aware access from access profile",
+          "AI Chat (/ai-chat) for how-to help",
+          "Connected to web-builder APIs",
         ]}
       />
 

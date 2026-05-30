@@ -4,10 +4,13 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/calls")({
   head: () => ({
     meta: [
-      { title: "Call Management — StartBusiness.ltd" },
-      { name: "description", content: "AI-powered telephony with live overview, recordings, reports and AI call summaries — built into your CRM." },
-      { property: "og:title", content: "Call Management" },
-      { property: "og:description", content: "Every call, transcribed, summarised and attached to the right customer." },
+      { title: "Call Tracker — Business CRM" },
+      {
+        name: "description",
+        content:
+          "Native call tracking: dashboard, history, hourly and day-wise reports, employee views, sync log, and leads.",
+      },
+      { property: "og:title", content: "Call Tracker" },
       { property: "og:image", content: IMG.callcenter },
     ],
   }),
@@ -18,58 +21,60 @@ function CallsModule() {
   return (
     <>
       <PageHero
-        eyebrow="Module 03 · Call Management"
-        title={<>AI-powered telephony, built into your CRM.</>}
-        lead="Make and receive calls inside StartBusiness. Every conversation is recorded, transcribed, summarised by AI and attached to the right lead, customer or deal — automatically."
-        primary={{ to: "/pricing", label: "Start free trial" }}
-        secondary={{ to: "/features", label: "See all features" }}
+        eyebrow="Call Tracker"
+        title={<>Mobile call sync for sales teams.</>}
+        lead="The Call Tracker area in Business CRM (backed by the native call-tracker plugin) syncs device calls into dashboards, history, hourly and day-wise reports, employee breakdowns, and sync logs — with leads linked to activity."
+        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        secondary={{ to: "/services", label: "All services" }}
         image={IMG.callcenter}
       />
 
-      <StatStrip items={[
-        { n: "100%", l: "Calls recorded & searchable" },
-        { n: "< 30 s", l: "AI summary, per call" },
-        { n: "Live", l: "Team & queue overview" },
-        { n: "Native", l: "No third-party dialer" },
-      ]} />
-
-      <FeatureRow
-        eyebrow="AI Call Assistant"
-        title="A coach in every rep's ear."
-        body="Real-time transcription, talk-listen ratios, sentiment and topic tracking. After the call, your rep gets a one-paragraph AI summary and a suggested follow-up email — ready to send."
-        image={IMG.dashboard}
-        bullets={[
-          "Real-time transcription with sentiment cues",
-          "Talk/listen ratio and pace coaching",
-          "AI call summary and follow-up draft",
-          "Automatic CRM activity logging",
+      <StatStrip
+        items={[
+          { n: "Native", l: "Android sync" },
+          { n: "Live", l: "Dashboard tab" },
+          { n: "History", l: "Searchable log" },
+          { n: "Leads", l: "Linked records" },
         ]}
       />
 
       <FeatureRow
-        eyebrow="Call overview & reports"
-        title="The whole call floor — at a glance."
-        body="Live queue, who's on a call, who's free, average handle time, abandonment, conversion. Drill into any rep, any campaign, any day."
+        eyebrow="Overview"
+        title="Call tracker dashboard."
+        body="See team activity from the dashboard tab on /call-tracking — the same overview managers use to monitor outbound and inbound volume."
+        image={IMG.dashboard}
+        bullets={[
+          "Dashboard tab on call tracking",
+          "Team-level visibility",
+          "Works with CRM roles",
+          "No separate dialer subscription",
+        ]}
+      />
+
+      <FeatureRow
+        eyebrow="History & analytics"
+        title="History, hourly, and day-wise tabs."
+        body="Drill into call history, hourly patterns, and day-wise totals. Filter by employee and date range for coaching and staffing decisions."
         image={IMG.analytics}
         reverse
         bullets={[
-          "Live agent and queue dashboard",
-          "Service-level and SLA reporting",
-          "Per-campaign and per-source attribution",
-          "Searchable recordings with timestamps",
+          "Call history with sync metadata",
+          "Hourly distribution reports",
+          "Day-wise summaries",
+          "Employee tab for per-rep stats",
         ]}
       />
 
       <FeatureRow
-        eyebrow="Recordings & compliance"
-        title="Recordings that are easy to find — and safe to store."
-        body="Encrypted at rest, region-pinned storage, granular retention policies and role-based access. Search any recording by speaker, keyword or sentiment."
+        eyebrow="Sync & leads"
+        title="Sync log and lead linkage."
+        body="Inspect the sync log when devices upload recordings or metadata. Tie conversations back to leads inside the CRM."
         image={IMG.meeting}
         bullets={[
-          "Keyword and speaker search across recordings",
-          "Configurable retention policies",
-          "Region-pinned, encrypted storage",
-          "Per-role access and audit trail",
+          "Sync log for troubleshooting",
+          "All leads shortcut from call tracker",
+          "Capacitor-friendly mobile workflow",
+          "Built for field sales in India",
         ]}
       />
 

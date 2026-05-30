@@ -9,6 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as RefundRouteImport } from './routes/refund'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as CustomersRouteImport } from './routes/customers'
@@ -22,6 +26,26 @@ import { Route as ModulesFinanceRouteImport } from './routes/modules.finance'
 import { Route as ModulesEmployeesRouteImport } from './routes/modules.employees'
 import { Route as ModulesCallsRouteImport } from './routes/modules.calls'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundRoute = RefundRouteImport.update({
+  id: '/refund',
+  path: '/refund',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -90,6 +114,10 @@ export interface FileRoutesByFullPath {
   '/customers': typeof CustomersRoute
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/refund': typeof RefundRoute
+  '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
   '/modules/calls': typeof ModulesCallsRoute
   '/modules/employees': typeof ModulesEmployeesRoute
   '/modules/finance': typeof ModulesFinanceRoute
@@ -104,6 +132,10 @@ export interface FileRoutesByTo {
   '/customers': typeof CustomersRoute
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/refund': typeof RefundRoute
+  '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
   '/modules/calls': typeof ModulesCallsRoute
   '/modules/employees': typeof ModulesEmployeesRoute
   '/modules/finance': typeof ModulesFinanceRoute
@@ -119,6 +151,10 @@ export interface FileRoutesById {
   '/customers': typeof CustomersRoute
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
+  '/refund': typeof RefundRoute
+  '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
   '/modules/calls': typeof ModulesCallsRoute
   '/modules/employees': typeof ModulesEmployeesRoute
   '/modules/finance': typeof ModulesFinanceRoute
@@ -135,6 +171,10 @@ export interface FileRouteTypes {
     | '/customers'
     | '/features'
     | '/pricing'
+    | '/privacy'
+    | '/refund'
+    | '/services'
+    | '/terms'
     | '/modules/calls'
     | '/modules/employees'
     | '/modules/finance'
@@ -149,6 +189,10 @@ export interface FileRouteTypes {
     | '/customers'
     | '/features'
     | '/pricing'
+    | '/privacy'
+    | '/refund'
+    | '/services'
+    | '/terms'
     | '/modules/calls'
     | '/modules/employees'
     | '/modules/finance'
@@ -163,6 +207,10 @@ export interface FileRouteTypes {
     | '/customers'
     | '/features'
     | '/pricing'
+    | '/privacy'
+    | '/refund'
+    | '/services'
+    | '/terms'
     | '/modules/calls'
     | '/modules/employees'
     | '/modules/finance'
@@ -178,6 +226,10 @@ export interface RootRouteChildren {
   CustomersRoute: typeof CustomersRoute
   FeaturesRoute: typeof FeaturesRoute
   PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RefundRoute: typeof RefundRoute
+  ServicesRoute: typeof ServicesRoute
+  TermsRoute: typeof TermsRoute
   ModulesCallsRoute: typeof ModulesCallsRoute
   ModulesEmployeesRoute: typeof ModulesEmployeesRoute
   ModulesFinanceRoute: typeof ModulesFinanceRoute
@@ -188,6 +240,34 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refund': {
+      id: '/refund'
+      path: '/refund'
+      fullPath: '/refund'
+      preLoaderRoute: typeof RefundRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -282,6 +362,10 @@ const rootRouteChildren: RootRouteChildren = {
   CustomersRoute: CustomersRoute,
   FeaturesRoute: FeaturesRoute,
   PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
+  RefundRoute: RefundRoute,
+  ServicesRoute: ServicesRoute,
+  TermsRoute: TermsRoute,
   ModulesCallsRoute: ModulesCallsRoute,
   ModulesEmployeesRoute: ModulesEmployeesRoute,
   ModulesFinanceRoute: ModulesFinanceRoute,

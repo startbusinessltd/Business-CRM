@@ -4,10 +4,13 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/social")({
   head: () => ({
     meta: [
-      { title: "Social Media — StartBusiness.ltd" },
-      { name: "description", content: "Manage WhatsApp, Instagram and Facebook from one inbox, and tune your SEO / GEO presence — all inside your CRM." },
-      { property: "og:title", content: "Social Media" },
-      { property: "og:description", content: "Reach customers everywhere they spend time — and reply from one inbox." },
+      { title: "Social Hub — Business CRM" },
+      {
+        name: "description",
+        content:
+          "Social Hub: connect accounts, posts, reels, ad campaigns, WhatsApp, and analytics in Business CRM.",
+      },
+      { property: "og:title", content: "Social Hub" },
       { property: "og:image", content: IMG.socialmarketing },
     ],
   }),
@@ -18,58 +21,60 @@ function SocialModule() {
   return (
     <>
       <PageHero
-        eyebrow="Module 04 · Social Media"
-        title={<>One inbox for WhatsApp, Instagram and Facebook.</>}
-        lead="Every DM, every comment, every WhatsApp message — in one inbox, attached to the right customer record. Reply faster, never miss a message, and let AI draft the answer when you're busy."
-        primary={{ to: "/pricing", label: "Start free trial" }}
-        secondary={{ to: "/features", label: "See all features" }}
+        eyebrow="Social Hub"
+        title={<>Publish, message, and measure — in one hub.</>}
+        lead="Connect social accounts, manage posts and reels, run Meta ad campaigns, reply on WhatsApp, and read analytics — the same Social Hub menus you see at /social-hub in the app."
+        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        secondary={{ to: "/services", label: "All services" }}
         image={IMG.socialmarketing}
       />
 
-      <StatStrip items={[
-        { n: "4", l: "Channels in one inbox" },
-        { n: "< 2 min", l: "Avg first-response time" },
-        { n: "AI", l: "Suggested replies" },
-        { n: "SEO/GEO", l: "Built-in optimisation" },
-      ]} />
-
-      <FeatureRow
-        eyebrow="WhatsApp Business"
-        title="A real WhatsApp inbox for your whole team."
-        body="Official WhatsApp Business API. Multiple agents, shared inbox, templates, broadcasts, and CRM context next to every conversation."
-        image={IMG.meeting}
-        bullets={[
-          "Official WhatsApp Business API integration",
-          "Shared multi-agent inbox with assignment",
-          "Templated replies and approved broadcasts",
-          "Conversation linked to lead / customer record",
+      <StatStrip
+        items={[
+          { n: "Meta", l: "Posts & ads" },
+          { n: "WA", l: "Business inbox" },
+          { n: "Reels", l: "& video" },
+          { n: "Guide", l: "In-app user guide" },
         ]}
       />
 
       <FeatureRow
-        eyebrow="Instagram & Facebook"
-        title="Comments and DMs, treated like real customer messages."
-        body="Stop missing leads in your DMs. Every Instagram and Facebook message lands in the same inbox, with the customer's full history one click away."
+        eyebrow="Connect & publish"
+        title="Accounts, posts, and reels."
+        body="Link Facebook and Instagram assets, schedule posts, and upload reels and videos from dedicated Social Hub screens."
+        image={IMG.meeting}
+        bullets={[
+          "Connect accounts workflow",
+          "Posts composer & library",
+          "Reels & videos publishing",
+          "Overview dashboard",
+        ]}
+      />
+
+      <FeatureRow
+        eyebrow="Campaigns & WhatsApp"
+        title="Ad campaigns and WhatsApp."
+        body="Launch and monitor ad campaigns, then handle WhatsApp business conversations beside your pipeline."
         image={IMG.laptop}
         reverse
         bullets={[
-          "Instagram DM + comment management",
-          "Facebook pages and ad-comment replies",
-          "AI draft reply per message",
-          "SLA and response-time reporting",
+          "Meta ad campaign management",
+          "WhatsApp business inbox",
+          "Comment and DM workflows",
+          "Tied to CRM customer context",
         ]}
       />
 
       <FeatureRow
-        eyebrow="SEO & GEO"
-        title="Show up where buyers are searching — locally and globally."
-        body="Built-in keyword research, on-page SEO scoring and Google Business Profile management. Tune your local presence in the same workspace that runs your sales."
+        eyebrow="Analytics"
+        title="Analytics and onboarding."
+        body="Review engagement analytics and share the in-app Social Hub user guide with new teammates."
         image={IMG.analytics}
         bullets={[
-          "On-page SEO scoring for every website page",
-          "Google Business Profile sync and posts",
-          "Local rank tracking by city / region",
-          "AI-generated meta descriptions and alt text",
+          "Social Hub analytics screens",
+          "Performance by channel",
+          "User guide route in product",
+          "OAuth-connected accounts",
         ]}
       />
 
