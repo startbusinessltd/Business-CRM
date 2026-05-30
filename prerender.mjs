@@ -7,6 +7,8 @@ import { writeFileSync, mkdirSync, cpSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 
+import { resolveServerEntryFileUrl } from "./scripts/resolve-server-entry.mjs";
+
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const ROUTES = [
@@ -33,7 +35,8 @@ const OUT_DIR = resolve(__dirname, "dist/prerendered");
 
 async function main() {
   console.log("Loading server bundle...");
-  const server = await import("./dist/server/index.js");
+  const serverHref = resolveServerEntryFileUrl(resolve(__dirname, "dist/server"));
+  const server = await import(serverHref);
   const handler = server.default;
 
   mkdirSync(OUT_DIR, { recursive: true });

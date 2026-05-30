@@ -1,7 +1,13 @@
 import http from "node:http";
 import { Readable } from "node:stream";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import app from "../dist/server/index.js";
+import { resolveServerEntryFileUrl } from "./resolve-server-entry.mjs";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const app = (await import(resolveServerEntryFileUrl(resolve(__dirname, "../dist/server")))).default;
 
 const host = process.env.HOST ?? "127.0.0.1";
 const port = Number(process.env.PORT ?? 3000);
@@ -26,7 +32,7 @@ const server = http.createServer(async (req, res) => {
           headers.append(key, item);
         }
       } else if (value !== undefined) {
-        headers.set(key, value);
+        headers.set(key, item);
       }
     }
 
