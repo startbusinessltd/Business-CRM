@@ -16,6 +16,10 @@ const ROUTES = [
   "/customers",
   "/features",
   "/pricing",
+  "/services",
+  "/privacy",
+  "/terms",
+  "/refund",
   "/modules/calls",
   "/modules/employees",
   "/modules/finance",
@@ -29,14 +33,17 @@ const OUT_DIR = resolve(__dirname, "dist/prerendered");
 
 async function main() {
   console.log("Loading server bundle...");
-  const server = await import("./dist/server/server.js");
+  const server = await import("./dist/server/index.js");
   const handler = server.default;
 
   mkdirSync(OUT_DIR, { recursive: true });
 
-  // Copy static client assets
-  cpSync(resolve(__dirname, "dist/client/assets"), resolve(OUT_DIR, "assets"), { recursive: true });
-  console.log("Copied static assets to dist/prerendered/assets/");
+  const clientDir = resolve(__dirname, "dist/client");
+  // Copy the full Vite client build: hashed chunks in `assets/` plus everything from `public/`
+  // (e.g. /images/*, /videos/*, /sb-logo.svg). Previously only `assets/` was synced to S3, so
+  // image/video requests returned the SPA HTML (text/html) from CloudFront/S3 fallback.
+  cpSync(clientDir, OUT_DIR, { recursive: true });
+  console.log("Copied dist/client → dist/prerendered/ (assets + public images, videos, logos)");
 
   for (const route of ROUTES) {
     const url = `${BASE_URL}${route}`;

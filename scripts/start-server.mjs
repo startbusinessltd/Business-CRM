@@ -1,7 +1,7 @@
 import http from "node:http";
 import { Readable } from "node:stream";
 
-import app from "../dist/server/server.js";
+import app from "../dist/server/index.js";
 
 const host = process.env.HOST ?? "127.0.0.1";
 const port = Number(process.env.PORT ?? 3000);

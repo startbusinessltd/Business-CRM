@@ -7,7 +7,7 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-  <FilesMatch "\.(css|js|mjs|png|jpg|jpeg|gif|svg|ico|webp|woff2?)$">
+  <FilesMatch "\.(css|js|mjs|png|jpg|jpeg|gif|svg|ico|webp|woff2?|mp4|webm)$">
     Header set Cache-Control "public, max-age=604800, immutable"
   </FilesMatch>
 </IfModule>
