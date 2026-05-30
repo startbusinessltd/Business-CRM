@@ -9,7 +9,7 @@ WorkingDirectory=__DEPLOY_PATH__
 Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
 Environment=PORT=__APP_PORT__
-ExecStart=/usr/bin/npm run serve:ssr
+ExecStart=__NPM_BIN__ run serve:ssr
 Restart=always
 RestartSec=5
 

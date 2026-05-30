@@ -51,7 +51,7 @@ set -euo pipefail
 
 install_packages() {
   if command -v dnf >/dev/null 2>&1; then
-    sudo dnf install -y nginx rsync tar nodejs
+    sudo dnf install -y nginx rsync tar nodejs22 nodejs22-npm
   elif command -v apt-get >/dev/null 2>&1; then
     sudo apt-get update
     sudo apt-get install -y nginx rsync tar nodejs npm
@@ -73,12 +73,18 @@ sudo mkdir -p "$DEPLOY_PATH"
 sudo rsync -a --delete "$HOME/$REMOTE_DIR/app/" "$DEPLOY_PATH/"
 sudo chown -R "$DEPLOY_USER:$DEPLOY_USER" "$DEPLOY_PATH"
 
-echo "Installing production dependencies..."
+if command -v npm-22 >/dev/null 2>&1; then
+  NPM_BIN="$(command -v npm-22)"
+else
+  NPM_BIN="$(command -v npm)"
+fi
+
+echo "Installing production dependencies with $NPM_BIN..."
 cd "$DEPLOY_PATH"
 if [ -f package-lock.json ]; then
-  npm ci --omit=dev --no-audit --no-fund
+  "$NPM_BIN" ci --no-audit --no-fund
 else
-  npm install --omit=dev --no-audit --no-fund
+  "$NPM_BIN" install --no-audit --no-fund
 fi
 
 echo "Refreshing service configuration..."
@@ -86,6 +92,7 @@ sudo sed \
   -e "s|__DEPLOY_USER__|$DEPLOY_USER|g" \
   -e "s|__DEPLOY_PATH__|$DEPLOY_PATH|g" \
   -e "s|__APP_PORT__|$DEPLOY_APP_PORT|g" \
+  -e "s|__NPM_BIN__|$NPM_BIN|g" \
   "$HOME/$REMOTE_DIR/config/businesscrm.service.template" | sudo tee /etc/systemd/system/businesscrm.service >/dev/null
 
 if [ "$WEB_SERVER" = "nginx" ]; then
