@@ -33,7 +33,7 @@ cp .deploy/systemd/businesscrm.service "$PACKAGE_DIR/config/businesscrm.service.
 tar -C "$PACKAGE_DIR" -czf "$ARCHIVE_PATH" .
 
 SSH_TARGET="$DEPLOY_USER@$DEPLOY_HOST"
-SSH_OPTS=( -i "$DEPLOY_KEY_PATH" -p "$DEPLOY_PORT" -o StrictHostKeyChecking=yes )
+SSH_OPTS=( -i "$DEPLOY_KEY_PATH" -p "$DEPLOY_PORT" -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 )
 SCP_OPTS=( -i "$DEPLOY_KEY_PATH" -P "$DEPLOY_PORT" -o StrictHostKeyChecking=yes )
 
 scp "${SCP_OPTS[@]}" "$ARCHIVE_PATH" "$SSH_TARGET:$REMOTE_ARCHIVE"
@@ -61,8 +61,10 @@ install_packages() {
   fi
 }
 
+echo "Installing server packages..."
 install_packages
 
+echo "Uploading release to $DEPLOY_PATH..."
 rm -rf "$HOME/$REMOTE_DIR"
 mkdir -p "$HOME/$REMOTE_DIR"
 tar -xzf "$HOME/$REMOTE_ARCHIVE" -C "$HOME/$REMOTE_DIR"
@@ -71,13 +73,15 @@ sudo mkdir -p "$DEPLOY_PATH"
 sudo rsync -a --delete "$HOME/$REMOTE_DIR/app/" "$DEPLOY_PATH/"
 sudo chown -R "$DEPLOY_USER:$DEPLOY_USER" "$DEPLOY_PATH"
 
+echo "Installing production dependencies..."
 cd "$DEPLOY_PATH"
 if [ -f package-lock.json ]; then
-  npm ci --omit=dev
+  npm ci --omit=dev --no-audit --no-fund
 else
-  npm install --omit=dev
+  npm install --omit=dev --no-audit --no-fund
 fi
 
+echo "Refreshing service configuration..."
 sudo sed \
   -e "s|__DEPLOY_USER__|$DEPLOY_USER|g" \
   -e "s|__DEPLOY_PATH__|$DEPLOY_PATH|g" \
@@ -94,6 +98,7 @@ if [ "$WEB_SERVER" = "nginx" ]; then
   sudo systemctl reload nginx
 fi
 
+echo "Restarting application service..."
 sudo systemctl daemon-reload
 sudo systemctl enable businesscrm.service
 sudo systemctl restart businesscrm.service
