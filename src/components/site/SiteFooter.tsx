@@ -37,10 +37,10 @@ export function SiteFooter() {
           <div style={{ minWidth: 0 }}>
             <div className="site-footer-brand">
               <img
-                src="/sb-logo.svg"
+                src="/logo.png"
                 alt="Business CRM"
-                width={44}
-                height={44}
+                width={52}
+                height={52}
                 className="site-brand-logo"
               />
               <div className="site-brand-title site-brand-title--footer">Business CRM</div>
@@ -52,7 +52,7 @@ export function SiteFooter() {
             <div className="footer-cta-row" style={{ marginTop: 18 }}>
               <CtaLink
                 to="/pricing"
-                label="Start 10-day trial"
+                label="Get started"
                 className="btn btn-brass"
                 crm="register"
               />

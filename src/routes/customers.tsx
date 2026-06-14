@@ -16,7 +16,7 @@ export const Route = createFileRoute("/customers")({
 
 const stories = [
   {
-    img: IMG.customer1,
+    img: IMG.customerFemale,
     who: "Neha Singh",
     role: "Client",
     quote:
@@ -24,7 +24,7 @@ const stories = [
     stat: "48 hrs · business live",
   },
   {
-    img: IMG.customer3,
+    img: IMG.customerRavi,
     who: "Ravi Kumar V",
     role: "Business Man",
     quote:
@@ -32,7 +32,7 @@ const stories = [
     stat: "1st month · earning",
   },
   {
-    img: IMG.customer2,
+    img: IMG.customerMale,
     who: "Prakash Rao",
     role: "Entrepreneur",
     quote:
@@ -48,7 +48,7 @@ function Customers() {
         eyebrow="Customer stories"
         title={<>Built for operators. Loved by their teams.</>}
         lead="From boutique agencies and clinics to multi-branch retailers and BPOs, businesses use Business CRM to consolidate four tools into one — and to run their day from a single screen."
-        primary={{ to: "/pricing", label: "Start free trial" }}
+        primary={{ to: "/pricing", label: "Get started" }}
         secondary={{ to: "/contact", label: "Become a case study" }}
         image={IMG.team}
       />

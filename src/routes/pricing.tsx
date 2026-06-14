@@ -10,12 +10,12 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "Simple INR pricing: monthly or yearly. Website, leads, calls, social, employees and finance included.",
+          "Simple INR yearly pricing. Website, leads, calls, social, employees and finance included.",
       },
       { property: "og:title", content: "Pricing — Business CRM" },
       {
         property: "og:description",
-        content: "₹899/month or ₹5,999/year. Every core module included.",
+        content: "₹10,000/year. Every core module included.",
       },
       { property: "og:image", content: IMG.pricing },
     ],
@@ -198,14 +198,14 @@ function PlanCard({
 
 function Pricing() {
   const crmShell = useCrmAppBase();
-  const trialCtaHref = crmAbsUrl("/auth/register", crmShell);
+  const signupHref = crmAbsUrl("/auth/register", crmShell);
 
   return (
     <>
       <PageHero
         eyebrow="Pricing"
         title={<>Simple plans. Full platform.</>}
-        lead="Choose monthly or yearly billing — both include website, leads, calls, social, employees and finance. Limited-time introductory prices shown below."
+        lead="One yearly plan includes website, leads, calls, social, employees and finance. Limited-time introductory price shown below."
         primary={{ to: "/contact", label: "Talk to sales" }}
         secondary={{ to: "/features", label: "See all features" }}
         image={IMG.pricing}
@@ -213,26 +213,16 @@ function Pricing() {
 
       <section className="section-tight">
         <div className="container-x">
-          <div className="grid-2" style={{ maxWidth: 880, marginInline: "auto" }}>
-            <PlanCard
-              name="Monthly"
-              blurb="Flexible billing — pay as you go each month."
-              price="₹899"
-              period="/ month"
-              priceWas="Was ₹1,000 / month"
-              saveNote="Save ₹101"
-              cta="Start 10-day trial"
-              ctaHref={trialCtaHref}
-            />
+          <div style={{ maxWidth: 480, marginInline: "auto" }}>
             <PlanCard
               name="Yearly"
               blurb="Best value — one payment for the full year."
-              price="₹5,999"
+              price="₹10,000"
               period="/ year"
-              priceWas="Was ₹10,000 / year"
-              saveNote="Save ₹4,001"
-              cta="Start 10-day trial"
-              ctaHref={trialCtaHref}
+              priceWas="Was ₹30,000 / year"
+              saveNote="Save ₹20,000"
+              cta="Get started"
+              ctaHref={signupHref}
               featured
               badge="BEST VALUE"
             />
@@ -253,7 +243,7 @@ function Pricing() {
             />
           </div>
           <p style={{ textAlign: "center", marginTop: 32, color: "var(--slate)", fontSize: 14 }}>
-            Prices in INR. Start with a 10-day free trial where available — no credit card required.
+            Prices in INR. All core modules included — pay once per year.
           </p>
         </div>
       </section>
@@ -270,16 +260,16 @@ function Pricing() {
           >
             {[
               [
-                "What is included at these prices?",
-                "Website & web builder, leads & CRM, call tracker, social hub, team & permissions, and finance & billing — the same scope on monthly and yearly billing.",
+                "What is included at this price?",
+                "Website & web builder, leads & CRM, call tracker, social hub, team & permissions, and finance & billing — the full platform in one yearly plan.",
               ],
               [
-                "Is there a free trial?",
-                "Yes. You can start with a 10-day free trial. No credit card required.",
+                "How do I get started?",
+                "Click Get started or Buy now to create your account. Our team will help you pick templates and configure your workspace.",
               ],
               [
-                "Can I switch between monthly and yearly?",
-                "Yes — contact us any time to change your billing cycle; we will help you move with a fair adjustment.",
+                "Can I renew or upgrade later?",
+                "Yes — contact us any time to renew your yearly plan or add partner and white-label options.",
               ],
               [
                 "Are taxes included?",

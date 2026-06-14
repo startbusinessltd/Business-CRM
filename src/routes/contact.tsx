@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { type ReactNode, useState } from "react";
+import { type FormEvent, type ReactNode, useState } from "react";
 import { IMG, PageHero } from "@/components/site/PageBlocks";
 import { CONTACT } from "@/lib/site-content";
+import {
+  isValidIndianMobile,
+  normalizeIndianMobile,
+  submitContactLead,
+} from "@/lib/contact-lead-api";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -19,8 +24,79 @@ export const Route = createFileRoute("/contact")({
   component: Contact,
 });
 
+type FormState = {
+  firstName: string;
+  lastName: string;
+  company: string;
+  email: string;
+  phone: string;
+  message: string;
+};
+
+const emptyForm: FormState = {
+  firstName: "",
+  lastName: "",
+  company: "",
+  email: "",
+  phone: "",
+  message: "",
+};
+
 function Contact() {
+  const [form, setForm] = useState<FormState>(emptyForm);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const onPhoneChange = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    setForm((f) => ({ ...f, phone: digits }));
+    if (phoneError && (digits.length === 0 || isValidIndianMobile(digits))) {
+      setPhoneError(null);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setSubmitError(null);
+
+    if (!isValidIndianMobile(form.phone)) {
+      setPhoneError("Enter a valid 10-digit Indian mobile number (starts with 6–9).");
+      return;
+    }
+
+    setPhoneError(null);
+    setSubmitting(true);
+
+    const phoneNumber = normalizeIndianMobile(form.phone);
+
+    try {
+      const result = await submitContactLead({
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim() || ".",
+        workEmail: form.email.trim(),
+        phoneNumber,
+        businessName: form.company.trim() || "Not provided",
+        message: form.message.trim() || undefined,
+      });
+
+      if (!result.ok) {
+        setSubmitError(result.message);
+        return;
+      }
+
+      setSent(true);
+      setSuccessMessage(result.message);
+      setForm(emptyForm);
+    } catch {
+      setSubmitError("Something went wrong. Please try again or email us directly.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <>
       <PageHero
@@ -34,34 +110,88 @@ function Contact() {
         <div className="container-x">
           <div className="grid-2 contact-grid">
             <div className="contact-form-column">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSent(true);
-                }}
-                className="card-flat contact-form-card"
-              >
+              <form onSubmit={handleSubmit} className="card-flat contact-form-card">
                 <h2 className="h-section" style={{ fontSize: 28 }}>
                   Send us a message
                 </h2>
                 <div className="contact-inline-2">
-                  <Field label="Full name" name="name" required />
-                  <Field label="Company" name="company" />
+                  <Field
+                    label="First name"
+                    name="firstName"
+                    required
+                    autoComplete="given-name"
+                    value={form.firstName}
+                    onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
+                  />
+                  <Field
+                    label="Last name"
+                    name="lastName"
+                    required
+                    autoComplete="family-name"
+                    value={form.lastName}
+                    onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
+                  />
                 </div>
-                <Field label="Work email" name="email" type="email" required />
-                <Field label="Team size" name="size" placeholder="e.g. 12 people" />
+                <Field
+                  label="Company"
+                  name="company"
+                  value={form.company}
+                  onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
+                />
+                <Field
+                  label="Work email"
+                  name="email"
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                />
+                <Field
+                  label="Contact number"
+                  name="phone"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  required
+                  placeholder="10-digit mobile number"
+                  maxLength={10}
+                  pattern="[6-9][0-9]{9}"
+                  title="Enter a valid 10-digit Indian mobile number"
+                  value={form.phone}
+                  onChange={(e) => onPhoneChange(e.target.value)}
+                  error={phoneError}
+                />
                 <div>
                   <label style={lblStyle}>How can we help?</label>
                   <textarea
                     name="message"
                     rows={5}
                     required
+                    value={form.message}
+                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                     style={{ ...inputStyle, resize: "vertical" }}
                   />
                 </div>
-                <button type="submit" className="btn btn-primary" style={{ width: "100%" }}>
-                  {sent ? "Thanks — we'll reply within the hour." : "Send message"}
+                {submitError ? (
+                  <p style={{ fontSize: 14, color: "#b91c1c", margin: 0 }} role="alert">
+                    {submitError}
+                  </p>
+                ) : null}
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ width: "100%" }}
+                  disabled={submitting}
+                >
+                  {submitting
+                    ? "Sending…"
+                    : sent
+                      ? "Thanks — we will reply within 24 hours."
+                      : "Send message"}
                 </button>
+                {sent && successMessage ? (
+                  <p style={{ fontSize: 14, color: "var(--purple)", margin: 0 }}>{successMessage}</p>
+                ) : null}
                 <p style={{ fontSize: 12, color: "var(--slate)" }}>
                   We respect your inbox. No newsletters, no third-party sharing.
                 </p>
@@ -96,7 +226,15 @@ function Contact() {
                   >
                     {CONTACT.salesEmail}
                   </a>,
-                  CONTACT.phone,
+                  <a
+                    key="web"
+                    href={CONTACT.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "var(--purple)", fontWeight: 600 }}
+                  >
+                    {CONTACT.website}
+                  </a>,
                 ]}
               />
               <InfoCard
@@ -114,7 +252,15 @@ function Contact() {
                   >
                     {CONTACT.supportEmail}
                   </a>,
-                  "Help videos inside the app",
+                  <a
+                    key="web2"
+                    href={CONTACT.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "var(--purple)", fontWeight: 600 }}
+                  >
+                    {CONTACT.website}
+                  </a>,
                 ]}
               />
               <InfoCard
@@ -156,12 +302,27 @@ const inputStyle: React.CSSProperties = {
 
 function Field({
   label,
+  error,
   ...props
-}: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+}: { label: string; error?: string | null } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div>
-      <label style={lblStyle}>{label}</label>
-      <input {...props} style={inputStyle} />
+      <label style={lblStyle} htmlFor={props.name}>
+        {label}
+      </label>
+      <input
+        {...props}
+        id={props.name}
+        style={{
+          ...inputStyle,
+          ...(error ? { borderColor: "#b91c1c" } : {}),
+        }}
+      />
+      {error ? (
+        <p style={{ fontSize: 12, color: "#b91c1c", marginTop: 4, marginBottom: 0 }} role="alert">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

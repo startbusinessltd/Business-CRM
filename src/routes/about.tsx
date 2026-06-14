@@ -13,7 +13,7 @@ export const Route = createFileRoute("/about")({
       },
       { property: "og:title", content: "About Business CRM" },
       { property: "og:description", content: "One platform for websites, CRM, calls, social, and finance." },
-      { property: "og:image", content: IMG.team },
+      { property: "og:image", content: IMG.aboutWhatWeShip },
     ],
   }),
   component: About,
@@ -28,7 +28,8 @@ function About() {
         lead="We built Business CRM so owners stop juggling a website tool, a spreadsheet for leads, a dialer app, social inboxes, HR sheets, and invoicing software. Everything in the Business CRM application — websites through finance — lives here."
         primary={{ to: "/services", label: "See services" }}
         secondary={{ to: "/contact", label: "Contact us" }}
-        image={IMG.team}
+        video={IMG.aboutHeroVideo}
+        poster={IMG.aboutWhatWeShip}
       />
 
       <StatStrip items={[...PLATFORM_STATS.about]} />
@@ -63,9 +64,9 @@ function About() {
         eyebrow="What we ship"
         title="Software that matches the sidebar."
         body="Marketing pages should not promise features the product does not have. Our website describes the same services you see after login: Website Type, Templates, Leads, Call Tracker, Social Hub, Team & Permissions, and Finance."
-        image={IMG.meeting}
+        image={IMG.aboutWhatWeShip}
         bullets={[
-          "Transparent INR plans with a 10-day trial",
+          "Transparent INR yearly plans",
           "Learning videos and in-app documentation",
           "Partner list, white label, and demo booking for teams",
           "Built-in AI assistant for day-to-day how-to questions",

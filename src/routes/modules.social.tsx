@@ -24,7 +24,7 @@ function SocialModule() {
         eyebrow="Social Hub"
         title={<>Publish, message, and measure — in one hub.</>}
         lead="Connect social accounts, manage posts and reels, run Meta ad campaigns, reply on WhatsApp, and read analytics — the same Social Hub menus you see at /social-hub in the app."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.socialmarketing}
       />

@@ -270,7 +270,9 @@
   .site-brand-logo {
     display: block;
     flex-shrink: 0;
-    object-fit: contain;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
 
   .media-frame { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
@@ -472,8 +474,9 @@
   }
 
   .legal-doc {
-    max-width: 760px;
+    max-width: 960px;
     margin-inline: auto;
+    padding-inline: clamp(8px, 2vw, 24px);
   }
 
   .legal-doc__masthead {
@@ -569,13 +572,13 @@
     overflow-wrap: anywhere;
   }
   .legal-doc__intro {
-    margin-top: 16px;
+    margin-top: 20px;
     color: var(--slate);
-    font-size: 17px;
-    line-height: 1.6;
+    font-size: 18px;
+    line-height: 1.75;
   }
   .legal-doc__section {
-    margin-top: 36px;
+    margin-top: 44px;
     scroll-margin-top: 88px;
   }
   .legal-doc__h2 {
@@ -590,9 +593,9 @@
     line-height: 1.28;
   }
   .legal-doc__p {
-    margin-top: 12px;
-    font-size: 15px;
-    line-height: 1.65;
+    margin-top: 16px;
+    font-size: 16px;
+    line-height: 1.8;
     color: var(--slate);
   }
   .legal-doc__footer {

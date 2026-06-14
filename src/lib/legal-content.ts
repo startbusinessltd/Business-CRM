@@ -61,7 +61,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
   {
     heading: "Contact Us",
     paragraphs: [
-      `If you have any questions or concerns about this privacy policy or our data practices, please contact us at ${CONTACT.salesEmail} or ${CONTACT.phone}, or through the Contact page on this website.`,
+      `If you have any questions or concerns about this privacy policy or our data practices, please contact us at ${CONTACT.supportEmail} or visit ${CONTACT.website}, or through the Contact page on this website.`,
       `Registered office: ${CONTACT.office.replace(/\n/g, ", ")}.`,
       "We are committed to addressing your concerns and protecting your privacy.",
     ],
@@ -165,7 +165,7 @@ export const REFUND_SECTIONS: LegalSection[] = [
   {
     heading: "Contact Us",
     paragraphs: [
-      `If you have any questions about our refund policy or need assistance with a refund request, please contact our customer support team at ${CONTACT.salesEmail} or ${CONTACT.phone}. You can also reach us through the Contact page on this website.`,
+      `If you have any questions about our refund policy or need assistance with a refund request, please contact our customer support team at ${CONTACT.supportEmail} or visit ${CONTACT.website}. You can also reach us through the Contact page on this website.`,
     ],
   },
 ];

@@ -63,10 +63,10 @@ export function SiteHeader() {
       >
         <Link to="/" className="site-brand-lockup">
           <img
-            src="/sb-logo.svg"
+            src="/logo.png"
             alt="Business CRM"
-            width={36}
-            height={36}
+            width={44}
+            height={44}
             className="site-brand-logo"
           />
           <span className="site-brand-title site-brand-title--header">Business CRM</span>
@@ -97,7 +97,7 @@ export function SiteHeader() {
           <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
           <CtaLink
             to="/pricing"
-            label="Start 10-day trial"
+            label="Get started"
             className="btn btn-primary"
             crm="register"
           />
@@ -133,7 +133,7 @@ export function SiteHeader() {
           </div>
           <div className="site-mobile-ctas">
             <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-            <CtaLink to="/pricing" label="Start 10-day trial" className="btn btn-primary" crm="register" />
+            <CtaLink to="/pricing" label="Get started" className="btn btn-primary" crm="register" />
           </div>
         </div>
       )}

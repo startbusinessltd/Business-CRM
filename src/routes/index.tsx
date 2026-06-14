@@ -29,7 +29,7 @@ function Home() {
         eyebrow="Business CRM platform"
         title={<>Business CRM is an all-in-one digital platform</>}
         lead="Business CRM is a complete digital platform designed to help anyone launch and grow their business effortlessly. We provide websites, CRM, branding, automation, and full support — everything you need to build a successful digital business."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/services", label: "Explore services" }}
         video={IMG.heroVideo}
         poster={IMG.hero}

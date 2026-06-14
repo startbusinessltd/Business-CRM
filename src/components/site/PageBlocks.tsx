@@ -160,7 +160,7 @@ export function CtaBand() {
         <div className="cta-band-actions">
           <CtaLink
             to="/pricing"
-            label="Start 10-day trial"
+            label="Get started"
             className="btn btn-brass"
             crm="register"
           />
@@ -180,6 +180,8 @@ export function CtaBand() {
 export const IMG = {
   hero: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=1400&q=80&auto=format&fit=crop",
   team: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80&auto=format&fit=crop",
+  aboutHeroVideo: "/images/about-hero.mp4",
+  aboutWhatWeShip: "/images/team.png",
   meeting:
     "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1400&q=80&auto=format&fit=crop",
   /** Lead Management module — global targeting / pipeline visual */
@@ -199,23 +201,18 @@ export const IMG = {
     "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80&auto=format&fit=crop",
   office:
     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80&auto=format&fit=crop",
-  handshake:
-    "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&q=80&auto=format&fit=crop",
+  handshake: "/images/handshake.png",
   /** Pricing page — growth / value visual */
   pricing: "/images/pricing-hero.png",
   laptop:
     "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1400&q=80&auto=format&fit=crop",
   contact:
     "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1400&q=80&auto=format&fit=crop",
-  /** Customer story portraits — HD width for sharp display on retina / large cards */
-  customer1:
-    "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1920&q=90&auto=format&fit=crop",
-  customer2:
-    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=1920&q=90&auto=format&fit=crop",
-  customer3:
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=1920&q=90&auto=format&fit=crop",
-  customer4:
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1920&q=90&auto=format&fit=crop",
+  /** Customer story portraits */
+  customerFemale: "/images/testimonial-female.png",
+  customerMale: "/images/testimonial-male.png",
+  customerRavi: "/images/testimonial-ravi.png",
+  customerFemaleAlt: "/images/testimonial-female-alt.png",
   city: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1600&q=80&auto=format&fit=crop",
   /** Local hero clip (copied from user asset into `public/videos/hero-home.mp4`) */
   heroVideo: "/videos/hero-home.mp4",

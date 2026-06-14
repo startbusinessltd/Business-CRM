@@ -23,17 +23,17 @@ export function LegalDocument({
   return (
     <section
       className="section section--legal"
-      style={{ paddingTop: "clamp(36px, 6vw, 56px)", paddingBottom: 72 }}
+      style={{ paddingTop: "clamp(48px, 8vw, 72px)", paddingBottom: 96 }}
     >
       <div className="container-x legal-doc">
         <div className="legal-doc__masthead">
           <div className="legal-doc__masthead-top">
             <Link to="/" className="legal-doc__brand site-brand-lockup" aria-label="Business CRM home">
               <img
-                src="/sb-logo.svg"
+                src="/logo.png"
                 alt=""
-                width={36}
-                height={36}
+                width={44}
+                height={44}
                 className="site-brand-logo"
                 aria-hidden
               />
@@ -80,9 +80,11 @@ export function LegalDocument({
         ))}
         <p className="legal-doc__footer">
           For questions about these documents, contact us at{" "}
-          <a href={`mailto:${CONTACT.salesEmail}`}>{CONTACT.salesEmail}</a>
+          <a href={`mailto:${CONTACT.supportEmail}`}>{CONTACT.supportEmail}</a>
           {" · "}
-          <a href={`tel:${CONTACT.phone.replace(/\D/g, "")}`}>{CONTACT.phone}</a>
+          <a href={CONTACT.websiteUrl} target="_blank" rel="noopener noreferrer">
+            {CONTACT.website}
+          </a>
           {" · "}
           <Link to="/contact">Contact form</Link>
         </p>

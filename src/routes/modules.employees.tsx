@@ -24,7 +24,7 @@ function EmployeesModule() {
         eyebrow="Team & permissions"
         title={<>Control who sees what in the product.</>}
         lead="Team & Permissions covers access profiles (roles & permissions) and My Team (employee management) — aligned with /access-profile and /employee-management in the Business CRM application."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.employees}
       />
@@ -69,7 +69,7 @@ function EmployeesModule() {
         eyebrow="Partners"
         title="Partner and white-label access."
         body="Partners get tailored menus (sign-up list, white label) while admins retain full platform controls."
-        image={IMG.handshake}
+        image={IMG.meeting}
         bullets={[
           "Partner role in menu-data",
           "White label & partner signups",

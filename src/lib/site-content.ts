@@ -89,15 +89,16 @@ export const SERVICES = [
 ] as const;
 
 export const CONTACT = {
-  phone: "080696-41100",
-  salesEmail: "startbusinessltd@gmail.com",
-  supportEmail: "startbusinessltd@gmail.com",
+  salesEmail: "support@businesscrm.co.in",
+  supportEmail: "support@businesscrm.co.in",
+  website: "Businesscrm.co.in",
+  websiteUrl: "https://businesscrm.co.in",
   office: [
     "Royal Space, No. 154, 5th Main, 7th Sector, Rajiv Gandhi Nagar",
     "HSR Layout, Bengaluru – 560102",
     "Karnataka, India",
   ].join("\n"),
-  replyTime: "We typically reply within 2 business hours.",
+  replyTime: "We typically reply within 24 hours.",
 };
 
 export const PLATFORM_STATS = {
@@ -105,7 +106,7 @@ export const PLATFORM_STATS = {
     { n: "6", l: "Core services" },
     { n: "30+", l: "Product capabilities" },
     { n: "1", l: "Login for your whole stack" },
-    { n: "10 days", l: "Free trial" },
+    { n: "INR", l: "India-first pricing" },
   ],
   about: [
     { n: "12+", l: "Industry templates" },

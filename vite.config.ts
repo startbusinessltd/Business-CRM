@@ -6,6 +6,10 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// Same gateway as startbusinessltd-ui `environment.apiUrl` → http://localhost:8013/api/
+const apiProxyTarget =
+  process.env.VITE_API_PROXY_TARGET?.trim() || "http://localhost:8013";
+
 // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 // @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
 export default defineConfig({
@@ -17,6 +21,13 @@ export default defineConfig({
     server: {
       port: 5180,
       strictPort: true,
+      proxy: {
+        "/api": {
+          target: apiProxyTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
   },
 });

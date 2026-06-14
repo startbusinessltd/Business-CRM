@@ -24,7 +24,7 @@ function CallsModule() {
         eyebrow="Call Tracker"
         title={<>Mobile call sync for sales teams.</>}
         lead="The Call Tracker area in Business CRM (backed by the native call-tracker plugin) syncs device calls into dashboards, history, hourly and day-wise reports, employee breakdowns, and sync logs — with leads linked to activity."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.callcenter}
       />

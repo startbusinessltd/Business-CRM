@@ -24,7 +24,7 @@ function FinanceModule() {
         eyebrow="Finance & billing"
         title={<>Plans, payments, and invoices together.</>}
         lead="Finance in the app includes package type, package & pricing, coupons, payment transactions, incentive wallet, invoice management, and payment gateway configuration — with Razorpay-ready checkout flows."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/contact", label: "Talk to sales" }}
         image={IMG.finance}
       />

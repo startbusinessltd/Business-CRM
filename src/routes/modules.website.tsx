@@ -24,7 +24,7 @@ function WebsiteModule() {
         eyebrow="Website & web builder"
         title={<>Templates, forms, and SEO — tied to your CRM.</>}
         lead="Pick a website type and template classification, configure site settings, publish forms, and optimise SEO & GEO. Website admin controls who can edit and publish — the same flows as /website-type, /templates, and /form-builder in the app."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.website}
       />

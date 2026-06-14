@@ -24,7 +24,7 @@ function LeadsModule() {
         eyebrow="Leads & CRM"
         title={<>Pipelines, forms, and automation in one place.</>}
         lead="Create pipelines and stages, publish forms, manage leads in table or grid views, run tasks, and automate follow-ups over email, WhatsApp, and SMS — including sign-up and website lead capture."
-        primary={{ to: "/pricing", label: "Start 10-day trial", crm: "register" }}
+        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/contact", label: "Book a demo" }}
         image={IMG.leads}
       />

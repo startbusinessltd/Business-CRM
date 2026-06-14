@@ -33,7 +33,7 @@ function Features() {
             .
           </>
         }
-        lead="These capabilities map to menus inside the app — not a generic feature brochure. Monthly and yearly plans include the same service scope."
+        lead="These capabilities map to menus inside the app — not a generic feature brochure. The yearly plan includes the full service scope."
         primary={{ to: "/pricing", label: "See pricing" }}
         secondary={{ to: "/services", label: "View all services" }}
         image={IMG.dashboard}
