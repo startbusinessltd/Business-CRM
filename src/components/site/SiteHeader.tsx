@@ -1,13 +1,28 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
 
 const MOBILE_MAX = 920;
 
+const DESKTOP_NAV: { to: string; label: string }[] = [
+  { to: "/about", label: "About" },
+  { to: "/features", label: "Features" },
+  { to: "/services", label: "Services" },
+  { to: "/customers", label: "Customers" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/contact", label: "Contact" },
+];
+
+function navLinkClass(pathname: string, to: string) {
+  const active = pathname === to || (to !== "/" && pathname.startsWith(`${to}/`));
+  return active ? "navlink navlink--active" : "navlink";
+}
+
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -74,24 +89,11 @@ export function SiteHeader() {
         </Link>
 
         <nav style={{ display: "flex", gap: 28, alignItems: "center" }} className="site-nav">
-          <Link to="/about" className="navlink">
-            About
-          </Link>
-          <Link to="/features" className="navlink">
-            Features
-          </Link>
-          <Link to="/services" className="navlink">
-            Services
-          </Link>
-          <Link to="/customers" className="navlink">
-            Customers
-          </Link>
-          <Link to="/pricing" className="navlink">
-            Pricing
-          </Link>
-          <Link to="/contact" className="navlink">
-            Contact
-          </Link>
+          {DESKTOP_NAV.map(({ to, label }) => (
+            <Link key={to} to={to} className={navLinkClass(pathname, to)}>
+              {label}
+            </Link>
+          ))}
         </nav>
 
         <div className="site-header-desktop-ctas" style={{ display: "flex", gap: 10, flexShrink: 0 }}>
@@ -127,7 +129,7 @@ export function SiteHeader() {
         <div className="container-x site-mobile-panel" style={{ paddingBottom: 16 }}>
           <div style={{ display: "grid", gap: 4 }}>
             {mobileLinks.map(([to, label]) => (
-              <Link key={to} to={to} className="navlink" onClick={close} style={{ padding: "10px 0" }}>
+              <Link key={to} to={to} className={navLinkClass(pathname, to)} onClick={close}>
                 {label}
               </Link>
             ))}

@@ -254,8 +254,27 @@
     letter-spacing: .14em;
   }
 
-  .navlink { font-size: 14px; color: var(--slate); font-weight: 500; }
+  .navlink {
+    font-size: 14px;
+    color: var(--slate);
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: color .2s, background .2s;
+  }
   .navlink:hover { color: var(--purple); }
+  .navlink--active {
+    color: var(--purple);
+    font-weight: 600;
+    background: var(--gold-soft);
+  }
+  .site-mobile-panel .navlink {
+    padding: 10px 12px;
+  }
+  .site-mobile-panel .navlink--active {
+    display: inline-flex;
+    width: fit-content;
+  }
 
   .site-brand-title {
     display: flex;
@@ -320,14 +339,20 @@
   .feature-row .media-frame {
     max-width: 100%;
     justify-self: start;
+    aspect-ratio: 5 / 4;
   }
   .feature-row-media--contain {
     aspect-ratio: 858 / 566;
     max-width: min(100%, 520px);
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
   }
   .feature-row-media--contain img {
     object-fit: contain;
     object-position: left center;
+    border-radius: 8px;
   }
 
   .feature-row > * {

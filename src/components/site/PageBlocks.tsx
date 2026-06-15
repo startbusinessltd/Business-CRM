@@ -143,7 +143,7 @@ export function FeatureRow({
           </div>
           <div
             className={["media-frame", mediaClassName].filter(Boolean).join(" ")}
-            style={{ direction: "ltr", aspectRatio: "5/4" }}
+            style={{ direction: "ltr", ...(mediaClassName ? {} : { aspectRatio: "5/4" }) }}
           >
             <img src={image} alt={title} loading="lazy" />
           </div>
