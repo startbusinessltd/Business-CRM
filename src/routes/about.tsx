@@ -53,7 +53,7 @@ function About() {
                 with Razorpay-ready flows.
               </p>
             </div>
-            <div className="media-frame" style={{ aspectRatio: "4/3" }}>
+            <div className="media-frame about-mission-media">
               <img src={IMG.mission} alt="Targeting goals with Business CRM" loading="lazy" />
             </div>
           </div>

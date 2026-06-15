@@ -91,6 +91,7 @@ export function FeatureRow({
   image,
   reverse,
   bullets,
+  mediaClassName,
 }: {
   eyebrow: string;
   title: string;
@@ -98,6 +99,7 @@ export function FeatureRow({
   image: string;
   reverse?: boolean;
   bullets?: string[];
+  mediaClassName?: string;
 }) {
   return (
     <section className="section-tight">
@@ -139,7 +141,10 @@ export function FeatureRow({
               </ul>
             )}
           </div>
-          <div className="media-frame" style={{ direction: "ltr", aspectRatio: "5/4" }}>
+          <div
+            className={["media-frame", mediaClassName].filter(Boolean).join(" ")}
+            style={{ direction: "ltr", aspectRatio: "5/4" }}
+          >
             <img src={image} alt={title} loading="lazy" />
           </div>
         </div>
@@ -204,6 +209,7 @@ export const IMG = {
   website:
     "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=1400&q=80&auto=format&fit=crop",
   finance: "/images/module-finance.png",
+  invoiceManagement: "/images/invoice-management.png",
   employees:
     "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=80&auto=format&fit=crop",
   office:

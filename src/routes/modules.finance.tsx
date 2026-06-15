@@ -69,7 +69,8 @@ function FinanceModule() {
         eyebrow="Invoicing"
         title="Invoice management."
         body="Create GST-friendly invoices, share PDFs, and keep finance next to the deals your team closes in CRM."
-        image={IMG.meeting}
+        image={IMG.invoiceManagement}
+        mediaClassName="feature-row-media--contain"
         bullets={[
           "Invoice templates & PDF export",
           "Customer-linked billing",
