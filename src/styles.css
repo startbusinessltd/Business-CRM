@@ -46,6 +46,7 @@
 
   /* Logo anchors: violet gradient + #FFCC00 gold + black/white */
   --purple: #3500a8;
+  --brand-crm: #5d26d6;
   --purple-deep: #1a0a4a;
   --purple-mid: #4e2fd6;
   --purple-soft: #f4f1fc;
@@ -88,7 +89,7 @@
 
   --serif: "Fraunces", ui-serif, Georgia, serif;
   --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --brand: "Times New Roman", Times, serif;
+  --brand: "Fredoka One", "Fredoka", cursive;
 }
 
 .dark {
@@ -151,45 +152,42 @@
     width: 100%;
     box-sizing: border-box;
   }
-  .site-brand-lockup {
-    display: flex;
+  .site-brand-lockup,
+  .site-footer-brand {
+    --brand-title-size: clamp(18px, 3.2vw, 22px);
+    font-size: var(--brand-title-size);
     align-items: center;
-    gap: 10px;
+    gap: 0.45em;
+  }
+  .site-brand-lockup {
+    display: inline-flex;
+    flex-flow: row nowrap;
+    flex-shrink: 0;
     min-width: 0;
     text-decoration: none;
     color: inherit;
   }
   .site-header-bar .site-brand-lockup {
-    flex: 1 1 0%;
-  }
-  .site-brand-title--header {
-    font-size: clamp(14px, 4.2vw, 20px);
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  @media (max-width: 400px) {
-    .site-brand-title--header {
-      white-space: normal;
-      overflow: visible;
-      text-overflow: unset;
-      word-break: break-word;
-      line-height: 1.12;
-    }
+    flex: 0 1 auto;
+    margin-right: 8px;
   }
   .site-footer-brand {
+    --brand-title-size: clamp(19px, 3.6vw, 24px);
     display: flex;
-    align-items: center;
-    gap: 12px;
     flex-wrap: wrap;
     min-width: 0;
   }
+  .site-brand-title--header,
   .site-brand-title--footer {
-    font-size: clamp(17px, 4.2vw, 22px);
-    line-height: 1.15;
+    font-size: 1em;
+    flex-shrink: 0;
     min-width: 0;
-    overflow-wrap: anywhere;
+  }
+  @media (max-width: 400px) {
+    .site-brand-lockup,
+    .site-footer-brand {
+      --brand-title-size: clamp(16px, 4.2vw, 19px);
+    }
   }
 
   .page-hero-copy {
@@ -259,19 +257,38 @@
   .navlink:hover { color: var(--purple); }
 
   .site-brand-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.04em;
+    line-height: 0.9;
     font-family: var(--brand);
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    letter-spacing: 0.01em;
   }
-  .surface-ink .site-brand-title {
+  .site-brand-title__line {
+    display: block;
+  }
+  .site-brand-title__business {
+    color: #0a0a0a;
+  }
+  .site-brand-title__crm {
+    color: var(--brand-crm);
+    letter-spacing: 0.05em;
+  }
+  .surface-ink .site-brand-title__business {
     color: var(--ivory);
+  }
+  .surface-ink .site-brand-title__crm {
+    color: var(--brand-crm);
   }
   .site-brand-logo {
     display: block;
     flex-shrink: 0;
-    border-radius: 50%;
-    object-fit: cover;
+    width: 1.95em;
+    height: 1.95em;
+    border-radius: 0.24em;
+    object-fit: contain;
     object-position: center;
   }
 
@@ -493,7 +510,7 @@
     gap: 16px;
     min-width: 0;
   }
-  .legal-doc__brand:hover .site-brand-title {
+  .legal-doc__brand:hover .site-brand-title__business {
     color: var(--purple);
   }
   @media (max-width: 520px) {

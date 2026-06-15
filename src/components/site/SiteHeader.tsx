@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
+import { BrandTitle } from "@/components/site/BrandTitle";
 
 const MOBILE_MAX = 920;
 
@@ -69,7 +70,7 @@ export function SiteHeader() {
             height={44}
             className="site-brand-logo"
           />
-          <span className="site-brand-title site-brand-title--header">Business CRM</span>
+          <BrandTitle className="site-brand-title--header" />
         </Link>
 
         <nav style={{ display: "flex", gap: 28, alignItems: "center" }} className="site-nav">

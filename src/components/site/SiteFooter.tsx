@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CtaLink } from "@/lib/crm-parent-bridge";
+import { BrandTitle } from "@/components/site/BrandTitle";
 
 export function SiteFooter() {
   const col = (title: string, items: { to: string; label: string; hash?: string }[]) => (
@@ -39,11 +40,11 @@ export function SiteFooter() {
               <img
                 src="/logo.png"
                 alt="Business CRM"
-                width={52}
-                height={52}
+                width={48}
+                height={48}
                 className="site-brand-logo"
               />
-              <div className="site-brand-title site-brand-title--footer">Business CRM</div>
+              <BrandTitle className="site-brand-title--footer" />
             </div>
             <p style={{ marginTop: 14, maxWidth: 320 }}>
               Business CRM helps Indian SMBs run websites, leads, calls, social, team access, and

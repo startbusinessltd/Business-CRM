@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { CONTACT } from "@/lib/site-content";
+import { BrandTitle } from "@/components/site/BrandTitle";
 
 export type LegalSection = { id?: string; heading: string; paragraphs: string[] };
 
@@ -37,7 +38,7 @@ export function LegalDocument({
                 className="site-brand-logo"
                 aria-hidden
               />
-              <span className="site-brand-title site-brand-title--header">Business CRM</span>
+              <BrandTitle className="site-brand-title--header" />
             </Link>
             <nav className="legal-doc__nav" aria-label="Legal document">
               <Link to="/" className="legal-doc__back">

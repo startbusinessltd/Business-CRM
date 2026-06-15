@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 
 export function PageHero({
@@ -11,6 +11,8 @@ export function PageHero({
   image,
   video,
   poster,
+  mediaStyle,
+  imageStyle,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -20,6 +22,8 @@ export function PageHero({
   image?: string;
   video?: string;
   poster?: string;
+  mediaStyle?: CSSProperties;
+  imageStyle?: CSSProperties;
 }) {
   return (
     <section className="section" style={{ paddingTop: "clamp(36px, 8vw, 64px)" }}>
@@ -52,11 +56,11 @@ export function PageHero({
               )}
             </div>
           </div>
-          <div className="media-frame" style={{ aspectRatio: "4/5", maxHeight: 560 }}>
+          <div className="media-frame" style={{ aspectRatio: "4/5", maxHeight: 560, ...mediaStyle }}>
             {video ? (
-              <video src={video} poster={poster} autoPlay muted loop playsInline />
+              <video src={video} poster={poster} autoPlay muted loop playsInline style={imageStyle} />
             ) : image ? (
-              <img src={image} alt="" loading="eager" />
+              <img src={image} alt="" loading="eager" style={imageStyle} />
             ) : null}
           </div>
         </div>
@@ -182,12 +186,15 @@ export const IMG = {
   team: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80&auto=format&fit=crop",
   aboutHeroVideo: "/images/about-hero.mp4",
   aboutWhatWeShip: "/images/team.png",
+  mission: "/images/mission.png",
   meeting:
     "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1400&q=80&auto=format&fit=crop",
   /** Lead Management module — global targeting / pipeline visual */
   leads: "/images/module-leads.png",
   dashboard:
     "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80&auto=format&fit=crop",
+  featuresHero: "/images/features-hero.png",
+  servicesHero: "/images/services-hero.png",
   /** Module imagery — local assets in `public/images` (finance / analytics / social / calls) */
   analytics: "/images/module-analytics.png",
   /** Home — “Built for Indian SMBs” FeatureRow (CRM concept art) */

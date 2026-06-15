@@ -13,7 +13,7 @@ export const Route = createFileRoute("/features")({
       },
       { property: "og:title", content: "Features — Business CRM" },
       { property: "og:description", content: "Every capability in the product, one platform." },
-      { property: "og:image", content: IMG.dashboard },
+      { property: "og:image", content: IMG.featuresHero },
     ],
   }),
   component: Features,
@@ -33,10 +33,12 @@ function Features() {
             .
           </>
         }
-        lead="These capabilities map to menus inside the app — not a generic feature brochure. The yearly plan includes the full service scope."
+        lead="Website management, lead management, call management, social media management, employee management, finance management."
         primary={{ to: "/pricing", label: "See pricing" }}
         secondary={{ to: "/services", label: "View all services" }}
-        image={IMG.dashboard}
+        image={IMG.featuresHero}
+        mediaStyle={{ marginLeft: "clamp(12px, 2vw, 28px)", aspectRatio: "3/2", maxHeight: 520 }}
+        imageStyle={{ objectFit: "contain", objectPosition: "center" }}
       />
 
       {SERVICES.map((m, idx) => (

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/services")({
           "Website builder, leads & CRM, call tracker, social hub, team permissions, and finance — the same services you get inside Business CRM.",
       },
       { property: "og:title", content: "Services — Business CRM" },
-      { property: "og:image", content: IMG.dashboard },
+      { property: "og:image", content: IMG.servicesHero },
     ],
   }),
   component: ServicesPage,
@@ -27,7 +27,9 @@ function ServicesPage() {
         lead="These are the same areas your team uses after sign-in: websites and forms, leads and automation, call tracking, social, team access, and billing. No bolt-on modules sold separately."
         primary={{ to: "/pricing", label: "See pricing", crm: "register" }}
         secondary={{ to: "/features", label: "Feature list" }}
-        image={IMG.dashboard}
+        image={IMG.servicesHero}
+        mediaStyle={{ aspectRatio: "3/2", maxHeight: 520 }}
+        imageStyle={{ objectFit: "cover", objectPosition: "center" }}
       />
 
       <section className="section">

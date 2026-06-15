@@ -54,7 +54,7 @@ function About() {
               </p>
             </div>
             <div className="media-frame" style={{ aspectRatio: "4/3" }}>
-              <img src={IMG.office} alt="Business CRM team" loading="lazy" />
+              <img src={IMG.mission} alt="Targeting goals with Business CRM" loading="lazy" />
             </div>
           </div>
         </div>
