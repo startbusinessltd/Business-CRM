@@ -81,8 +81,8 @@ export function SiteHeader() {
           <img
             src="/logo.png"
             alt="Business CRM"
-            width={44}
-            height={44}
+            width={56}
+            height={56}
             className="site-brand-logo"
           />
           <BrandTitle className="site-brand-title--header" />
