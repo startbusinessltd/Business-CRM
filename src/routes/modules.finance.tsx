@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/finance")({
   head: () => ({
     meta: [
-      { title: "Finance & Billing — Business CRM" },
+      { title: "Finance & Billing — B Soft" },
       {
         name: "description",
         content:
-          "Packages, coupons, payments, incentive wallet, invoices, and payment gateway — Finance in Business CRM.",
+          "Packages, coupons, payments, incentive wallet, invoices, and payment gateway — Finance in B Soft.",
       },
       { property: "og:title", content: "Finance & Billing" },
       { property: "og:image", content: IMG.finance },

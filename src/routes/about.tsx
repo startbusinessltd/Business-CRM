@@ -5,13 +5,13 @@ import { PLATFORM_STATS } from "@/lib/site-content";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Business CRM" },
+      { title: "About — B Soft" },
       {
         name: "description",
         content:
-          "Business CRM helps Indian SMBs run websites, leads, calls, social, team access, and billing from one CRM platform.",
+          "B Soft helps Indian SMBs run websites, leads, calls, social, team access, and billing from one CRM platform.",
       },
-      { property: "og:title", content: "About Business CRM" },
+      { property: "og:title", content: "About B Soft" },
       { property: "og:description", content: "One platform for websites, CRM, calls, social, and finance." },
       { property: "og:image", content: IMG.aboutWhatWeShip },
     ],
@@ -23,9 +23,9 @@ function About() {
   return (
     <>
       <PageHero
-        eyebrow="About Business CRM"
+        eyebrow="About B Soft"
         title={<>One product for how Indian businesses actually work.</>}
-        lead="We built Business CRM so owners stop juggling a website tool, a spreadsheet for leads, a dialer app, social inboxes, HR sheets, and invoicing software. Everything in the Business CRM application — websites through finance — lives here."
+        lead="We built B Soft so owners stop juggling a website tool, a spreadsheet for leads, a dialer app, social inboxes, HR sheets, and invoicing software. Everything in the B Soft application — websites through finance — lives here."
         primary={{ to: "/services", label: "See services" }}
         secondary={{ to: "/contact", label: "Contact us" }}
         video={IMG.aboutHeroVideo}
@@ -44,7 +44,7 @@ function About() {
               </h2>
               <p style={{ marginTop: 14, fontSize: 17 }}>
                 Most growing companies do not need more apps — they need the apps they already pay for
-                to share the same customers, leads, and payments. Business CRM is that shared
+                to share the same customers, leads, and payments. B Soft is that shared
                 layer.
               </p>
               <p style={{ marginTop: 12, fontSize: 17 }}>
@@ -54,7 +54,7 @@ function About() {
               </p>
             </div>
             <div className="media-frame about-mission-media">
-              <img src={IMG.mission} alt="Targeting goals with Business CRM" loading="lazy" />
+              <img src={IMG.mission} alt="Targeting goals with B Soft" loading="lazy" />
             </div>
           </div>
         </div>

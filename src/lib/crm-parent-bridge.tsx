@@ -5,7 +5,7 @@ export const CRM_PARENT_ORIGIN_EVENT = "crm-parent-origin-updated";
 export const CRM_API_BASE_EVENT = "crm-api-base-updated";
 
 /** Angular CRM shell in production (register/login iframe target). */
-export const CRM_APP_ORIGIN_PRODUCTION = "https://www.startbusiness.ltd";
+export const CRM_APP_ORIGIN_PRODUCTION = "https://app.bsoft.ltd";
 
 declare global {
   interface Window {
@@ -32,7 +32,7 @@ function defaultCrmShellOrigin(): string {
 }
 
 /**
- * Origin of the Business CRM Angular app (signup / trial / login land here; APIs are called from that app).
+ * Origin of the B Soft Angular app (signup / trial / login land here; APIs are called from that app).
  * Priority: iframe postMessage → `VITE_CRM_APP_ORIGIN` → prod/dev default.
  */
 export function resolveCrmShellOrigin(): string {

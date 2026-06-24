@@ -1,7 +1,7 @@
 import { getCrmApiBase } from "@/lib/crm-parent-bridge";
 
 /** Production gateway — matches startbusinessltd-ui `environments.prod.ts` apiUrl. */
-const DEFAULT_API_BASE = "https://api.startbusiness.ltd/api/";
+const DEFAULT_API_BASE = "https://api.bsoft.ltd/api/";
 /** Local gateway — matches startbusinessltd-ui `environments.ts` apiUrl (SB-GATEWAY-SERVICE :8013). */
 const DEV_GATEWAY_API_BASE = "http://localhost:8013/api/";
 
@@ -10,7 +10,7 @@ const DEV_GATEWAY_API_BASE = "http://localhost:8013/api/";
  * 1. Parent postMessage SET_API_BASE (environment.apiUrl from startbusinessltd-ui)
  * 2. VITE_API_BASE
  * 3. Dev standalone: direct gateway http://localhost:8013/api/ (not /api/ on :5180)
- * 4. Production build: api.startbusiness.ltd
+ * 4. Production build: api.bsoft.ltd
  */
 function resolveApiBase(): string {
   const fromParent = getCrmApiBase();
@@ -101,7 +101,7 @@ export async function submitContactLead(
       payload.domain?.trim() ||
       (typeof import.meta !== "undefined" &&
         (import.meta as { env?: { VITE_CONTACT_WEBSITE_DOMAIN?: string } }).env?.VITE_CONTACT_WEBSITE_DOMAIN?.trim()) ||
-      "businesscrm.co.in",
+      "bsoft.ltd",
   };
 
   let res: Response;

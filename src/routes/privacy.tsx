@@ -6,16 +6,16 @@ import { LEGAL_LAST_UPDATED, PRIVACY_INTRO, PRIVACY_SECTIONS } from "@/lib/legal
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "Privacy Policy — Business CRM" },
+      { title: "Privacy Policy — B Soft" },
       {
         name: "description",
         content:
-          "How Business CRM collects, uses, and protects personal information for the platform and marketing site.",
+          "How B Soft collects, uses, and protects personal information for the platform and marketing site.",
       },
-      { property: "og:title", content: "Privacy Policy — Business CRM" },
+      { property: "og:title", content: "Privacy Policy — B Soft" },
       {
         property: "og:description",
-        content: "Privacy practices for Business CRM.",
+        content: "Privacy practices for B Soft.",
       },
       { property: "og:image", content: IMG.team },
     ],

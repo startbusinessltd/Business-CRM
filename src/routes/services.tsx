@@ -5,13 +5,13 @@ import { SERVICES } from "@/lib/site-content";
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — Business CRM" },
+      { title: "Services — B Soft" },
       {
         name: "description",
         content:
-          "Website builder, leads & CRM, call tracker, social hub, team permissions, and finance — the same services you get inside Business CRM.",
+          "Website builder, leads & CRM, call tracker, social hub, team permissions, and finance — the same services you get inside B Soft.",
       },
-      { property: "og:title", content: "Services — Business CRM" },
+      { property: "og:title", content: "Services — B Soft" },
       { property: "og:image", content: IMG.servicesHero },
     ],
   }),
@@ -23,7 +23,7 @@ function ServicesPage() {
     <>
       <PageHero
         eyebrow="Platform services"
-        title={<>Everything in Business CRM — on one plan.</>}
+        title={<>Everything in B Soft — on one plan.</>}
         lead="These are the same areas your team uses after sign-in: websites and forms, leads and automation, call tracking, social, team access, and billing. No bolt-on modules sold separately."
         primary={{ to: "/pricing", label: "See pricing", crm: "register" }}
         secondary={{ to: "/features", label: "Feature list" }}

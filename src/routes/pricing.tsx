@@ -6,13 +6,13 @@ import { PRICING_FEATURES } from "@/lib/site-content";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — Business CRM" },
+      { title: "Pricing — B Soft" },
       {
         name: "description",
         content:
           "Simple INR yearly pricing. Website, leads, calls, social, employees and finance included.",
       },
-      { property: "og:title", content: "Pricing — Business CRM" },
+      { property: "og:title", content: "Pricing — B Soft" },
       {
         property: "og:description",
         content: "₹10,000/year. Every core module included.",
@@ -281,7 +281,7 @@ function Pricing() {
               ],
               [
                 "Where is data stored?",
-                "Production APIs run on Business CRM infrastructure with encryption in transit; contact us for security and data questions.",
+                "Production APIs run on B Soft infrastructure with encryption in transit; contact us for security and data questions.",
               ],
             ].map(([q, a]) => (
               <div key={q} className="card-flat" style={{ padding: 24 }}>

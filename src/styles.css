@@ -4,7 +4,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Business CRM — Corporate Design System
+/* B Soft — Corporate Design System
    Strict rule: NO gradients anywhere. Solid colors only.
    Palette derived from SB logo: deep violet, gold accent (#FFCC00), cool neutrals. */
 
@@ -146,7 +146,7 @@
     box-sizing: border-box;
   }
 
-  /** Header / footer brand — flex children must shrink so “Business CRM” never overflows small viewports */
+  /** Header / footer brand — flex children must shrink so “B Soft” never overflows small viewports */
   .site-header-bar {
     min-width: 0;
     width: 100%;

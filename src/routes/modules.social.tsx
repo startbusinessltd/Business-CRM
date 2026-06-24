@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/social")({
   head: () => ({
     meta: [
-      { title: "Social Hub — Business CRM" },
+      { title: "Social Hub — B Soft" },
       {
         name: "description",
         content:
-          "Social Hub: connect accounts, posts, reels, ad campaigns, WhatsApp, and analytics in Business CRM.",
+          "Social Hub: connect accounts, posts, reels, ad campaigns, WhatsApp, and analytics in B Soft.",
       },
       { property: "og:title", content: "Social Hub" },
       { property: "og:image", content: IMG.socialmarketing },
