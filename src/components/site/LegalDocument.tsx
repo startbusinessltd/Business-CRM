@@ -33,8 +33,8 @@ export function LegalDocument({
               <img
                 src="/logo.png"
                 alt=""
-                width={44}
-                height={44}
+                width={56}
+                height={56}
                 className="site-brand-logo"
                 aria-hidden
               />

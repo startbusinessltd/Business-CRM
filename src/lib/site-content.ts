@@ -91,7 +91,7 @@ export const SERVICES = [
 export const CONTACT = {
   salesEmail: "support@bsoft.ltd",
   supportEmail: "support@bsoft.ltd",
-  website: "bsoft.ltd",
+  website: "Bsoft.ltd",
   websiteUrl: "https://bsoft.ltd",
   office: [
     "Royal Space, No. 154, 5th Main, 7th Sector, Rajiv Gandhi Nagar",

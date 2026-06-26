@@ -40,8 +40,8 @@ export function SiteFooter() {
               <img
                 src="/logo.png"
                 alt="B Soft"
-                width={48}
-                height={48}
+                width={64}
+                height={64}
                 className="site-brand-logo"
               />
               <BrandTitle className="site-brand-title--footer" />
