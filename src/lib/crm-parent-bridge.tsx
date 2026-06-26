@@ -5,7 +5,7 @@ export const CRM_PARENT_ORIGIN_EVENT = "crm-parent-origin-updated";
 export const CRM_API_BASE_EVENT = "crm-api-base-updated";
 
 /** Angular CRM shell in production (register/login iframe target). */
-export const CRM_APP_ORIGIN_PRODUCTION = "https://www.startbusiness.ltd";
+export const CRM_APP_ORIGIN_PRODUCTION = "https://app.bsoft.ltd";
 
 declare global {
   interface Window {
