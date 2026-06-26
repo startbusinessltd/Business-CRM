@@ -1,6 +1,6 @@
 import { IMG } from "@/components/site/PageBlocks";
 
-/** Product areas aligned with the Business CRM app (menu-data + app documentation). */
+/** Product areas aligned with the B Soft app (menu-data + app documentation). */
 export const SERVICES = [
   {
     to: "/modules/website",
@@ -89,10 +89,10 @@ export const SERVICES = [
 ] as const;
 
 export const CONTACT = {
-  salesEmail: "support@businesscrm.co.in",
-  supportEmail: "support@businesscrm.co.in",
-  website: "Businesscrm.co.in",
-  websiteUrl: "https://businesscrm.co.in",
+  salesEmail: "support@bsoft.ltd",
+  supportEmail: "support@bsoft.ltd",
+  website: "Bsoft.ltd",
+  websiteUrl: "https://bsoft.ltd",
   office: [
     "Royal Space, No. 154, 5th Main, 7th Sector, Rajiv Gandhi Nagar",
     "HSR Layout, Bengaluru – 560102",

@@ -101,7 +101,7 @@ export async function submitContactLead(
       payload.domain?.trim() ||
       (typeof import.meta !== "undefined" &&
         (import.meta as { env?: { VITE_CONTACT_WEBSITE_DOMAIN?: string } }).env?.VITE_CONTACT_WEBSITE_DOMAIN?.trim()) ||
-      "businesscrm.co.in",
+      "bsoft.ltd",
   };
 
   let res: Response;

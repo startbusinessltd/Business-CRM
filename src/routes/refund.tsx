@@ -6,13 +6,13 @@ import { LEGAL_LAST_UPDATED, REFUND_INTRO, REFUND_SECTIONS } from "@/lib/legal-c
 export const Route = createFileRoute("/refund")({
   head: () => ({
     meta: [
-      { title: "Refund Policy — Business CRM" },
+      { title: "Refund Policy — B Soft" },
       {
         name: "description",
-        content: "Refund eligibility, process, non-refundable items, and how to contact Business CRM support.",
+        content: "Refund eligibility, process, non-refundable items, and how to contact B Soft support.",
       },
-      { property: "og:title", content: "Refund Policy — Business CRM" },
-      { property: "og:description", content: "Refund and billing policy for Business CRM." },
+      { property: "og:title", content: "Refund Policy — B Soft" },
+      { property: "og:description", content: "Refund and billing policy for B Soft." },
       { property: "og:image", content: IMG.team },
     ],
   }),

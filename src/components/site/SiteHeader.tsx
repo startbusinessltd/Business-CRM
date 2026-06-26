@@ -80,7 +80,7 @@ export function SiteHeader() {
         <Link to="/" className="site-brand-lockup">
           <img
             src="/logo.png"
-            alt="Business CRM"
+            alt="B Soft"
             width={56}
             height={56}
             className="site-brand-logo"

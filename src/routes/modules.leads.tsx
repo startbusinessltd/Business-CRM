@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/leads")({
   head: () => ({
     meta: [
-      { title: "Leads & CRM — Business CRM" },
+      { title: "Leads & CRM — B Soft" },
       {
         name: "description",
         content:
-          "Pipelines, forms, lead management, tasks, automation (email, WhatsApp, SMS), and website leads in Business CRM.",
+          "Pipelines, forms, lead management, tasks, automation (email, WhatsApp, SMS), and website leads in B Soft.",
       },
       { property: "og:title", content: "Leads & CRM" },
       { property: "og:image", content: IMG.leads },

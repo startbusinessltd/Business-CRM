@@ -21,6 +21,20 @@ export default defineConfig({
     server: {
       port: 5180,
       strictPort: true,
+      warmup: {
+        ssrFiles: [
+          "./src/components/site/BrandTitle.tsx",
+          "./src/components/site/SiteHeader.tsx",
+          "./src/components/site/SiteFooter.tsx",
+        ],
+      },
+      watch: {
+        // Debounce rapid saves (BrandTitle + styles.css) so SSR module fetch does not time out.
+        awaitWriteFinish: {
+          stabilityThreshold: 1000,
+          pollInterval: 100,
+        },
+      },
       proxy: {
         "/api": {
           target: apiProxyTarget,

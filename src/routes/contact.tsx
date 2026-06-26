@@ -11,12 +11,12 @@ import {
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Business CRM" },
+      { title: "Contact — B Soft" },
       {
         name: "description",
         content: "Talk to sales, book a demo or reach support. We answer in hours, not days.",
       },
-      { property: "og:title", content: "Contact Business CRM" },
+      { property: "og:title", content: "Contact B Soft" },
       { property: "og:description", content: "Reach our sales, support or partnerships team." },
       { property: "og:image", content: IMG.contact },
     ],
@@ -216,7 +216,7 @@ function Contact() {
                 body="See Website, Leads, Call Tracker, Social Hub, Team, and Finance in a live walkthrough."
                 lines={[
                   <span key="brand" style={{ fontWeight: 600, color: "var(--ink)" }}>
-                    Business CRM
+                    B Soft
                   </span>,
                   <a
                     key="mail"
@@ -242,7 +242,7 @@ function Contact() {
                 body="Logged-in customers — use in-app help, learning videos, and the built-in AI assistant."
                 lines={[
                   <span key="brand2" style={{ fontWeight: 600, color: "var(--ink)" }}>
-                    Business CRM
+                    B Soft
                   </span>,
                   <a
                     key="mail2"
@@ -265,7 +265,7 @@ function Contact() {
               />
               <InfoCard
                 title="Office"
-                body="Business CRM · Bengaluru"
+                body="B Soft · Bengaluru"
                 lines={CONTACT.office.split("\n")}
               />
               <img

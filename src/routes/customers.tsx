@@ -4,9 +4,9 @@ import { CtaBand, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks"
 export const Route = createFileRoute("/customers")({
   head: () => ({
     meta: [
-      { title: "Customers — Business CRM" },
-      { name: "description", content: "How modern teams use Business CRM to replace four tools, save hours per week and grow revenue." },
-      { property: "og:title", content: "Customers — Business CRM" },
+      { title: "Customers — B Soft" },
+      { name: "description", content: "How modern teams use B Soft to replace four tools, save hours per week and grow revenue." },
+      { property: "og:title", content: "Customers — B Soft" },
       { property: "og:description", content: "Real businesses, real numbers, one platform." },
       { property: "og:image", content: IMG.team },
     ],
@@ -20,7 +20,7 @@ const stories = [
     who: "Neha Singh",
     role: "Client",
     quote:
-      "Business CRM gave me everything I needed — website, CRM, and full setup. I started my business in just 48 hours. Amazing support!",
+      "B Soft gave me everything I needed — website, CRM, and full setup. I started my business in just 48 hours. Amazing support!",
     stat: "48 hrs · business live",
   },
   {
@@ -28,7 +28,7 @@ const stories = [
     who: "Ravi Kumar V",
     role: "Business Man",
     quote:
-      "Business CRM made my dream of becoming an entrepreneur easy. From website to CRM and training — everything was provided. I started earning in my first month.",
+      "B Soft made my dream of becoming an entrepreneur easy. From website to CRM and training — everything was provided. I started earning in my first month.",
     stat: "1st month · earning",
   },
   {
@@ -36,7 +36,7 @@ const stories = [
     who: "Prakash Rao",
     role: "Entrepreneur",
     quote:
-      "With Business CRM, I didn't need any technical knowledge. They built my website, CRM, and guided me step by step. Today I run my own service business confidently.",
+      "With B Soft, I didn't need any technical knowledge. They built my website, CRM, and guided me step by step. Today I run my own service business confidently.",
     stat: "Guided setup · no code",
   },
 ];
@@ -47,7 +47,7 @@ function Customers() {
       <PageHero
         eyebrow="Customer stories"
         title={<>Built for operators. Loved by their teams.</>}
-        lead="From boutique agencies and clinics to multi-branch retailers and BPOs, businesses use Business CRM to consolidate four tools into one — and to run their day from a single screen."
+        lead="From boutique agencies and clinics to multi-branch retailers and BPOs, businesses use B Soft to consolidate four tools into one — and to run their day from a single screen."
         primary={{ to: "/pricing", label: "Get started" }}
         secondary={{ to: "/contact", label: "Become a case study" }}
         image={IMG.team}

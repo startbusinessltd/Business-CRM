@@ -4,7 +4,7 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/calls")({
   head: () => ({
     meta: [
-      { title: "Call Tracker — Business CRM" },
+      { title: "Call Tracker — B Soft" },
       {
         name: "description",
         content:
@@ -23,7 +23,7 @@ function CallsModule() {
       <PageHero
         eyebrow="Call Tracker"
         title={<>Mobile call sync for sales teams.</>}
-        lead="The Call Tracker area in Business CRM (backed by the native call-tracker plugin) syncs device calls into dashboards, history, hourly and day-wise reports, employee breakdowns, and sync logs — with leads linked to activity."
+        lead="The Call Tracker area in B Soft (backed by the native call-tracker plugin) syncs device calls into dashboards, history, hourly and day-wise reports, employee breakdowns, and sync logs — with leads linked to activity."
         primary={{ to: "/pricing", label: "Get started", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.callcenter}

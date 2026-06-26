@@ -146,7 +146,7 @@
     box-sizing: border-box;
   }
 
-  /** Header / footer brand — flex children must shrink so “Business CRM” never overflows small viewports */
+  /** Header / footer brand — flex children must shrink so the wordmark never overflows small viewports */
   .site-header-bar {
     min-width: 0;
     width: 100%;
@@ -277,28 +277,37 @@
   }
 
   .site-brand-title {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.04em;
-    line-height: 0.9;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.06em;
+    line-height: 1;
     font-family: var(--brand);
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: 0.01em;
+    white-space: nowrap;
   }
+  .site-brand-title__b,
+  .site-brand-title__soft,
   .site-brand-title__line {
-    display: block;
+    display: inline;
   }
+  .site-brand-title__b,
   .site-brand-title__business {
     color: #0a0a0a;
+    font-weight: 700;
   }
+  .site-brand-title__soft,
   .site-brand-title__crm {
     color: var(--brand-crm);
-    letter-spacing: 0.05em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
+  .surface-ink .site-brand-title__b,
   .surface-ink .site-brand-title__business {
     color: var(--ivory);
   }
+  .surface-ink .site-brand-title__soft,
   .surface-ink .site-brand-title__crm {
     color: var(--brand-crm);
   }
@@ -560,6 +569,7 @@
     gap: 16px;
     min-width: 0;
   }
+  .legal-doc__brand:hover .site-brand-title__b,
   .legal-doc__brand:hover .site-brand-title__business {
     color: var(--purple);
   }

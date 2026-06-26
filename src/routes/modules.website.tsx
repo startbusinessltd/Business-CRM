@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/website")({
   head: () => ({
     meta: [
-      { title: "Website & Web Builder — Business CRM" },
+      { title: "Website & Web Builder — B Soft" },
       {
         name: "description",
         content:
-          "Website type, templates, settings, form builder, SEO & GEO, website admin, and AI chat — in Business CRM.",
+          "Website type, templates, settings, form builder, SEO & GEO, website admin, and AI chat — in B Soft.",
       },
       { property: "og:title", content: "Website & Web Builder" },
       { property: "og:image", content: IMG.website },
@@ -54,7 +54,7 @@ function WebsiteModule() {
       <FeatureRow
         eyebrow="Forms & SEO"
         title="Form builder and SEO & GEO."
-        body="Build lead-capture forms with the drag-and-drop form builder, then tune discoverability from SEO & GEO — without leaving Business CRM."
+        body="Build lead-capture forms with the drag-and-drop form builder, then tune discoverability from SEO & GEO — without leaving B Soft."
         image={IMG.analytics}
         reverse
         bullets={[
