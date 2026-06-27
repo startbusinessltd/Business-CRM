@@ -5,13 +5,13 @@ import { PLATFORM_STATS, SERVICES } from "@/lib/site-content";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "B Soft — One Platform to Run Your Entire Business" },
+      { title: "B-SOFT — One Platform to Run Your Entire Business" },
       {
         name: "description",
         content:
-          "B Soft: websites, leads, call tracker, social hub, team permissions, and finance — one CRM for Indian SMBs.",
+          "B-SOFT: websites, leads, call tracker, social hub, team permissions, and finance — one CRM for Indian SMBs.",
       },
-      { property: "og:title", content: "B Soft — Run Your Business Smarter" },
+      { property: "og:title", content: "B-SOFT — Run Your Business Smarter" },
       {
         property: "og:description",
         content: "Six core services. In-app AI assistant. One professional workspace.",
@@ -26,10 +26,10 @@ function Home() {
   return (
     <>
       <PageHero
-        eyebrow="B Soft platform"
-        title={<>B Soft is an all-in-one digital platform</>}
-        lead="B Soft is a complete digital platform designed to help anyone launch and grow their business effortlessly. We provide websites, CRM, branding, automation, and full support — everything you need to build a successful digital business."
-        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
+        eyebrow="B-SOFT platform"
+        title={<>B-SOFT is an all-in-one digital platform</>}
+        lead="B-SOFT is a complete digital platform designed to help anyone launch and grow their business effortlessly. We provide websites, CRM, branding, automation, and full support — everything you need to build a successful digital business."
+        primary={{ to: "/pricing", label: "Register now", crm: "register" }}
         secondary={{ to: "/services", label: "Explore services" }}
         video={IMG.heroVideo}
         poster={IMG.hero}
@@ -43,7 +43,7 @@ function Home() {
           <div style={{ maxWidth: 720 }}>
             <span className="eyebrow">Our services</span>
             <h2 className="h-section" style={{ marginTop: 16 }}>
-              Six services. One B Soft login.
+              Six services. One B-SOFT login.
             </h2>
             <p style={{ marginTop: 14, fontSize: 17 }}>
               Each area matches a section in the app — templates and forms, leads and automation,
@@ -108,7 +108,7 @@ function Home() {
       <FeatureRow
         eyebrow="AI assistant"
         title="Guidance inside the app."
-        body="The in-product AI assistant helps you use pipelines, forms, social hub, and dashboards — with answers grounded in how B Soft actually works."
+        body="The in-product AI assistant helps you use pipelines, forms, social hub, and dashboards — with answers grounded in how B-SOFT actually works."
         image={IMG.dashboard}
         bullets={[
           "Chatbot help on any screen you are using",
@@ -136,7 +136,7 @@ function Home() {
         <div className="container-x" style={{ textAlign: "center" }}>
           <span className="eyebrow">Why teams switch</span>
           <h2 className="h-section" style={{ marginTop: 16, maxWidth: 820, marginInline: "auto" }}>
-            “B Soft replaced four tools for us. Our sales team finally lives in one place.”
+            “B-SOFT replaced four tools for us. Our sales team finally lives in one place.”
           </h2>
         </div>
       </section>

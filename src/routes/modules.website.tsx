@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/website")({
   head: () => ({
     meta: [
-      { title: "Website & Web Builder — B Soft" },
+      { title: "Website & Web Builder — B-SOFT" },
       {
         name: "description",
         content:
-          "Website type, templates, settings, form builder, SEO & GEO, website admin, and AI chat — in B Soft.",
+          "Website type, templates, settings, form builder, SEO & GEO, website admin, and AI chat — in B-SOFT.",
       },
       { property: "og:title", content: "Website & Web Builder" },
       { property: "og:image", content: IMG.website },
@@ -24,7 +24,7 @@ function WebsiteModule() {
         eyebrow="Website & web builder"
         title={<>Templates, forms, and SEO — tied to your CRM.</>}
         lead="Pick a website type and template classification, configure site settings, publish forms, and optimise SEO & GEO. Website admin controls who can edit and publish — the same flows as /website-type, /templates, and /form-builder in the app."
-        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
+        primary={{ to: "/pricing", label: "Register now", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.website}
       />
@@ -54,7 +54,7 @@ function WebsiteModule() {
       <FeatureRow
         eyebrow="Forms & SEO"
         title="Form builder and SEO & GEO."
-        body="Build lead-capture forms with the drag-and-drop form builder, then tune discoverability from SEO & GEO — without leaving B Soft."
+        body="Build lead-capture forms with the drag-and-drop form builder, then tune discoverability from SEO & GEO — without leaving B-SOFT."
         image={IMG.analytics}
         reverse
         bullets={[

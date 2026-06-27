@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/finance")({
   head: () => ({
     meta: [
-      { title: "Finance & Billing — B Soft" },
+      { title: "Finance & Billing — B-SOFT" },
       {
         name: "description",
         content:
-          "Packages, coupons, payments, incentive wallet, invoices, and payment gateway — Finance in B Soft.",
+          "Packages, coupons, payments, incentive wallet, invoices, and payment gateway — Finance in B-SOFT.",
       },
       { property: "og:title", content: "Finance & Billing" },
       { property: "og:image", content: IMG.finance },
@@ -24,7 +24,7 @@ function FinanceModule() {
         eyebrow="Finance & billing"
         title={<>Plans, payments, and invoices together.</>}
         lead="Finance in the app includes package type, package & pricing, coupons, payment transactions, incentive wallet, invoice management, and payment gateway configuration — with Razorpay-ready checkout flows."
-        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
+        primary={{ to: "/pricing", label: "Register now", crm: "register" }}
         secondary={{ to: "/contact", label: "Talk to sales" }}
         image={IMG.finance}
       />

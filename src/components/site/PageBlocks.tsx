@@ -163,13 +163,13 @@ export function CtaBand() {
           </h2>
           <p style={{ marginTop: 12, color: "var(--on-dark-muted)", maxWidth: 560 }}>
             Website, leads, calls, social, team access, and finance — the same services inside
-            B Soft, with in-app AI when you need guidance.
+            B-SOFT, with in-app AI when you need guidance.
           </p>
         </div>
         <div className="cta-band-actions">
           <CtaLink
             to="/pricing"
-            label="Get started"
+            label="Register now"
             className="btn btn-brass"
             crm="register"
           />

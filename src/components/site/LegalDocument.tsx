@@ -29,7 +29,7 @@ export function LegalDocument({
       <div className="container-x legal-doc">
         <div className="legal-doc__masthead">
           <div className="legal-doc__masthead-top">
-            <Link to="/" className="legal-doc__brand site-brand-lockup" aria-label="B Soft home">
+            <Link to="/" className="legal-doc__brand site-brand-lockup" aria-label="B-SOFT home">
               <img
                 src="/logo.png"
                 alt=""

@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/employees")({
   head: () => ({
     meta: [
-      { title: "Team & Permissions — B Soft" },
+      { title: "Team & Permissions — B-SOFT" },
       {
         name: "description",
         content:
-          "Roles & permissions and employee management — Team & Permissions in B Soft.",
+          "Roles & permissions and employee management — Team & Permissions in B-SOFT.",
       },
       { property: "og:title", content: "Team & Permissions" },
       { property: "og:image", content: IMG.employees },
@@ -23,8 +23,8 @@ function EmployeesModule() {
       <PageHero
         eyebrow="Team & permissions"
         title={<>Control who sees what in the product.</>}
-        lead="Team & Permissions covers access profiles (roles & permissions) and My Team (employee management) — aligned with /access-profile and /employee-management in the B Soft application."
-        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
+        lead="Team & Permissions covers access profiles (roles & permissions) and My Team (employee management) — aligned with /access-profile and /employee-management in the B-SOFT application."
+        primary={{ to: "/pricing", label: "Register now", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.employees}
       />

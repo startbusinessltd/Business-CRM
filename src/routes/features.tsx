@@ -5,13 +5,13 @@ import { SERVICES } from "@/lib/site-content";
 export const Route = createFileRoute("/features")({
   head: () => ({
     meta: [
-      { title: "Platform Features — B Soft" },
+      { title: "Platform Features — B-SOFT" },
       {
         name: "description",
         content:
-          "Feature list across B Soft services — websites, leads, call tracker, social hub, team, and finance.",
+          "Feature list across B-SOFT services — websites, leads, call tracker, social hub, team, and finance.",
       },
-      { property: "og:title", content: "Features — B Soft" },
+      { property: "og:title", content: "Features — B-SOFT" },
       { property: "og:description", content: "Every capability in the product, one platform." },
       { property: "og:image", content: IMG.featuresHero },
     ],
@@ -28,7 +28,7 @@ function Features() {
           <>
             What you get in{" "}
             <em style={{ fontStyle: "italic", color: "var(--purple-mid)", fontWeight: 500 }}>
-              B Soft
+              B-SOFT
             </em>
             .
           </>

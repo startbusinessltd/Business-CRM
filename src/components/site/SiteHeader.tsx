@@ -80,7 +80,7 @@ export function SiteHeader() {
         <Link to="/" className="site-brand-lockup">
           <img
             src="/logo.png"
-            alt="B Soft"
+            alt="B-SOFT"
             width={56}
             height={56}
             className="site-brand-logo"
@@ -100,7 +100,7 @@ export function SiteHeader() {
           <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
           <CtaLink
             to="/pricing"
-            label="Get started"
+            label="Register now"
             className="btn btn-primary"
             crm="register"
           />
@@ -136,7 +136,7 @@ export function SiteHeader() {
           </div>
           <div className="site-mobile-ctas">
             <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-            <CtaLink to="/pricing" label="Get started" className="btn btn-primary" crm="register" />
+            <CtaLink to="/pricing" label="Register now" className="btn btn-primary" crm="register" />
           </div>
         </div>
       )}

@@ -4,11 +4,11 @@ import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site
 export const Route = createFileRoute("/modules/social")({
   head: () => ({
     meta: [
-      { title: "Social Hub — B Soft" },
+      { title: "Social Hub — B-SOFT" },
       {
         name: "description",
         content:
-          "Social Hub: connect accounts, posts, reels, ad campaigns, WhatsApp, and analytics in B Soft.",
+          "Social Hub: connect accounts, posts, reels, ad campaigns, WhatsApp, and analytics in B-SOFT.",
       },
       { property: "og:title", content: "Social Hub" },
       { property: "og:image", content: IMG.socialmarketing },
@@ -24,7 +24,7 @@ function SocialModule() {
         eyebrow="Social Hub"
         title={<>Publish, message, and measure — in one hub.</>}
         lead="Connect social accounts, manage posts and reels, run Meta ad campaigns, reply on WhatsApp, and read analytics — the same Social Hub menus you see at /social-hub in the app."
-        primary={{ to: "/pricing", label: "Get started", crm: "register" }}
+        primary={{ to: "/pricing", label: "Register now", crm: "register" }}
         secondary={{ to: "/services", label: "All services" }}
         image={IMG.socialmarketing}
       />

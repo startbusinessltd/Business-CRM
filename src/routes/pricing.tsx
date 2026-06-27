@@ -6,13 +6,13 @@ import { PRICING_FEATURES } from "@/lib/site-content";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — B Soft" },
+      { title: "Pricing — B-SOFT" },
       {
         name: "description",
         content:
           "Simple INR yearly pricing. Website, leads, calls, social, employees and finance included.",
       },
-      { property: "og:title", content: "Pricing — B Soft" },
+      { property: "og:title", content: "Pricing — B-SOFT" },
       {
         property: "og:description",
         content: "₹10,000/year. Every core module included.",
@@ -221,7 +221,7 @@ function Pricing() {
               period="/ year"
               priceWas="Was ₹30,000 / year"
               saveNote="Save ₹20,000"
-              cta="Get started"
+              cta="Register now"
               ctaHref={signupHref}
               featured
               badge="BEST VALUE"
@@ -264,8 +264,8 @@ function Pricing() {
                 "Website & web builder, leads & CRM, call tracker, social hub, team & permissions, and finance & billing — the full platform in one yearly plan.",
               ],
               [
-                "How do I get started?",
-                "Click Get started or Buy now to create your account. Our team will help you pick templates and configure your workspace.",
+                "How do I Register now?",
+                "Click Register now or Buy now to create your account. Our team will help you pick templates and configure your workspace.",
               ],
               [
                 "Can I renew or upgrade later?",
@@ -281,7 +281,7 @@ function Pricing() {
               ],
               [
                 "Where is data stored?",
-                "Production APIs run on B Soft infrastructure with encryption in transit; contact us for security and data questions.",
+                "Production APIs run on B-SOFT infrastructure with encryption in transit; contact us for security and data questions.",
               ],
             ].map(([q, a]) => (
               <div key={q} className="card-flat" style={{ padding: 24 }}>

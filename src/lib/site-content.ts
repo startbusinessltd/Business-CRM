@@ -1,6 +1,6 @@
 import { IMG } from "@/components/site/PageBlocks";
 
-/** Product areas aligned with the B Soft app (menu-data + app documentation). */
+/** Product areas aligned with the B-SOFT app (menu-data + app documentation). */
 export const SERVICES = [
   {
     to: "/modules/website",

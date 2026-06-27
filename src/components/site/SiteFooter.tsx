@@ -39,7 +39,7 @@ export function SiteFooter() {
             <div className="site-footer-brand">
               <img
                 src="/logo.png"
-                alt="B Soft"
+                alt="B-SOFT"
                 width={64}
                 height={64}
                 className="site-brand-logo"
@@ -47,13 +47,13 @@ export function SiteFooter() {
               <BrandTitle className="site-brand-title--footer" />
             </div>
             <p style={{ marginTop: 14, maxWidth: 320 }}>
-              B Soft helps Indian SMBs run websites, leads, calls, social, team access, and
+              B-SOFT helps Indian SMBs run websites, leads, calls, social, team access, and
               billing from one CRM — with a built-in AI assistant.
             </p>
             <div className="footer-cta-row" style={{ marginTop: 18 }}>
               <CtaLink
                 to="/pricing"
-                label="Get started"
+                label="Register now"
                 className="btn btn-brass"
                 crm="register"
               />
@@ -105,7 +105,7 @@ export function SiteFooter() {
             color: "var(--on-dark-muted)",
           }}
         >
-          <span>© {new Date().getFullYear()} B Soft — All rights reserved.</span>
+          <span>© {new Date().getFullYear()} B-SOFT — All rights reserved.</span>
           <span>Made for operators who want one platform, not ten.</span>
         </div>
       </div>

@@ -64,14 +64,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#3500a8" },
-      { title: "B Soft — Run Your Entire Business Smarter" },
+      { title: "B-SOFT — Run Your Entire Business Smarter" },
       {
         name: "description",
         content:
-          "B Soft: website builder, leads, call tracker, social hub, team permissions, and finance — one platform for Indian SMBs.",
+          "B-SOFT: website builder, leads, call tracker, social hub, team permissions, and finance — one platform for Indian SMBs.",
       },
-      { name: "author", content: "B Soft" },
-      { property: "og:title", content: "B Soft — One Platform to Run Your Business" },
+      { name: "author", content: "B-SOFT" },
+      { property: "og:title", content: "B-SOFT — One Platform to Run Your Business" },
       {
         property: "og:description",
         content:

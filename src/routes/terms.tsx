@@ -6,15 +6,15 @@ import { LEGAL_LAST_UPDATED, TERMS_INTRO, TERMS_SECTIONS } from "@/lib/legal-con
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "Terms of Service — B Soft" },
+      { title: "Terms of Service — B-SOFT" },
       {
         name: "description",
-        content: "Terms governing use of the B Soft platform and related services.",
+        content: "Terms governing use of the B-SOFT platform and related services.",
       },
-      { property: "og:title", content: "Terms of Service — B Soft" },
+      { property: "og:title", content: "Terms of Service — B-SOFT" },
       {
         property: "og:description",
-        content: "Terms of Service for B Soft.",
+        content: "Terms of Service for B-SOFT.",
       },
       { property: "og:image", content: IMG.team },
     ],

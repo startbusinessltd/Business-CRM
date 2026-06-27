@@ -5,7 +5,7 @@ import { CONTACT } from "@/lib/site-content";
 export const LEGAL_LAST_UPDATED = "28 May 2026";
 
 export const PRIVACY_INTRO =
-  "This Privacy Policy describes how B Soft (“we”, “us”, or “our”) collects, uses, shares, and protects information when you use our website, mobile app, and related services.";
+  "This Privacy Policy describes how B-SOFT (“we”, “us”, or “our”) collects, uses, shares, and protects information when you use our website, mobile app, and related services.";
 
 export const PRIVACY_SECTIONS: LegalSection[] = [
   {
@@ -75,7 +75,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
 ];
 
 export const TERMS_INTRO =
-  "These Terms of Service apply to your access and use of this website and the B Soft service. Please read them carefully before you continue.";
+  "These Terms of Service apply to your access and use of this website and the B-SOFT service. Please read them carefully before you continue.";
 
 export const TERMS_SECTIONS: LegalSection[] = [
   {
@@ -99,7 +99,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
   {
     heading: "Limitations",
     paragraphs: [
-      "In no event shall B Soft or its suppliers be liable for any damages including, without limitation, damages for loss of data or profit, or due to business interruption arising out of the use or inability to use the materials on our website, even if we or our authorized representative has been notified orally or in writing of the possibility of such damage.",
+      "In no event shall B-SOFT or its suppliers be liable for any damages including, without limitation, damages for loss of data or profit, or due to business interruption arising out of the use or inability to use the materials on our website, even if we or our authorized representative has been notified orally or in writing of the possibility of such damage.",
     ],
   },
   {
