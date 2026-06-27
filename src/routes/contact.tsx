@@ -104,6 +104,7 @@ function Contact() {
         title={<>Talk to a human. Today.</>}
         lead={`Book a demo, ask about partner / white-label access, or get help with your account. ${CONTACT.replyTime}`}
         image={IMG.contact}
+        mediaStyle={{ aspectRatio: "16/10", maxHeight: 460 }}
       />
 
       <section className="section-tight" style={{ paddingBlockStart: 24 }}>

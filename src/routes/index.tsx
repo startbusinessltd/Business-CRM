@@ -33,6 +33,7 @@ function Home() {
         secondary={{ to: "/services", label: "Explore services" }}
         video={IMG.heroVideo}
         poster={IMG.hero}
+        mediaStyle={{ aspectRatio: "16/10", maxHeight: 460 }}
       />
 
       <StatStrip items={[...PLATFORM_STATS.home]} />
