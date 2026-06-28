@@ -43,8 +43,17 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/prerendered/ "s3://${{ secrets.UI_BUCKET }}/businesscrm/" --delete
-          echo "Deployed to s3://${{ secrets.UI_BUCKET }}/businesscrm/"
+          aws s3 sync dist/prerendered/ "s3://${{ secrets.UI_BUCKET }}/" --delete \
+            --exclude "backup/*" \
+            --exclude "businesscrm/*" \
+            --exclude "ecommerce/*" \
+            --exclude "insurance/*" \
+            --exclude "main/*" \
+            --exclude "modeling/*" \
+            --exclude "salon-gold/*" \
+            --exclude "salon/*" \
+            --exclude "startup/*"
+          echo "Deployed to s3://${{ secrets.UI_BUCKET }}/ (root)"
 
       - name: Invalidate CloudFront cache
         run: |
