@@ -10,12 +10,29 @@ on:
         options:
           - prod
 
+# Only one deploy at a time per environment — prevents half-finished / racing deploys.
+concurrency:
+  group: deploy-marketing-${{ inputs.environment }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+      SITE_URL: https://bsoft.ltd
+      # Other apps share this bucket at their own prefixes — never touch them.
+      KEEP_EXCLUDES: >-
+        --exclude backup/*
+        --exclude businesscrm/*
+        --exclude ecommerce/*
+        --exclude insurance/*
+        --exclude main/*
+        --exclude modeling/*
+        --exclude salon-gold/*
+        --exclude salon/*
+        --exclude startup/*
     steps:
       - uses: actions/checkout@v4
 
@@ -28,11 +45,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Build first. If this fails the job stops here and S3 is never touched —
+      # the live site keeps serving the previous version (zero downtime).
       - name: Build
         run: npm run build
 
       - name: Prerender static HTML
         run: node prerender.mjs
+
+      # Guard against a "successful but empty/partial" build wiping the live site.
+      - name: Verify build output
+        run: |
+          test -f dist/prerendered/index.html || { echo "::error::index.html missing from build"; exit 1; }
+          SIZE=$(stat -c%s dist/prerendered/index.html)
+          test "$SIZE" -gt 500 || { echo "::error::index.html only ${SIZE} bytes — refusing to deploy"; exit 1; }
+          COUNT=$(find dist/prerendered -type f | wc -l)
+          test "$COUNT" -gt 5 || { echo "::error::only ${COUNT} files built — refusing to deploy"; exit 1; }
+          echo "Build OK: ${COUNT} files, index.html ${SIZE} bytes"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -41,24 +70,71 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Deploy to S3
+      # Snapshot the current live site so we can restore it if the new deploy is bad.
+      - name: Backup current live site
+        id: backup
         run: |
-          aws s3 sync dist/prerendered/ "s3://${{ secrets.UI_BUCKET }}/" --delete \
-            --exclude "backup/*" \
-            --exclude "businesscrm/*" \
-            --exclude "ecommerce/*" \
-            --exclude "insurance/*" \
-            --exclude "main/*" \
-            --exclude "modeling/*" \
-            --exclude "salon-gold/*" \
-            --exclude "salon/*" \
-            --exclude "startup/*"
+          TS=$(date +%Y%m%d-%H%M%S)
+          echo "ts=$TS" >> "$GITHUB_OUTPUT"
+          BK="s3://${{ secrets.UI_BUCKET }}/backup/marketing/$TS"
+          aws s3 sync "s3://${{ secrets.UI_BUCKET }}/" "$BK/" ${{ env.KEEP_EXCLUDES }}
+          echo "Backed up live site -> $BK"
+
+      - name: Deploy to S3 root
+        run: |
+          aws s3 sync dist/prerendered/ "s3://${{ secrets.UI_BUCKET }}/" --delete ${{ env.KEEP_EXCLUDES }}
           echo "Deployed to s3://${{ secrets.UI_BUCKET }}/ (root)"
 
-      - name: Invalidate CloudFront cache
+      - name: Invalidate CloudFront
         run: |
-          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+          ID=$(aws cloudfront create-invalidation \
             --distribution-id "${{ secrets.CF_DIST_ID }}" \
-            --paths "/*" \
-            --query "Invalidation.Id" --output text)
-          echo "CloudFront invalidation: $INVALIDATION_ID"
+            --paths "/*" --query "Invalidation.Id" --output text)
+          echo "CloudFront invalidation: $ID"
+
+      # Confirm the live site actually serves a real page after the deploy.
+      - name: Smoke test live site
+        run: |
+          for i in $(seq 1 10); do
+            sleep 15
+            CODE=$(curl -s -o /tmp/body.html -w "%{http_code}" "$SITE_URL/" || echo "000")
+            echo "Attempt $i: HTTP $CODE"
+            if [ "$CODE" = "200" ] && grep -qi "<html" /tmp/body.html; then
+              echo "Smoke test passed"; exit 0
+            fi
+          done
+          echo "::error::Smoke test failed — site not returning 200/HTML"; exit 1
+
+      # If anything above (deploy / invalidate / smoke test) failed AFTER the backup
+      # was taken, restore the previous stable version automatically.
+      - name: Rollback on failure
+        if: failure() && steps.backup.outputs.ts != ''
+        run: |
+          echo "::warning::Deploy failed — rolling back to ${{ steps.backup.outputs.ts }}"
+          BK="s3://${{ secrets.UI_BUCKET }}/backup/marketing/${{ steps.backup.outputs.ts }}"
+          aws s3 sync "$BK/" "s3://${{ secrets.UI_BUCKET }}/" --delete ${{ env.KEEP_EXCLUDES }}
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.CF_DIST_ID }}" --paths "/*" \
+            --query "Invalidation.Id" --output text
+          echo "Rolled back to previous stable version"
+
+      # Keep only the 5 most recent backups.
+      - name: Prune old backups
+        if: always()
+        run: |
+          OLD=$(aws s3 ls "s3://${{ secrets.UI_BUCKET }}/backup/marketing/" | awk '{print $2}' | sort -r | tail -n +6)
+          for p in $OLD; do
+            echo "Pruning old backup: $p"
+            aws s3 rm "s3://${{ secrets.UI_BUCKET }}/backup/marketing/$p" --recursive >/dev/null
+          done
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "## Marketing site deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Key | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-----|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Environment | ${{ inputs.environment }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Site | ${{ env.SITE_URL }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Backup | backup/marketing/${{ steps.backup.outputs.ts }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | ${{ github.sha }} |" >> "$GITHUB_STEP_SUMMARY"
