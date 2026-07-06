@@ -98,6 +98,7 @@ export function SiteHeader() {
 
         <div className="site-header-desktop-ctas" style={{ display: "flex", gap: 10, flexShrink: 0 }}>
           <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
+          <CtaLink to="/pricing" label="Become Partner" className="btn btn-ghost" crm="partner" />
           <CtaLink
             to="/pricing"
             label="Register now"
@@ -136,6 +137,7 @@ export function SiteHeader() {
           </div>
           <div className="site-mobile-ctas">
             <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
+            <CtaLink to="/pricing" label="Become Partner" className="btn btn-ghost" crm="partner" />
             <CtaLink to="/pricing" label="Register now" className="btn btn-primary" crm="register" />
           </div>
         </div>

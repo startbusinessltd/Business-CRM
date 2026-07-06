@@ -101,11 +101,12 @@ export function useCrmAppBase(): string {
   return resolveCrmShellOrigin();
 }
 
-type CrmKind = "register" | "login";
+type CrmKind = "register" | "login" | "partner";
 
 /**
  * Sign up / trial → `/auth/register` on CRM shell (Angular then calls `auth/register` on api.*).
  * Sign in → `/auth/login`.
+ * Become a partner → `/auth/partner-register` (public self-service partner signup + ₹999 activation).
  */
 export function CtaLink({
   to,
@@ -124,6 +125,7 @@ export function CtaLink({
   let href: string | null = null;
   if (crm === "register") href = crmAbsUrl("/auth/register", crmBase);
   else if (crm === "login") href = crmAbsUrl("/auth/login", crmBase);
+  else if (crm === "partner") href = crmAbsUrl("/auth/partner-register", crmBase);
   const resolved = href ?? to;
 
   if (href) {
