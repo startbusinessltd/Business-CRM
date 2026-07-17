@@ -14,6 +14,7 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RefundRouteImport } from './routes/refund'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -49,6 +50,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerRoute = PartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeaturesRoute = FeaturesRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/customers': typeof CustomersRoute
   '/features': typeof FeaturesRoute
+  '/partner': typeof PartnerRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refund': typeof RefundRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/customers': typeof CustomersRoute
   '/features': typeof FeaturesRoute
+  '/partner': typeof PartnerRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refund': typeof RefundRoute
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/customers': typeof CustomersRoute
   '/features': typeof FeaturesRoute
+  '/partner': typeof PartnerRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refund': typeof RefundRoute
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/customers'
     | '/features'
+    | '/partner'
     | '/pricing'
     | '/privacy'
     | '/refund'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/customers'
     | '/features'
+    | '/partner'
     | '/pricing'
     | '/privacy'
     | '/refund'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/customers'
     | '/features'
+    | '/partner'
     | '/pricing'
     | '/privacy'
     | '/refund'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CustomersRoute: typeof CustomersRoute
   FeaturesRoute: typeof FeaturesRoute
+  PartnerRoute: typeof PartnerRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundRoute: typeof RefundRoute
@@ -273,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner': {
+      id: '/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof PartnerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/features': {
@@ -361,6 +381,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CustomersRoute: CustomersRoute,
   FeaturesRoute: FeaturesRoute,
+  PartnerRoute: PartnerRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundRoute: RefundRoute,
