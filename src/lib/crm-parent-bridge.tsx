@@ -32,7 +32,7 @@ function defaultCrmShellOrigin(): string {
 }
 
 /**
- * Origin of the Business CRM Angular app (signup / trial / login land here; APIs are called from that app).
+ * Origin of the B Soft Angular app (signup / trial / login land here; APIs are called from that app).
  * Priority: iframe postMessage → `VITE_CRM_APP_ORIGIN` → prod/dev default.
  */
 export function resolveCrmShellOrigin(): string {
