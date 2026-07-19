@@ -1,7 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, IMG, PageHero } from "@/components/site/PageBlocks";
-import { CtaLink, useCrmAppBase, crmAbsUrl } from "@/lib/crm-parent-bridge";
-import { PRICING_FEATURES } from "@/lib/site-content";
+import { useCrmAppBase, crmAbsUrl } from "@/lib/crm-parent-bridge";
+import { fetchPricingPlans, formatINR, type PricingPlan } from "@/lib/pricing-api";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -10,12 +11,12 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "Simple INR yearly pricing. Website, leads, calls, social, employees and finance included.",
+          "Simple INR yearly pricing. Website, CRM, calls, social, employees and finance — pick the plan that fits your business.",
       },
       { property: "og:title", content: "Pricing — B-SOFT" },
       {
         property: "og:description",
-        content: "₹10,000/year. Every core module included.",
+        content: "Website, full CRM suite and custom development plans — transparent yearly pricing.",
       },
       { property: "og:image", content: IMG.pricing },
     ],
@@ -23,52 +24,131 @@ export const Route = createFileRoute("/pricing")({
   component: Pricing,
 });
 
-const pricingFeatures = [...PRICING_FEATURES];
-
-function PlanCard({
-  name,
-  blurb,
-  price,
-  period,
-  priceWas,
-  saveNote,
-  cta,
-  featured,
-  badge,
-  ctaHref,
-}: {
-  name: string;
-  blurb: string;
-  price: string;
-  period: string;
-  priceWas: string;
-  saveNote: string;
-  cta: string;
-  featured?: boolean;
+/* ── Presentation meta layered on top of the live API data ─────────────────── */
+type PlanMeta = {
   badge?: string;
-  ctaHref: string;
-}) {
+  featured?: boolean;
+  ctaLabel: string;
+  ctaKind: "register" | "contact";
+  priceLabel?: (p: PricingPlan) => string; // override (e.g. "Starting …")
+};
+
+function metaFor(plan: PricingPlan): PlanMeta {
+  const name = plan.packagesName.toLowerCase();
+  if (name.includes("custom")) {
+    return {
+      badge: "ENTERPRISE",
+      ctaLabel: "Talk to sales",
+      ctaKind: "contact",
+      priceLabel: (p) => `Starting ${formatINR(p.discountedPrice ?? p.price)}`,
+    };
+  }
+  if (name.includes("crm") || name.includes("suite") || name.includes("business")) {
+    return { badge: "MOST POPULAR", featured: true, ctaLabel: "Register now", ctaKind: "register" };
+  }
+  return { badge: "STARTER", ctaLabel: "Register now", ctaKind: "register" };
+}
+
+/* Static fallback — mirrors the platform plans so the page renders even if the API is unreachable. */
+const FALLBACK_PLANS: PricingPlan[] = [
+  {
+    packagesId: -1,
+    packagesName: "Website Pro",
+    description: "AI-built professional website with your own domain, lead forms and free hosting.",
+    price: 15000,
+    discountedPrice: 9999,
+    period: 12,
+    packagesTypeId: 0,
+    packagesTypeName: "Website Pro",
+    features: [
+      "AI Website Builder - launch in minutes",
+      "Unlimited premium templates & themes",
+      "Free custom domain + SSL certificate",
+      "Smart lead-capture forms built in",
+      "Website leads straight to your inbox",
+      "Mobile-perfect, SEO-ready pages",
+      "Free B-SOFT cloud hosting",
+    ],
+  },
+  {
+    packagesId: -2,
+    packagesName: "CRM Business Suite",
+    description: "The complete platform - website, CRM, calls, social, team and finance in one place.",
+    price: 30000,
+    discountedPrice: 19999,
+    period: 12,
+    packagesTypeId: 0,
+    packagesTypeName: "CRM Business Suite",
+    features: [
+      "Everything in Website Pro",
+      "Full Lead & Pipeline CRM",
+      "Call tracking & team performance",
+      "Social hub - post, schedule, analyze",
+      "WhatsApp & ad-campaign marketing",
+      "Employees, roles & attendance",
+      "Finance, invoices & payment gateway",
+      "Priority onboarding & support",
+    ],
+  },
+  {
+    packagesId: -3,
+    packagesName: "Custom Development Studio",
+    description: "Bespoke modules, integrations and workflows built by our dedicated engineering team.",
+    price: 99999,
+    discountedPrice: 49999,
+    period: 12,
+    packagesTypeId: 0,
+    packagesTypeName: "Custom Development Studio",
+    features: [
+      "Everything in CRM Business Suite",
+      "Dedicated development team",
+      "Custom modules & integrations",
+      "Third-party & API integrations",
+      "Bespoke workflows & automation",
+      "Priority SLA & account manager",
+    ],
+  },
+];
+
+function periodLabel(period: number): string {
+  if (period === 12) return "/ year";
+  if (period === 1) return "/ month";
+  return `/ ${period} mo`;
+}
+
+function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
+  const meta = metaFor(plan);
+  const featured = !!meta.featured;
   const muted = featured ? "var(--on-dark-muted)" : "var(--slate)";
+  const has = plan.discountedPrice != null && plan.discountedPrice < plan.price;
+  const shown = plan.discountedPrice ?? plan.price;
+  const priceText = meta.priceLabel ? meta.priceLabel(plan) : formatINR(shown);
+  const save = has ? plan.price - (plan.discountedPrice as number) : 0;
+
   return (
     <div
       className="card-flat"
       style={{
         position: "relative",
-        padding: "clamp(20px, 5vw, 32px)",
-        paddingTop: badge ? "clamp(28px, 6vw, 40px)" : undefined,
+        display: "flex",
+        flexDirection: "column",
+        padding: "clamp(20px, 4vw, 30px)",
+        paddingTop: meta.badge ? "clamp(30px, 6vw, 42px)" : undefined,
         borderColor: featured ? "var(--purple-mid)" : "var(--line)",
         background: featured ? "var(--purple-deep)" : "var(--card)",
         color: featured ? "var(--ivory)" : "var(--ink)",
+        boxShadow: featured ? "0 24px 60px -28px rgba(76,29,149,.6)" : undefined,
+        transform: featured ? "translateY(-6px)" : undefined,
       }}
     >
-      {badge ? (
+      {meta.badge ? (
         <div
           style={{
             position: "absolute",
             top: -12,
             left: "50%",
             transform: "translateX(-50%)",
-            background: "var(--brass)",
+            background: featured ? "var(--brass)" : "var(--purple)",
             color: "#fff",
             fontSize: 12,
             fontWeight: 600,
@@ -78,9 +158,10 @@ function PlanCard({
             whiteSpace: "nowrap",
           }}
         >
-          {badge}
+          {meta.badge}
         </div>
       ) : null}
+
       <div
         style={{
           fontFamily: "var(--serif)",
@@ -89,86 +170,76 @@ function PlanCard({
           color: featured ? "var(--ivory)" : "var(--ink)",
         }}
       >
-        {name}
+        {plan.packagesName}
       </div>
-      <div style={{ marginTop: 6, fontSize: 14, color: muted }}>{blurb}</div>
-      <div
-        style={{ marginTop: 24, display: "flex", alignItems: "baseline", gap: 6, flexWrap: "wrap" }}
-      >
+      <div style={{ marginTop: 6, fontSize: 14, color: muted, minHeight: 42 }}>{plan.description}</div>
+
+      <div style={{ marginTop: 22, display: "flex", alignItems: "baseline", gap: 6, flexWrap: "wrap" }}>
         <span
           style={{
             fontFamily: "var(--serif)",
-            fontSize: "clamp(32px, 10vw, 52px)",
+            fontSize: "clamp(30px, 7vw, 46px)",
             fontWeight: 600,
             letterSpacing: "-0.02em",
           }}
         >
-          {price}
+          {priceText}
         </span>
-        <span style={{ fontSize: 14, color: muted }}>{period}</span>
+        <span style={{ fontSize: 14, color: muted }}>{periodLabel(plan.period)}</span>
       </div>
-      <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
-        <span style={{ fontSize: 14, color: muted, textDecoration: "line-through" }}>
-          {priceWas}
-        </span>
-        <span
-          style={{
-            display: "inline-block",
-            fontSize: 12,
-            fontWeight: 600,
-            color: featured ? "var(--ivory)" : "var(--ink)",
-            background: featured ? "rgba(255,255,255,.12)" : "var(--gold-soft)",
-            padding: "4px 10px",
-            borderRadius: 999,
-            width: "fit-content",
-          }}
-        >
-          {saveNote}
-        </span>
+
+      <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minHeight: 46 }}>
+        {has ? (
+          <>
+            <span style={{ fontSize: 14, color: muted, textDecoration: "line-through" }}>
+              Was {formatINR(plan.price)} {periodLabel(plan.period)}
+            </span>
+            <span
+              style={{
+                display: "inline-block",
+                fontSize: 12,
+                fontWeight: 600,
+                color: featured ? "var(--ivory)" : "var(--ink)",
+                background: featured ? "rgba(255,255,255,.12)" : "var(--gold-soft)",
+                padding: "4px 10px",
+                borderRadius: 999,
+                width: "fit-content",
+              }}
+            >
+              Save {formatINR(save)}
+            </span>
+          </>
+        ) : null}
       </div>
-      {ctaHref.startsWith("http") ? (
-        <a
-          href={ctaHref}
-          target="_top"
-          rel="noopener noreferrer"
-          className="btn"
-          style={{
-            marginTop: 24,
-            width: "100%",
-            background: featured ? "var(--brass)" : "var(--purple)",
-            color: featured ? "var(--ink)" : "#fff",
-            textAlign: "center",
-            textDecoration: "none",
-            display: "inline-block",
-          }}
-        >
-          {cta}
-        </a>
-      ) : (
-        <Link
-          to={ctaHref}
-          className="btn"
-          style={{
-            marginTop: 24,
-            width: "100%",
-            background: featured ? "var(--brass)" : "var(--purple)",
-            color: featured ? "var(--ink)" : "#fff",
-          }}
-        >
-          {cta}
-        </Link>
-      )}
+
+      <a
+        href={ctaHref}
+        target="_top"
+        rel="noopener noreferrer"
+        className="btn"
+        style={{
+          marginTop: 22,
+          width: "100%",
+          background: featured ? "var(--brass)" : "var(--purple)",
+          color: featured ? "var(--ink)" : "#fff",
+          textAlign: "center",
+          textDecoration: "none",
+          display: "inline-block",
+        }}
+      >
+        {meta.ctaLabel}
+      </a>
+
       <div
         style={{
           height: 1,
           background: featured ? "rgba(255,255,255,.15)" : "var(--line)",
-          marginBlock: 24,
+          marginBlock: 22,
         }}
       />
-      <ul
-        style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10, fontSize: 14 }}
-      >
-        {pricingFeatures.map((f) => (
+
+      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10, fontSize: 14 }}>
+        {plan.features.map((f) => (
           <li
             key={f}
             style={{
@@ -198,14 +269,27 @@ function PlanCard({
 
 function Pricing() {
   const crmShell = useCrmAppBase();
-  const signupHref = crmAbsUrl("/auth/register", crmShell);
+  const registerHref = crmAbsUrl("/auth/register", crmShell);
+
+  const [plans, setPlans] = useState<PricingPlan[]>(FALLBACK_PLANS);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchPricingPlans(controller.signal).then((live) => {
+      if (live.length > 0) setPlans(live);
+    });
+    return () => controller.abort();
+  }, []);
+
+  const ctaHrefFor = (plan: PricingPlan): string =>
+    metaFor(plan).ctaKind === "contact" ? "/contact" : registerHref;
 
   return (
     <>
       <PageHero
         eyebrow="Pricing"
         title={<>Simple plans. Full platform.</>}
-        lead="One yearly plan includes website, leads, calls, social, employees and finance. Limited-time introductory price shown below."
+        lead="From a stunning website to the complete CRM suite and bespoke custom development — pick the plan that fits, upgrade any time. Limited-time introductory pricing shown below."
         primary={{ to: "/contact", label: "Talk to sales" }}
         secondary={{ to: "/features", label: "See all features" }}
         image={IMG.pricing}
@@ -213,38 +297,25 @@ function Pricing() {
 
       <section className="section-tight">
         <div className="container-x">
-          <div style={{ maxWidth: 480, marginInline: "auto" }}>
-            <PlanCard
-              name="Yearly"
-              blurb="Best value — one payment for the full year."
-              price="₹10,000"
-              period="/ year"
-              priceWas="Was ₹30,000 / year"
-              saveNote="Save ₹20,000"
-              cta="Register now"
-              ctaHref={signupHref}
-              featured
-              badge="BEST VALUE"
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: 28,
-            }}
-          >
-            <CtaLink
-              to="/auth/login"
-              label="Buy now"
-              className="btn btn-primary"
-              crm="login"
-              style={{ minWidth: "min(220px, 100%)", textAlign: "center", maxWidth: "100%" }}
-            />
+          <div className="pricing-grid">
+            {plans.map((plan) => (
+              <PlanCard key={plan.packagesId} plan={plan} ctaHref={ctaHrefFor(plan)} />
+            ))}
           </div>
           <p style={{ textAlign: "center", marginTop: 32, color: "var(--slate)", fontSize: 14 }}>
-            Prices in INR. All core modules included — pay once per year.
+            Prices in INR, billed yearly. All plans include free updates. GST applied on invoice where applicable.
           </p>
+          <style>{`
+            .pricing-grid{
+              display:grid;
+              grid-template-columns:repeat(3, minmax(0,1fr));
+              gap:24px;
+              align-items:start;
+              max-width:1120px;
+              margin-inline:auto;
+            }
+            @media (max-width:980px){ .pricing-grid{grid-template-columns:1fr; max-width:460px} }
+          `}</style>
         </div>
       </section>
 
@@ -260,16 +331,16 @@ function Pricing() {
           >
             {[
               [
-                "What is included at this price?",
-                "Website & web builder, leads & CRM, call tracker, social hub, team & permissions, and finance & billing — the full platform in one yearly plan.",
+                "Which plan is right for me?",
+                "Choose Website Pro for a professional site with lead capture, CRM Business Suite for the complete platform (calls, social, team and finance), or Custom Development Studio for bespoke modules and integrations.",
               ],
               [
-                "How do I Register now?",
-                "Click Register now or Buy now to create your account. Our team will help you pick templates and configure your workspace.",
+                "How do I get started?",
+                "Click Register now on any plan to create your account. Our team will help you pick templates and configure your workspace. For custom work, talk to sales.",
               ],
               [
-                "Can I renew or upgrade later?",
-                "Yes — contact us any time to renew your yearly plan or add partner and white-label options.",
+                "Can I upgrade later?",
+                "Yes — start on Website Pro and upgrade to the CRM Business Suite any time. Contact us to add partner and white-label options.",
               ],
               [
                 "Are taxes included?",
@@ -280,7 +351,7 @@ function Pricing() {
                 "We offer discounts for registered non-profits and early-stage startups. Reach out via the contact page.",
               ],
               [
-                "Where is data stored?",
+                "Where is my data stored?",
                 "Production APIs run on B-SOFT infrastructure with encryption in transit; contact us for security and data questions.",
               ],
             ].map(([q, a]) => (

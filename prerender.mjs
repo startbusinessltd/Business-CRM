@@ -18,6 +18,7 @@ const ROUTES = [
   "/customers",
   "/features",
   "/pricing",
+  "/partner",
   "/services",
   "/privacy",
   "/terms",
