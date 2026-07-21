@@ -232,7 +232,7 @@ function PartnerPage() {
         <div className="container-x">
           <span className="eyebrow">Why partners join</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>Everything a software business needs, ready on day one.</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16, marginTop: 28 }}>
+          <div className="card-slider" style={{ marginTop: 20 }}>
             {BENEFITS.map((b) => (
               <div key={b.title} className="card-flat" style={{ padding: 22 }}>
                 <h3 style={{ fontSize: 17, fontWeight: 700 }}>{b.title}</h3>
@@ -251,7 +251,7 @@ function PartnerPage() {
           <p style={{ marginTop: 10, color: "var(--slate)", fontSize: 15 }}>
             The selling price, your Associate commission and your Franchise wallet cost below are all <strong>live B-Soft rates</strong> — nothing is made up.
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16, marginTop: 28 }}>
+          <div className="card-slider" style={{ marginTop: 20 }}>
             {products.map((p) => (
               <PlanEconomicsCard key={p.packagesId} plan={p} />
             ))}
@@ -277,7 +277,7 @@ function PartnerPage() {
         <div className="container-x">
           <span className="eyebrow">Partner plans</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>One joining fee. No monthly platform charge.</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16, marginTop: 28 }}>
+          <div className="card-slider" style={{ marginTop: 20 }}>
             {plans.map((p) => {
               const featured = isCommission(p) ? false : (p.partnerType === "WALLET");
               const commission = isCommission(p);
@@ -388,7 +388,7 @@ function PartnerPage() {
         <div className="container-x">
           <span className="eyebrow">What a partner business looks like</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>Example partner journeys.</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16, marginTop: 28 }}>
+          <div className="card-slider" style={{ marginTop: 20 }}>
             {JOURNEY_EXAMPLES.map((s) => (
               <div key={s.name} className="card-flat" style={{ padding: 22 }}>
                 <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: "var(--purple-mid)" }}>{s.name}</p>

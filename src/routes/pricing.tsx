@@ -307,25 +307,14 @@ function Pricing() {
 
       <section className="section-tight">
         <div className="container-x">
-          <div className="pricing-grid">
+          <div className="card-slider" style={{ maxWidth: "fit-content", marginInline: "auto" }}>
             {plans.map((plan) => (
               <PlanCard key={plan.packagesId} plan={plan} ctaHref={ctaHrefFor(plan)} />
             ))}
           </div>
-          <p style={{ textAlign: "center", marginTop: 32, color: "var(--slate)", fontSize: 14 }}>
-            Prices in INR, billed yearly. All plans include free updates. GST applied on invoice where applicable.
+          <p style={{ textAlign: "center", marginTop: 20, color: "var(--slate)", fontSize: 13 }}>
+            Swipe to see all plans · Prices in INR, billed yearly. GST applied on invoice where applicable.
           </p>
-          <style>{`
-            .pricing-grid{
-              display:grid;
-              grid-template-columns:repeat(3, minmax(0,1fr));
-              gap:24px;
-              align-items:start;
-              max-width:1120px;
-              margin-inline:auto;
-            }
-            @media (max-width:980px){ .pricing-grid{grid-template-columns:1fr; max-width:460px} }
-          `}</style>
         </div>
       </section>
 
@@ -350,7 +339,7 @@ function Pricing() {
               ],
               [
                 "Can I upgrade later?",
-                "Yes — start on Website Pro and upgrade to the CRM Business Suite any time. Contact us to add partner and white-label options.",
+                "Yes — start on Website Pro and upgrade to the CRM Business Suite any time. Contact us to add partner and reseller options.",
               ],
               [
                 "Are taxes included?",

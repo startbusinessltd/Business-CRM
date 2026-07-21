@@ -247,6 +247,32 @@
   .grid-2 > * { min-width: 0; max-width: 100%; }
   @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } .grid-2 { grid-template-columns: 1fr; } }
 
+  /* Horizontal card slider — cards slide sideways instead of wrapping to a new row.
+     align-items: stretch keeps every card the same height; the fixed flex-basis keeps
+     every card the same width. */
+  .card-slider {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-left: 2px;
+    padding: 18px 4px 14px;
+    margin-inline: -4px;
+    scrollbar-width: thin;
+  }
+  .card-slider::-webkit-scrollbar { height: 8px; }
+  .card-slider::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+  .card-slider > * {
+    flex: 0 0 320px;
+    width: 320px;
+    max-width: 84vw;
+    scroll-snap-align: start;
+  }
+  @media (max-width: 520px) { .card-slider > * { flex-basis: 84vw; width: 84vw; } }
+
   .pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--slate); background: var(--card); }
   .num-tag {
     font-family: var(--serif);
