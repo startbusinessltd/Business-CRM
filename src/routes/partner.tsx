@@ -37,6 +37,8 @@ interface PartnerPlan {
   features: string[];
   partnerType?: PartnerType;
   maxCommissionPct?: number | null;
+  /** WALLET tiers: recharge bonus multiplier — pay ₹X, get ₹X × this credited to the wallet. */
+  rechargeMultiplier?: number | null;
 }
 
 /** Static fallback mirroring the seeded catalog — replaced by the live API when reachable. */
@@ -55,10 +57,11 @@ const FALLBACK_PLANS: PartnerPlan[] = [
   },
   {
     planId: 1, code: "FRANCHISE", name: "Franchise Partner", joiningFee: 25000, websiteCost: 1000, crmCost: 3000,
-    partnerType: "WALLET",
+    partnerType: "WALLET", rechargeMultiplier: 4,
     description: "Run a full white-label software franchise on your own brand & domain — resell every B-Soft product at your own prices from a prepaid wallet.",
     features: [
       "White-label brand & custom domain",
+      "4× wallet recharge bonus — pay ₹25,000, get ₹1,00,000 to spend",
       "Resell every B-Soft product",
       "Prepaid wallet billing at plan price",
       "AI Voice, Social Hub & automation",
@@ -109,6 +112,9 @@ function PartnerPage() {
   const crmPlan = products.find((p) => /crm/i.test(p.packagesName)) ?? products[1] ?? products[0];
   const wsCost = websitePlan?.walletCharge ?? websitePlan?.discountedPrice ?? 9999;
   const crmCost = crmPlan?.walletCharge ?? crmPlan?.discountedPrice ?? 19999;
+  // Franchise (WALLET) recharge bonus multiplier — live from the partner-plans API.
+  const franchisePlan = plans.find((p) => !isCommission(p));
+  const rechargeMult = franchisePlan?.rechargeMultiplier ?? null;
 
   useEffect(() => {
     fetch(PLANS_API)
@@ -179,11 +185,14 @@ function PartnerPage() {
               <h3 style={{ fontSize: 20, fontWeight: 800, marginTop: 14 }}>Franchise Partner</h3>
               <p style={{ marginTop: 10, fontSize: 15, color: "var(--slate)" }}>
                 Run a full software business under <strong>your own brand and domain</strong>. Recharge a prepaid
-                wallet, pay a fixed wholesale cost per website/CRM you sell, and charge your customers whatever
+                wallet{rechargeMult && rechargeMult > 1 ? <> — and every recharge is <strong>multiplied {rechargeMult}×</strong></> : null}, pay a fixed wholesale cost per website/CRM you sell, and charge your customers whatever
                 you like — their money lands in <strong>your</strong> payment gateway.
               </p>
               <ul style={{ marginTop: 14, display: "grid", gap: 8, fontSize: 15, listStyle: "none", padding: 0 }}>
                 <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Your brand, domain, logo and colors</li>
+                {rechargeMult && rechargeMult > 1 ? (
+                  <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> <strong>{rechargeMult}× wallet recharge bonus</strong> — pay ₹1, get ₹{rechargeMult} to spend</li>
+                ) : null}
                 <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Set your own client prices — keep 100% of what you charge</li>
                 <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Fixed wholesale cost per sale from your wallet</li>
               </ul>
@@ -264,6 +273,20 @@ function PartnerPage() {
                   {commission && p.maxCommissionPct != null ? (
                     <p style={{ fontSize: 14, marginTop: 8, fontWeight: 700, color: featured ? "#fff" : "#B45309" }}>Earn up to {p.maxCommissionPct}% commission</p>
                   ) : null}
+                  {!commission && p.rechargeMultiplier != null && p.rechargeMultiplier > 1 ? (
+                    <div style={{
+                      marginTop: 10, padding: "10px 12px", borderRadius: 10,
+                      background: featured ? "rgba(255,255,255,0.12)" : "#ECFDF5",
+                      border: featured ? "1px solid rgba(255,255,255,0.25)" : "1px solid #A7F3D0",
+                    }}>
+                      <p style={{ fontSize: 15, fontWeight: 800, color: featured ? "#9AE6B4" : "#047857" }}>
+                        🎁 {p.rechargeMultiplier}× wallet recharge bonus
+                      </p>
+                      <p style={{ fontSize: 12, marginTop: 2, opacity: 0.85 }}>
+                        Recharge ₹{inr(p.joiningFee)} → get ₹{inr(Math.round(p.joiningFee * p.rechargeMultiplier))} to spend
+                      </p>
+                    </div>
+                  ) : null}
                   {p.description ? <p style={{ fontSize: 14, marginTop: 10, opacity: 0.85 }}>{p.description}</p> : null}
                   <ul style={{ marginTop: 14, display: "grid", gap: 8, fontSize: 15, listStyle: "none", padding: 0 }}>
                     {p.features.map((f) => (
@@ -301,6 +324,10 @@ function PartnerPage() {
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
                   <td style={{ padding: 16, color: "var(--slate)" }}>Max commission</td>
                   {plans.map((p) => <td key={p.code} style={{ padding: 16 }}>{isCommission(p) && p.maxCommissionPct != null ? `${p.maxCommissionPct}%` : "—"}</td>)}
+                </tr>
+                <tr style={{ borderBottom: "1px solid var(--line)" }}>
+                  <td style={{ padding: 16, color: "var(--slate)" }}>Wallet recharge bonus</td>
+                  {plans.map((p) => <td key={p.code} style={{ padding: 16, fontWeight: 700 }}>{!isCommission(p) && p.rechargeMultiplier != null && p.rechargeMultiplier > 1 ? `${p.rechargeMultiplier}× (pay ₹1 → get ₹${p.rechargeMultiplier})` : "—"}</td>)}
                 </tr>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
                   <td style={{ padding: 16, color: "var(--slate)" }}>Cost per website sold</td>
