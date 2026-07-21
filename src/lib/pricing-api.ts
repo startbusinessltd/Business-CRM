@@ -42,6 +42,9 @@ export type PricingPlan = {
   packagesTypeName: string;
   color?: string | null;
   features: string[];
+  /** Partner economics from the linked plan-type (public API). */
+  commissionPct: number | null;
+  walletCharge: number | null;
 };
 
 type RawFeature = { packagesFeaturesId?: number; data?: string };
@@ -55,8 +58,16 @@ type RawPackage = {
   packagesTypeId?: number;
   packagesTypeName?: string;
   color?: string | null;
+  partnerCommissionPct?: number | string | null;
+  partnerWalletCharge?: number | string | null;
   packagesFeaturesResponse?: RawFeature[] | null;
 };
+
+function num(v: number | string | null | undefined): number | null {
+  if (v === null || v === undefined || v === "") return null;
+  const n = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(n) ? n : null;
+}
 
 function normalize(raw: RawPackage): PricingPlan {
   return {
@@ -69,6 +80,8 @@ function normalize(raw: RawPackage): PricingPlan {
     packagesTypeId: raw.packagesTypeId ?? 0,
     packagesTypeName: raw.packagesTypeName ?? "",
     color: raw.color ?? null,
+    commissionPct: num(raw.partnerCommissionPct),
+    walletCharge: num(raw.partnerWalletCharge),
     features: (raw.packagesFeaturesResponse ?? [])
       .map((f) => (f?.data ?? "").trim())
       .filter(Boolean),

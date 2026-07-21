@@ -60,6 +60,8 @@ const FALLBACK_PLANS: PricingPlan[] = [
     period: 12,
     packagesTypeId: 0,
     packagesTypeName: "Website Pro",
+    commissionPct: 30,
+    walletCharge: 9999,
     features: [
       "AI Website Builder - launch in minutes",
       "Unlimited premium templates & themes",
@@ -79,6 +81,8 @@ const FALLBACK_PLANS: PricingPlan[] = [
     period: 12,
     packagesTypeId: 0,
     packagesTypeName: "CRM Business Suite",
+    commissionPct: 40,
+    walletCharge: 19999,
     features: [
       "Everything in Website Pro",
       "Full Lead & Pipeline CRM",
@@ -99,6 +103,8 @@ const FALLBACK_PLANS: PricingPlan[] = [
     period: 12,
     packagesTypeId: 0,
     packagesTypeName: "Custom Development Studio",
+    commissionPct: 15,
+    walletCharge: 49999,
     features: [
       "Everything in CRM Business Suite",
       "Dedicated development team",

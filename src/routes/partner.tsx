@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, IMG } from "@/components/site/PageBlocks";
 import { CtaLink } from "@/lib/crm-parent-bridge";
+import { fetchPricingPlans, formatINR, type PricingPlan } from "@/lib/pricing-api";
 
 export const Route = createFileRoute("/partner")({
   head: () => ({
@@ -76,7 +77,7 @@ const PLANS_API = "https://api.bsoft.ltd/api/auth/partner/plans";
 const BENEFITS: { title: string; body: string }[] = [
   { title: "No development team", body: "The SaaS platform is ready — websites, CRM, leads, employees, social, AI. You focus on selling." },
   { title: "Your own brand & domain", body: "Customers open your domain, see your logo and colors. B-Soft stays invisible." },
-  { title: "You set the prices", body: "Sell a website for ₹5,000 that costs you ₹1,000. Sell CRM for ₹10,000 that costs ₹3,000. The margin is yours." },
+  { title: "You set the prices", body: "Charge your clients whatever you like for every website and CRM you sell. B-Soft only debits your wallet the plan cost — the difference is your margin." },
   { title: "Recurring revenue", body: "Renewals, upgrades and new modules keep customers paying you year after year." },
   { title: "Own payment gateway", body: "Customer money lands in your account. B-Soft only charges your wallet per product sold." },
   { title: "Growing product line", body: "AI Website Builder, AI Voice Agent, Social Hub — every new B-Soft product becomes yours to sell." },
@@ -92,12 +93,23 @@ function inr(n: number): string {
   return n.toLocaleString("en-IN");
 }
 
+/** Static fallback for the product-plan economics — replaced by the live public API. */
+const FALLBACK_PRODUCTS: PricingPlan[] = [
+  { packagesId: -1, packagesName: "Website Pro", description: "", price: 15000, discountedPrice: 9999, period: 12, packagesTypeId: 1, packagesTypeName: "Website Pro", features: [], commissionPct: 30, walletCharge: 9999 },
+  { packagesId: -2, packagesName: "CRM Business Suite", description: "", price: 30000, discountedPrice: 19999, period: 12, packagesTypeId: 2, packagesTypeName: "CRM Business Suite", features: [], commissionPct: 40, walletCharge: 19999 },
+  { packagesId: -3, packagesName: "Custom Development Studio", description: "", price: 99999, discountedPrice: 49999, period: 12, packagesTypeId: 3, packagesTypeName: "Custom Development Studio", features: [], commissionPct: 15, walletCharge: 49999 },
+];
+
 function PartnerPage() {
   const [plans, setPlans] = useState<PartnerPlan[]>(FALLBACK_PLANS);
-  // The White-Label (wallet) plan drives the wholesale-cost examples + calculator.
-  const walletPlan = plans.find((p) => !isCommission(p));
-  const wsCost = walletPlan?.websiteCost ?? 1000;
-  const crmCost = walletPlan?.crmCost ?? 3000;
+  // Live product plans (Website Pro / CRM Suite / …) — retail price + commission % + wallet cost, from the DB.
+  const [products, setProducts] = useState<PricingPlan[]>(FALLBACK_PRODUCTS);
+
+  const websitePlan = products.find((p) => /website|web\b/i.test(p.packagesName)) ?? products[0];
+  const crmPlan = products.find((p) => /crm/i.test(p.packagesName)) ?? products[1] ?? products[0];
+  const wsCost = websitePlan?.walletCharge ?? websitePlan?.discountedPrice ?? 9999;
+  const crmCost = crmPlan?.walletCharge ?? crmPlan?.discountedPrice ?? 19999;
+
   useEffect(() => {
     fetch(PLANS_API)
       .then((r) => (r.ok ? r.json() : null))
@@ -106,6 +118,12 @@ function PartnerPage() {
         if (Array.isArray(live) && live.length > 0) setPlans(live);
       })
       .catch(() => { /* static fallback stays */ });
+
+    const ac = new AbortController();
+    fetchPricingPlans(ac.signal).then((live) => {
+      if (live.length > 0) setProducts(live);
+    });
+    return () => ac.abort();
   }, []);
 
   return (
@@ -190,18 +208,27 @@ function PartnerPage() {
         </div>
       </section>
 
-      {/* Revenue model */}
+      {/* Product plans & partner economics — live from the DB */}
       <section className="section-tight">
         <div className="container-x">
-          <span className="eyebrow">The Franchise revenue model</span>
-          <h2 className="h-section" style={{ marginTop: 12 }}>Buy wholesale. Sell under your brand. Keep the difference.</h2>
+          <span className="eyebrow">What you sell & what you earn</span>
+          <h2 className="h-section" style={{ marginTop: 12 }}>Every B-Soft plan, and your economics on it.</h2>
+          <p style={{ marginTop: 10, color: "var(--slate)", fontSize: 15 }}>
+            Retail price, Associate commission and Franchise wallet cost below are the <strong>live B-Soft plan rates</strong>.
+          </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16, marginTop: 28 }}>
-            <RevenueCard product="Website" cost={wsCost} sell={5000} />
-            <RevenueCard product="CRM" cost={crmCost} sell={10000} />
+            {products.map((p) => (
+              <PlanEconomicsCard key={p.packagesId} plan={p} />
+            ))}
             <div className="card-flat" style={{ padding: 22, background: "var(--purple-deep)", color: "#fff", borderColor: "var(--purple-mid)" }}>
-              <p style={{ fontSize: 14, opacity: 0.85 }}>10 websites + 10 CRMs a month</p>
-              <p style={{ fontSize: 30, fontWeight: 800, marginTop: 8 }}>₹1,10,000</p>
-              <p style={{ fontSize: 14, opacity: 0.85, marginTop: 6 }}>potential monthly profit at the example prices</p>
+              <p style={{ fontSize: 14, opacity: 0.85 }}>Refer 10 websites + 10 CRMs / month</p>
+              <p style={{ fontSize: 30, fontWeight: 800, marginTop: 8 }}>
+                {formatINR(
+                  10 * Math.round((websitePlan?.discountedPrice ?? wsCost) * ((websitePlan?.commissionPct ?? 30) / 100)) +
+                  10 * Math.round((crmPlan?.discountedPrice ?? crmCost) * ((crmPlan?.commissionPct ?? 40) / 100))
+                )}
+              </p>
+              <p style={{ fontSize: 14, opacity: 0.85, marginTop: 6 }}>potential monthly commission (Associate) at live rates</p>
             </div>
           </div>
         </div>
@@ -318,19 +345,26 @@ function PartnerPage() {
   );
 }
 
-function RevenueCard({ product, cost, sell }: { product: string; cost: number; sell: number }) {
+function PlanEconomicsCard({ plan }: { plan: PricingPlan }) {
+  const retail = plan.discountedPrice ?? plan.price;
+  const commissionEarn = plan.commissionPct != null ? Math.round((retail * plan.commissionPct) / 100) : null;
   return (
     <div className="card-flat" style={{ padding: 22 }}>
-      <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: "var(--purple-mid)" }}>{product}</p>
-      <dl style={{ marginTop: 12, display: "grid", gap: 8, fontSize: 15 }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <dt style={{ color: "var(--slate)" }}>Your cost</dt><dd>₹{inr(cost)}</dd>
+      <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: "var(--purple-mid)" }}>{plan.packagesName}</p>
+      <p style={{ fontSize: 26, fontWeight: 800, marginTop: 8 }}>{formatINR(retail)}</p>
+      <p style={{ fontSize: 12, color: "var(--slate)" }}>retail plan price</p>
+      <div style={{ height: 1, background: "var(--line)", marginBlock: 14 }} />
+      <dl style={{ display: "grid", gap: 8, fontSize: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+          <dt style={{ color: "var(--slate)" }}>Associate commission</dt>
+          <dd style={{ fontWeight: 700, color: "#B45309", textAlign: "right" }}>
+            {plan.commissionPct != null ? `${plan.commissionPct}%` : "—"}
+            {commissionEarn != null ? ` · ${formatINR(commissionEarn)}` : ""}
+          </dd>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <dt style={{ color: "var(--slate)" }}>Example selling price</dt><dd>₹{inr(sell)}</dd>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, borderTop: "1px solid var(--line)", paddingTop: 8 }}>
-          <dt>Your profit</dt><dd>₹{inr(sell - cost)}</dd>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+          <dt style={{ color: "var(--slate)" }}>Franchise wallet cost</dt>
+          <dd style={{ fontWeight: 700 }}>{plan.walletCharge != null ? formatINR(plan.walletCharge) : "—"}</dd>
         </div>
       </dl>
     </div>
@@ -340,8 +374,9 @@ function RevenueCard({ product, cost, sell }: { product: string; cost: number; s
 function ProfitCalculator({ websiteCost, crmCost }: { websiteCost: number; crmCost: number }) {
   const [websites, setWebsites] = useState(10);
   const [crms, setCrms] = useState(10);
-  const [websitePrice, setWebsitePrice] = useState(5000);
-  const [crmPrice, setCrmPrice] = useState(10000);
+  // Default selling prices ~50% above the live wallet cost so the example margin is positive.
+  const [websitePrice, setWebsitePrice] = useState(Math.round(websiteCost * 1.5));
+  const [crmPrice, setCrmPrice] = useState(Math.round(crmCost * 1.5));
 
   const { revenue, cost, profit } = useMemo(() => {
     const revenue = websites * websitePrice + crms * crmPrice;
