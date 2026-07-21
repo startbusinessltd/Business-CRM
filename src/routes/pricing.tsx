@@ -130,6 +130,8 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
   const shown = plan.discountedPrice ?? plan.price;
   const priceText = meta.priceLabel ? meta.priceLabel(plan) : formatINR(shown);
   const save = has ? plan.price - (plan.discountedPrice as number) : 0;
+  // Accent = the admin-configured plan colour (business_type.bt_color) from the backend.
+  const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : (featured ? "var(--brass)" : "var(--purple)");
 
   return (
     <div
@@ -141,6 +143,7 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
         padding: "clamp(20px, 4vw, 30px)",
         paddingTop: meta.badge ? "clamp(30px, 6vw, 42px)" : undefined,
         borderColor: featured ? "var(--purple-mid)" : "var(--line)",
+        borderTop: `5px solid ${accent}`,
         background: featured ? "var(--purple-deep)" : "var(--card)",
         color: featured ? "var(--ivory)" : "var(--ink)",
         boxShadow: featured ? "0 24px 60px -28px rgba(76,29,149,.6)" : undefined,
@@ -154,7 +157,7 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
             top: -12,
             left: "50%",
             transform: "translateX(-50%)",
-            background: featured ? "var(--brass)" : "var(--purple)",
+            background: accent,
             color: "#fff",
             fontSize: 12,
             fontWeight: 600,
@@ -173,7 +176,7 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
           fontFamily: "var(--serif)",
           fontSize: 22,
           fontWeight: 600,
-          color: featured ? "var(--ivory)" : "var(--ink)",
+          color: featured ? "var(--ivory)" : accent,
         }}
       >
         {plan.packagesName}
@@ -187,6 +190,7 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
             fontSize: "clamp(30px, 7vw, 46px)",
             fontWeight: 600,
             letterSpacing: "-0.02em",
+            color: featured ? "var(--ivory)" : accent,
           }}
         >
           {priceText}

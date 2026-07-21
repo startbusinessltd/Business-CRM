@@ -7,16 +7,16 @@ import { fetchPricingPlans, formatINR, type PricingPlan } from "@/lib/pricing-ap
 export const Route = createFileRoute("/partner")({
   head: () => ({
     meta: [
-      { title: "Become a White Label Partner — B-SOFT" },
+      { title: "Become a B-Soft Partner — Start Your Own Software Business" },
       {
         name: "description",
         content:
-          "Start your own software company on B-SOFT. Sell websites, CRM and AI products under your own brand and domain — no development team required.",
+          "Join the B-Soft Partner Program. Sell ready-made websites, CRM and AI products to businesses around you at your own price and keep the profit — no coding, no team, no big investment.",
       },
-      { property: "og:title", content: "Become a B-Soft White Label Partner" },
+      { property: "og:title", content: "Become a B-Soft Business Partner" },
       {
         property: "og:description",
-        content: "Your brand. Your domain. Your prices. B-Soft runs the platform — you keep the margin.",
+        content: "Sell software that businesses already need. You set the price, you keep the profit — B-Soft runs everything behind the scenes.",
       },
       { property: "og:image", content: IMG.handshake },
     ],
@@ -37,8 +37,29 @@ interface PartnerPlan {
   features: string[];
   partnerType?: PartnerType;
   maxCommissionPct?: number | null;
-  /** WALLET tiers: recharge bonus multiplier — pay ₹X, get ₹X × this credited to the wallet. */
+  /** WALLET tiers: base/fallback recharge bonus multiplier — pay ₹X, get ₹X × this in the wallet. */
   rechargeMultiplier?: number | null;
+  /** WALLET tiers: amount-based recharge bonus ladder (recharge more → higher multiplier). */
+  rechargeTiers?: RechargeTier[] | null;
+}
+
+type RechargeTier = { minAmount: number; multiplier: number };
+
+/** ₹ range of multipliers a WALLET plan offers, from its recharge ladder (falls back to the flat one). */
+function multiplierRange(p: PartnerPlan): { min: number; max: number } | null {
+  const mults = (p.rechargeTiers ?? [])
+    .map((t) => Number(t.multiplier))
+    .filter((m) => Number.isFinite(m) && m > 1);
+  if (mults.length > 0) return { min: Math.min(...mults), max: Math.max(...mults) };
+  const flat = p.rechargeMultiplier != null ? Number(p.rechargeMultiplier) : null;
+  return flat && flat > 1 ? { min: flat, max: flat } : null;
+}
+
+/** "4×" or "4× to 10×" depending on whether the ladder has more than one rate. */
+function multiplierLabel(p: PartnerPlan): string | null {
+  const r = multiplierRange(p);
+  if (!r) return null;
+  return r.min === r.max ? `${r.min}×` : `${r.min}× to ${r.max}×`;
 }
 
 /** Static fallback mirroring the seeded catalog — replaced by the live API when reachable. */
@@ -46,27 +67,32 @@ const FALLBACK_PLANS: PartnerPlan[] = [
   {
     planId: 4, code: "ASSOCIATE", name: "Associate Partner", joiningFee: 5000,
     partnerType: "COMMISSION", maxCommissionPct: 30,
-    description: "Promote B-Soft and earn commission on every plan you refer — no wallet, no upfront product cost.",
+    description: "Refer B-Soft to businesses you know and earn a commission on every plan they buy — no wallet, no stock, nothing to manage.",
     features: [
-      "Earn up to 30% commission",
-      "Create your own discount coupons",
-      "Instant commission to Incentive Wallet",
-      "Track all your sign-ups",
-      "No wallet to maintain",
+      "Earn up to 30% commission on every sale",
+      "Give your own discount coupons to customers",
+      "Commission comes straight to your Incentive Wallet",
+      "See every customer you bring in",
+      "Just refer and earn — no wallet to maintain",
     ],
   },
   {
     planId: 1, code: "FRANCHISE", name: "Franchise Partner", joiningFee: 25000, websiteCost: 1000, crmCost: 3000,
     partnerType: "WALLET", rechargeMultiplier: 4,
-    description: "Run a full white-label software franchise on your own brand & domain — resell every B-Soft product at your own prices from a prepaid wallet.",
+    rechargeTiers: [
+      { minAmount: 0, multiplier: 4 },
+      { minAmount: 25000, multiplier: 6 },
+      { minAmount: 50000, multiplier: 8 },
+      { minAmount: 100000, multiplier: 10 },
+    ],
+    description: "Become a full B-Soft business owner. Recharge your wallet, get a big bonus, and sell websites, CRM and AI products to businesses around you at any price you like — the profit is yours.",
     features: [
-      "White-label brand & custom domain",
-      "4× wallet recharge bonus — pay ₹25,000, get ₹1,00,000 to spend",
-      "Resell every B-Soft product",
-      "Prepaid wallet billing at plan price",
-      "AI Voice, Social Hub & automation",
-      "GST invoicing & marketing tools",
-      "Your clients, your pricing",
+      "Wallet recharge bonus up to 10× — recharge more, get more",
+      "Sell every B-Soft product — websites, CRM, AI Voice, Social Hub",
+      "You decide the selling price and keep the full profit",
+      "Only a small fixed cost per sale from your wallet",
+      "GST invoices and ready-made marketing material",
+      "Manage all your customers from one simple panel",
     ],
   },
 ];
@@ -78,18 +104,18 @@ function isCommission(p: PartnerPlan): boolean {
 const PLANS_API = "https://api.bsoft.ltd/api/auth/partner/plans";
 
 const BENEFITS: { title: string; body: string }[] = [
-  { title: "No development team", body: "The SaaS platform is ready — websites, CRM, leads, employees, social, AI. You focus on selling." },
-  { title: "Your own brand & domain", body: "Customers open your domain, see your logo and colors. B-Soft stays invisible." },
-  { title: "You set the prices", body: "Charge your clients whatever you like for every website and CRM you sell. B-Soft only debits your wallet the plan cost — the difference is your margin." },
-  { title: "Recurring revenue", body: "Renewals, upgrades and new modules keep customers paying you year after year." },
-  { title: "Own payment gateway", body: "Customer money lands in your account. B-Soft only charges your wallet per product sold." },
-  { title: "Growing product line", body: "AI Website Builder, AI Voice Agent, Social Hub — every new B-Soft product becomes yours to sell." },
+  { title: "No technical team needed", body: "The full platform is ready — websites, CRM, leads, staff, social media and AI. You just bring the customers." },
+  { title: "You decide the price", body: "Sell every website and CRM at any price you want. B-Soft takes only a small fixed cost from your wallet — the rest is your profit." },
+  { title: "Big recharge bonus", body: "Recharge your wallet and get up to 10× the amount to sell with. The more you add, the bigger the bonus." },
+  { title: "Income that keeps coming", body: "Renewals, upgrades and new products keep your customers paying you every single year." },
+  { title: "Ready-made products", body: "AI Website Builder, AI Voice Agent, Social Hub and more — sell products businesses already want to buy." },
+  { title: "Support at every step", body: "Easy onboarding, training and a full partner panel — you are never left alone or stuck." },
 ];
 
 const JOURNEY_EXAMPLES: { name: string; body: string; figure: string }[] = [
-  { name: "The freelancer", body: "A web designer who stops building sites by hand — 8 AI websites a month at ₹6,000 each.", figure: "≈ ₹40,000/mo margin" },
-  { name: "The local agency", body: "A 3-person agency selling websites + CRM bundles to shops and clinics in their district.", figure: "≈ ₹1,00,000/mo margin" },
-  { name: "The white-label agency", body: "A White-Label partner running a full software business under their own brand and domain across their district.", figure: "₹2,00,000+/mo potential" },
+  { name: "The freelancer", body: "A web designer who stops coding by hand — sells 8 AI websites a month at ₹6,000 each.", figure: "≈ ₹40,000/mo profit" },
+  { name: "The local agency", body: "A small 3-person team selling website + CRM bundles to shops and clinics in their city.", figure: "≈ ₹1,00,000/mo profit" },
+  { name: "The growing business", body: "A partner selling websites, CRM and AI products to businesses all across their district.", figure: "₹2,00,000+/mo potential" },
 ];
 
 function inr(n: number): string {
@@ -112,9 +138,9 @@ function PartnerPage() {
   const crmPlan = products.find((p) => /crm/i.test(p.packagesName)) ?? products[1] ?? products[0];
   const wsCost = websitePlan?.walletCharge ?? websitePlan?.discountedPrice ?? 9999;
   const crmCost = crmPlan?.walletCharge ?? crmPlan?.discountedPrice ?? 19999;
-  // Franchise (WALLET) recharge bonus multiplier — live from the partner-plans API.
+  // Franchise (WALLET) recharge bonus range — live from the partner-plans API tier ladder.
   const franchisePlan = plans.find((p) => !isCommission(p));
-  const rechargeMult = franchisePlan?.rechargeMultiplier ?? null;
+  const rechargeLabel = franchisePlan ? multiplierLabel(franchisePlan) : null;
 
   useEffect(() => {
     fetch(PLANS_API)
@@ -139,14 +165,14 @@ function PartnerPage() {
         <div className="container-x">
           <div className="grid-2" style={{ alignItems: "center" }}>
             <div>
-              <span className="eyebrow">White Label Partner Program</span>
+              <span className="eyebrow">B-Soft Partner Program</span>
               <h1 className="h-section" style={{ marginTop: 16 }}>
-                Start your own software company — without writing software.
+                Start your own software business — without writing a single line of code.
               </h1>
               <p style={{ marginTop: 14, fontSize: 18 }}>
-                Sell websites, CRM and AI products under <strong>your brand</strong>, on{" "}
-                <strong>your domain</strong>, at <strong>your prices</strong>. B-Soft runs the
-                platform; you keep the margin.
+                Sell ready-made websites, CRM and AI products to businesses around you — at{" "}
+                <strong>your own price</strong>. B-Soft builds and runs everything; you bring the
+                customers and <strong>keep the profit</strong>.
               </p>
               <div style={{ display: "flex", gap: 12, marginTop: 22, flexWrap: "wrap" }}>
                 <CtaLink to="/pricing" label="Become a Partner" className="btn btn-primary" crm="partner" />
@@ -170,31 +196,31 @@ function PartnerPage() {
               <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800, letterSpacing: 0.5, background: "#FEF3C7", color: "#92400E" }}>COMMISSION</span>
               <h3 style={{ fontSize: 20, fontWeight: 800, marginTop: 14 }}>Associate Partner</h3>
               <p style={{ marginTop: 10, fontSize: 15, color: "var(--slate)" }}>
-                The simplest way to start. Promote B-Soft, hand out <strong>your own discount coupons</strong>,
-                and earn commission on every sale you refer — the client pays B-Soft directly and you keep the
-                margin between your coupon discount and your commission cap. No wallet to fund, no gateway to set up.
+                The easiest way to begin. Tell businesses you know about B-Soft, give them
+                {" "}<strong>your own discount coupons</strong>, and earn a commission on every plan they buy.
+                The customer pays B-Soft directly — you simply earn. No wallet, no stock, nothing to manage.
               </p>
               <ul style={{ marginTop: 14, display: "grid", gap: 8, fontSize: 15, listStyle: "none", padding: 0 }}>
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Low ₹5,000 joining fee</li>
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Create discount coupons up to your commission cap</li>
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Commission paid into your Incentive Wallet, withdraw anytime</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Low joining fee — start earning fast</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Give your own discount coupons to win customers</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Commission comes to your Incentive Wallet — withdraw anytime</li>
               </ul>
             </div>
             <div className="card-flat" style={{ padding: 26, borderColor: "var(--purple-mid)" }}>
               <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800, letterSpacing: 0.5, background: "#E0F2FE", color: "#075985" }}>FRANCHISE</span>
               <h3 style={{ fontSize: 20, fontWeight: 800, marginTop: 14 }}>Franchise Partner</h3>
               <p style={{ marginTop: 10, fontSize: 15, color: "var(--slate)" }}>
-                Run a full software business under <strong>your own brand and domain</strong>. Recharge a prepaid
-                wallet{rechargeMult && rechargeMult > 1 ? <> — and every recharge is <strong>multiplied {rechargeMult}×</strong></> : null}, pay a fixed wholesale cost per website/CRM you sell, and charge your customers whatever
-                you like — their money lands in <strong>your</strong> payment gateway.
+                Become a full B-Soft business owner. Recharge your prepaid
+                wallet{rechargeLabel ? <> — and every recharge is <strong>multiplied {rechargeLabel}</strong></> : null}, then sell websites, CRM and AI products to businesses around you at
+                {" "}<strong>any price you like</strong>. B-Soft takes only a small fixed cost per sale — the rest of the profit stays with you.
               </p>
               <ul style={{ marginTop: 14, display: "grid", gap: 8, fontSize: 15, listStyle: "none", padding: 0 }}>
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Your brand, domain, logo and colors</li>
-                {rechargeMult && rechargeMult > 1 ? (
-                  <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> <strong>{rechargeMult}× wallet recharge bonus</strong> — pay ₹1, get ₹{rechargeMult} to spend</li>
+                {rechargeLabel ? (
+                  <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> <strong>{rechargeLabel} wallet recharge bonus</strong> — the more you recharge, the bigger the bonus</li>
                 ) : null}
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Set your own client prices — keep 100% of what you charge</li>
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Fixed wholesale cost per sale from your wallet</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> You set the selling price — keep the full profit</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Only a small fixed cost per sale from your wallet</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "var(--purple-mid)" }}>✓</span> Sell every B-Soft product from one simple panel</li>
               </ul>
             </div>
           </div>
@@ -221,9 +247,9 @@ function PartnerPage() {
       <section className="section-tight">
         <div className="container-x">
           <span className="eyebrow">What you sell & what you earn</span>
-          <h2 className="h-section" style={{ marginTop: 12 }}>Every B-Soft plan, and your economics on it.</h2>
+          <h2 className="h-section" style={{ marginTop: 12 }}>Every B-Soft plan, and what you earn on it.</h2>
           <p style={{ marginTop: 10, color: "var(--slate)", fontSize: 15 }}>
-            Retail price, Associate commission and Franchise wallet cost below are the <strong>live B-Soft plan rates</strong>.
+            The selling price, your Associate commission and your Franchise wallet cost below are all <strong>live B-Soft rates</strong> — nothing is made up.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16, marginTop: 28 }}>
             {products.map((p) => (
@@ -243,7 +269,7 @@ function PartnerPage() {
         </div>
       </section>
 
-      {/* Profit calculator (White-Label model) */}
+      {/* Profit calculator (Franchise model) */}
       <ProfitCalculator websiteCost={wsCost} crmCost={crmCost} />
 
       {/* Plans */}
@@ -273,18 +299,28 @@ function PartnerPage() {
                   {commission && p.maxCommissionPct != null ? (
                     <p style={{ fontSize: 14, marginTop: 8, fontWeight: 700, color: featured ? "#fff" : "#B45309" }}>Earn up to {p.maxCommissionPct}% commission</p>
                   ) : null}
-                  {!commission && p.rechargeMultiplier != null && p.rechargeMultiplier > 1 ? (
+                  {!commission && multiplierLabel(p) ? (
                     <div style={{
                       marginTop: 10, padding: "10px 12px", borderRadius: 10,
                       background: featured ? "rgba(255,255,255,0.12)" : "#ECFDF5",
                       border: featured ? "1px solid rgba(255,255,255,0.25)" : "1px solid #A7F3D0",
                     }}>
                       <p style={{ fontSize: 15, fontWeight: 800, color: featured ? "#9AE6B4" : "#047857" }}>
-                        🎁 {p.rechargeMultiplier}× wallet recharge bonus
+                        🎁 {multiplierLabel(p)} wallet recharge bonus
                       </p>
-                      <p style={{ fontSize: 12, marginTop: 2, opacity: 0.85 }}>
-                        Recharge ₹{inr(p.joiningFee)} → get ₹{inr(Math.round(p.joiningFee * p.rechargeMultiplier))} to spend
-                      </p>
+                      {(p.rechargeTiers ?? []).length > 1 ? (
+                        <ul style={{ margin: "6px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 3, fontSize: 12, opacity: 0.9 }}>
+                          {[...(p.rechargeTiers ?? [])].sort((a, b) => a.minAmount - b.minAmount).map((t) => (
+                            <li key={t.minAmount}>
+                              Recharge ₹{inr(t.minAmount)}+ → <strong>{t.multiplier}×</strong> (get ₹{inr(Math.round(Math.max(t.minAmount, 1) * t.multiplier))})
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p style={{ fontSize: 12, marginTop: 2, opacity: 0.85 }}>
+                          Pay ₹1 → get ₹{multiplierRange(p)?.max ?? p.rechargeMultiplier} to spend
+                        </p>
+                      )}
                     </div>
                   ) : null}
                   {p.description ? <p style={{ fontSize: 14, marginTop: 10, opacity: 0.85 }}>{p.description}</p> : null}
@@ -327,7 +363,7 @@ function PartnerPage() {
                 </tr>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
                   <td style={{ padding: 16, color: "var(--slate)" }}>Wallet recharge bonus</td>
-                  {plans.map((p) => <td key={p.code} style={{ padding: 16, fontWeight: 700 }}>{!isCommission(p) && p.rechargeMultiplier != null && p.rechargeMultiplier > 1 ? `${p.rechargeMultiplier}× (pay ₹1 → get ₹${p.rechargeMultiplier})` : "—"}</td>)}
+                  {plans.map((p) => <td key={p.code} style={{ padding: 16, fontWeight: 700 }}>{!isCommission(p) && multiplierLabel(p) ? `${multiplierLabel(p)} — recharge more, get more` : "—"}</td>)}
                 </tr>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
                   <td style={{ padding: 16, color: "var(--slate)" }}>Cost per website sold</td>
@@ -375,10 +411,12 @@ function PartnerPage() {
 function PlanEconomicsCard({ plan }: { plan: PricingPlan }) {
   const retail = plan.discountedPrice ?? plan.price;
   const commissionEarn = plan.commissionPct != null ? Math.round((retail * plan.commissionPct) / 100) : null;
+  // Accent colour is the admin-configured plan colour (business_type.bt_color) from the backend.
+  const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : "var(--purple-mid)";
   return (
-    <div className="card-flat" style={{ padding: 22 }}>
-      <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: "var(--purple-mid)" }}>{plan.packagesName}</p>
-      <p style={{ fontSize: 26, fontWeight: 800, marginTop: 8 }}>{formatINR(retail)}</p>
+    <div className="card-flat" style={{ padding: 22, borderTop: `4px solid ${accent}` }}>
+      <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: accent }}>{plan.packagesName}</p>
+      <p style={{ fontSize: 26, fontWeight: 800, marginTop: 8, color: accent }}>{formatINR(retail)}</p>
       <p style={{ fontSize: 12, color: "var(--slate)" }}>retail plan price</p>
       <div style={{ height: 1, background: "var(--line)", marginBlock: 14 }} />
       <dl style={{ display: "grid", gap: 8, fontSize: 14 }}>
@@ -454,8 +492,8 @@ function ProfitCalculator({ websiteCost, crmCost }: { websiteCost: number; crmCo
               </div>
             </dl>
             <p style={{ marginTop: 14, fontSize: 13, color: "var(--slate)" }}>
-              Per sale, ₹{inr(websiteCost)} (website) / ₹{inr(crmCost)} (CRM) is deducted from your partner wallet.
-              Customer payments go to your own payment gateway.
+              Per sale, only ₹{inr(websiteCost)} (website) / ₹{inr(crmCost)} (CRM) is taken from your wallet —
+              whatever you charge your customer above that is your profit to keep.
             </p>
             <div style={{ marginTop: 18 }}>
               <CtaLink to="/pricing" label="Start earning — become a Partner" className="btn btn-primary" crm="partner" />
