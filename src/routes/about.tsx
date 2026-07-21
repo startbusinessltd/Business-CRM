@@ -68,7 +68,7 @@ function About() {
         bullets={[
           "Transparent INR yearly plans",
           "Learning videos and in-app documentation",
-          "Partner list, white label, and demo booking for teams",
+          "Partner list, reseller access, and demo booking for teams",
           "Built-in AI assistant for day-to-day how-to questions",
         ]}
       />

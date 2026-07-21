@@ -128,7 +128,7 @@ function Home() {
           "Industry templates (salon, ecommerce, insurance, and more)",
           "INR pricing with Razorpay-ready payments",
           "GST-friendly invoicing and transaction history",
-          "Partner & white-label options for agencies",
+          "Partner & reseller options for agencies",
         ]}
       />
 

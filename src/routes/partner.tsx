@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, IMG } from "@/components/site/PageBlocks";
+import { CardMarquee } from "@/components/site/CardMarquee";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { fetchPricingPlans, formatINR, type PricingPlan } from "@/lib/pricing-api";
 
@@ -62,18 +63,21 @@ function multiplierLabel(p: PartnerPlan): string | null {
   return r.min === r.max ? `${r.min}×` : `${r.min}× to ${r.max}×`;
 }
 
+/** Uniform dark accent used for every card when the backend sends no plan colour. */
+const DARK_ACCENT = "#1f2937";
+
 /** Static fallback mirroring the seeded catalog — replaced by the live API when reachable. */
 const FALLBACK_PLANS: PartnerPlan[] = [
   {
     planId: 4, code: "ASSOCIATE", name: "Associate Partner", joiningFee: 5000,
     partnerType: "COMMISSION", maxCommissionPct: 30,
-    description: "Refer B-Soft to businesses you know and earn a commission on every plan they buy — no wallet, no stock, nothing to manage.",
+    description: "Offer B-Soft to businesses around you and earn a reward on every plan they buy — no wallet, no stock, nothing to manage.",
     features: [
-      "Earn up to 30% commission on every sale",
+      "Earn up to 30% reward on every sale",
       "Give your own discount coupons to customers",
-      "Commission comes straight to your Incentive Wallet",
+      "Your reward comes straight to your Incentive Wallet",
       "See every customer you bring in",
-      "Just refer and earn — no wallet to maintain",
+      "Just share and earn — no wallet to maintain",
     ],
   },
   {
@@ -193,17 +197,17 @@ function PartnerPage() {
           <h2 className="h-section" style={{ marginTop: 12 }}>Pick the model that fits you.</h2>
           <div className="grid-2" style={{ marginTop: 28, alignItems: "stretch" }}>
             <div className="card-flat" style={{ padding: 26, borderColor: "var(--line)" }}>
-              <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800, letterSpacing: 0.5, background: "#FEF3C7", color: "#92400E" }}>COMMISSION</span>
+              <span style={{ display: "inline-block", padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 800, letterSpacing: 0.5, background: "#FEF3C7", color: "#92400E" }}>REWARD</span>
               <h3 style={{ fontSize: 20, fontWeight: 800, marginTop: 14 }}>Associate Partner</h3>
               <p style={{ marginTop: 10, fontSize: 15, color: "var(--slate)" }}>
                 The easiest way to begin. Tell businesses you know about B-Soft, give them
-                {" "}<strong>your own discount coupons</strong>, and earn a commission on every plan they buy.
+                {" "}<strong>your own discount coupons</strong>, and earn a reward on every plan they buy.
                 The customer pays B-Soft directly — you simply earn. No wallet, no stock, nothing to manage.
               </p>
               <ul style={{ marginTop: 14, display: "grid", gap: 8, fontSize: 15, listStyle: "none", padding: 0 }}>
                 <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Low joining fee — start earning fast</li>
                 <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Give your own discount coupons to win customers</li>
-                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Commission comes to your Incentive Wallet — withdraw anytime</li>
+                <li style={{ display: "flex", gap: 8 }}><span style={{ color: "#D97706" }}>✓</span> Your reward comes to your Incentive Wallet — withdraw anytime</li>
               </ul>
             </div>
             <div className="card-flat" style={{ padding: 26, borderColor: "var(--purple-mid)" }}>
@@ -232,13 +236,16 @@ function PartnerPage() {
         <div className="container-x">
           <span className="eyebrow">Why partners join</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>Everything a software business needs, ready on day one.</h2>
-          <div className="card-slider" style={{ marginTop: 20 }}>
-            {BENEFITS.map((b) => (
-              <div key={b.title} className="card-flat" style={{ padding: 22 }}>
-                <h3 style={{ fontSize: 17, fontWeight: 700 }}>{b.title}</h3>
-                <p style={{ marginTop: 8, fontSize: 15, color: "var(--slate)" }}>{b.body}</p>
-              </div>
-            ))}
+          <div style={{ marginTop: 20 }}>
+            <CardMarquee
+              items={BENEFITS}
+              render={(b) => (
+                <div className="card-flat" style={{ padding: 22 }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 700 }}>{b.title}</h3>
+                  <p style={{ marginTop: 8, fontSize: 15, color: "var(--slate)" }}>{b.body}</p>
+                </div>
+              )}
+            />
           </div>
         </div>
       </section>
@@ -249,22 +256,20 @@ function PartnerPage() {
           <span className="eyebrow">What you sell & what you earn</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>Every B-Soft plan, and what you earn on it.</h2>
           <p style={{ marginTop: 10, color: "var(--slate)", fontSize: 15 }}>
-            The selling price, your Associate commission and your Franchise wallet cost below are all <strong>live B-Soft rates</strong> — nothing is made up.
+            The selling price, your Associate reward and your Franchise wallet cost below are all <strong>live B-Soft rates</strong> — nothing is made up.
           </p>
-          <div className="card-slider" style={{ marginTop: 20 }}>
-            {products.map((p) => (
-              <PlanEconomicsCard key={p.packagesId} plan={p} />
-            ))}
-            <div className="card-flat" style={{ padding: 22, background: "var(--purple-deep)", color: "#fff", borderColor: "var(--purple-mid)" }}>
-              <p style={{ fontSize: 14, opacity: 0.85 }}>Refer 10 websites + 10 CRMs / month</p>
-              <p style={{ fontSize: 30, fontWeight: 800, marginTop: 8 }}>
-                {formatINR(
-                  10 * Math.round((websitePlan?.discountedPrice ?? wsCost) * ((websitePlan?.commissionPct ?? 30) / 100)) +
-                  10 * Math.round((crmPlan?.discountedPrice ?? crmCost) * ((crmPlan?.commissionPct ?? 40) / 100))
-                )}
-              </p>
-              <p style={{ fontSize: 14, opacity: 0.85, marginTop: 6 }}>potential monthly commission (Associate) at live rates</p>
-            </div>
+          <div style={{ marginTop: 20 }}>
+            <CardMarquee items={products} render={(p) => <PlanEconomicsCard plan={p} />} />
+          </div>
+          <div className="card-flat" style={{ marginTop: 12, padding: 22, background: "var(--purple-deep)", color: "#fff", borderColor: "var(--purple-mid)", maxWidth: 440, marginInline: "auto", textAlign: "center" }}>
+            <p style={{ fontSize: 14, opacity: 0.85 }}>Sell 10 websites + 10 CRMs / month</p>
+            <p style={{ fontSize: 30, fontWeight: 800, marginTop: 8 }}>
+              {formatINR(
+                10 * Math.round((websitePlan?.discountedPrice ?? wsCost) * ((websitePlan?.commissionPct ?? 30) / 100)) +
+                10 * Math.round((crmPlan?.discountedPrice ?? crmCost) * ((crmPlan?.commissionPct ?? 40) / 100))
+              )}
+            </p>
+            <p style={{ fontSize: 14, opacity: 0.85, marginTop: 6 }}>potential monthly earnings (Associate) at live rates</p>
           </div>
         </div>
       </section>
@@ -277,12 +282,12 @@ function PartnerPage() {
         <div className="container-x">
           <span className="eyebrow">Partner plans</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>One joining fee. No monthly platform charge.</h2>
-          <div className="card-slider" style={{ marginTop: 20 }}>
-            {plans.map((p) => {
+          <div style={{ marginTop: 20 }}>
+            <CardMarquee items={plans} speed={26} render={(p) => {
               const featured = isCommission(p) ? false : (p.partnerType === "WALLET");
               const commission = isCommission(p);
               return (
-                <div key={p.code} className="card-flat" style={{
+                <div className="card-flat" style={{
                   padding: 26,
                   borderColor: featured ? "var(--purple-mid)" : "var(--line)",
                   background: featured ? "var(--purple-deep)" : "var(--card)",
@@ -292,12 +297,12 @@ function PartnerPage() {
                     display: "inline-block", padding: "3px 9px", borderRadius: 999, fontSize: 11, fontWeight: 800, letterSpacing: 0.5,
                     background: commission ? "#FEF3C7" : (featured ? "rgba(255,255,255,0.2)" : "#E0F2FE"),
                     color: commission ? "#92400E" : (featured ? "#fff" : "#075985"),
-                  }}>{commission ? "COMMISSION" : "FRANCHISE"}</span>
+                  }}>{commission ? "REWARD" : "FRANCHISE"}</span>
                   <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", opacity: featured ? 0.9 : 0.7, marginTop: 10 }}>{p.name}</p>
                   <p style={{ fontSize: 32, fontWeight: 800, marginTop: 8 }}>₹{inr(p.joiningFee)}</p>
                   <p style={{ fontSize: 13, opacity: 0.75 }}>one-time joining fee</p>
                   {commission && p.maxCommissionPct != null ? (
-                    <p style={{ fontSize: 14, marginTop: 8, fontWeight: 700, color: featured ? "#fff" : "#B45309" }}>Earn up to {p.maxCommissionPct}% commission</p>
+                    <p style={{ fontSize: 14, marginTop: 8, fontWeight: 700, color: featured ? "#fff" : "#B45309" }}>Earn up to {p.maxCommissionPct}% reward</p>
                   ) : null}
                   {!commission && multiplierLabel(p) ? (
                     <div style={{
@@ -336,7 +341,7 @@ function PartnerPage() {
                   </div>
                 </div>
               );
-            })}
+            }} />
           </div>
 
           {/* Comparison table */}
@@ -351,14 +356,14 @@ function PartnerPage() {
               <tbody>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
                   <td style={{ padding: 16, color: "var(--slate)" }}>Model</td>
-                  {plans.map((p) => <td key={p.code} style={{ padding: 16, fontWeight: 700 }}>{isCommission(p) ? "Commission" : "Franchise (wallet)"}</td>)}
+                  {plans.map((p) => <td key={p.code} style={{ padding: 16, fontWeight: 700 }}>{isCommission(p) ? "Reward" : "Franchise (wallet)"}</td>)}
                 </tr>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
                   <td style={{ padding: 16, color: "var(--slate)" }}>Joining fee</td>
                   {plans.map((p) => <td key={p.code} style={{ padding: 16, fontWeight: 700 }}>₹{inr(p.joiningFee)}</td>)}
                 </tr>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
-                  <td style={{ padding: 16, color: "var(--slate)" }}>Max commission</td>
+                  <td style={{ padding: 16, color: "var(--slate)" }}>Max reward</td>
                   {plans.map((p) => <td key={p.code} style={{ padding: 16 }}>{isCommission(p) && p.maxCommissionPct != null ? `${p.maxCommissionPct}%` : "—"}</td>)}
                 </tr>
                 <tr style={{ borderBottom: "1px solid var(--line)" }}>
@@ -388,14 +393,17 @@ function PartnerPage() {
         <div className="container-x">
           <span className="eyebrow">What a partner business looks like</span>
           <h2 className="h-section" style={{ marginTop: 12 }}>Example partner journeys.</h2>
-          <div className="card-slider" style={{ marginTop: 20 }}>
-            {JOURNEY_EXAMPLES.map((s) => (
-              <div key={s.name} className="card-flat" style={{ padding: 22 }}>
-                <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: "var(--purple-mid)" }}>{s.name}</p>
-                <p style={{ marginTop: 10, fontSize: 15, color: "var(--slate)" }}>{s.body}</p>
-                <p style={{ marginTop: 12, fontSize: 18, fontWeight: 800 }}>{s.figure}</p>
-              </div>
-            ))}
+          <div style={{ marginTop: 20 }}>
+            <CardMarquee
+              items={JOURNEY_EXAMPLES}
+              render={(s) => (
+                <div className="card-flat" style={{ padding: 22 }}>
+                  <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: "var(--purple-mid)" }}>{s.name}</p>
+                  <p style={{ marginTop: 10, fontSize: 15, color: "var(--slate)" }}>{s.body}</p>
+                  <p style={{ marginTop: 12, fontSize: 18, fontWeight: 800 }}>{s.figure}</p>
+                </div>
+              )}
+            />
           </div>
           <p style={{ marginTop: 14, fontSize: 12, color: "var(--slate)" }}>
             Illustrative scenarios at the example selling prices above — your prices and volumes are your own.
@@ -412,7 +420,8 @@ function PlanEconomicsCard({ plan }: { plan: PricingPlan }) {
   const retail = plan.discountedPrice ?? plan.price;
   const commissionEarn = plan.commissionPct != null ? Math.round((retail * plan.commissionPct) / 100) : null;
   // Accent colour is the admin-configured plan colour (business_type.bt_color) from the backend.
-  const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : "var(--purple-mid)";
+  // When the API sends no colour, every card falls back to the same dark accent.
+  const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : DARK_ACCENT;
   return (
     <div className="card-flat" style={{ padding: 22, borderTop: `4px solid ${accent}` }}>
       <p style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", color: accent }}>{plan.packagesName}</p>
@@ -421,7 +430,7 @@ function PlanEconomicsCard({ plan }: { plan: PricingPlan }) {
       <div style={{ height: 1, background: "var(--line)", marginBlock: 14 }} />
       <dl style={{ display: "grid", gap: 8, fontSize: 14 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-          <dt style={{ color: "var(--slate)" }}>Associate commission</dt>
+          <dt style={{ color: "var(--slate)" }}>Associate reward</dt>
           <dd style={{ fontWeight: 700, color: "#B45309", textAlign: "right" }}>
             {plan.commissionPct != null ? `${plan.commissionPct}%` : "—"}
             {commissionEarn != null ? ` · ${formatINR(commissionEarn)}` : ""}

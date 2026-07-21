@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, IMG, PageHero } from "@/components/site/PageBlocks";
+import { CardMarquee } from "@/components/site/CardMarquee";
 import { useCrmAppBase, crmAbsUrl } from "@/lib/crm-parent-bridge";
 import { fetchPricingPlans, formatINR, type PricingPlan } from "@/lib/pricing-api";
 
@@ -131,7 +132,8 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
   const priceText = meta.priceLabel ? meta.priceLabel(plan) : formatINR(shown);
   const save = has ? plan.price - (plan.discountedPrice as number) : 0;
   // Accent = the admin-configured plan colour (business_type.bt_color) from the backend.
-  const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : (featured ? "var(--brass)" : "var(--purple)");
+  // When the API sends no colour, every card falls back to the same dark accent.
+  const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : "#1f2937";
 
   return (
     <div
@@ -307,13 +309,11 @@ function Pricing() {
 
       <section className="section-tight">
         <div className="container-x">
-          <div className="card-slider" style={{ maxWidth: "fit-content", marginInline: "auto" }}>
-            {plans.map((plan) => (
-              <PlanCard key={plan.packagesId} plan={plan} ctaHref={ctaHrefFor(plan)} />
-            ))}
-          </div>
+          <CardMarquee items={plans} speed={26} render={(plan) => (
+            <PlanCard plan={plan} ctaHref={ctaHrefFor(plan)} />
+          )} />
           <p style={{ textAlign: "center", marginTop: 20, color: "var(--slate)", fontSize: 13 }}>
-            Swipe to see all plans · Prices in INR, billed yearly. GST applied on invoice where applicable.
+            Hover to pause · Prices in INR, billed yearly. GST applied on invoice where applicable.
           </p>
         </div>
       </section>

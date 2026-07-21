@@ -67,12 +67,12 @@ function EmployeesModule() {
 
       <FeatureRow
         eyebrow="Partners"
-        title="Partner and white-label access."
-        body="Partners get tailored menus (sign-up list, white label) while admins retain full platform controls."
+        title="Partner and reseller access."
+        body="Partners get tailored menus (sign-up list, reseller tools) while admins retain full platform controls."
         image={IMG.meeting}
         bullets={[
           "Partner role in menu-data",
-          "White label & partner signups",
+          "Reseller & partner signups",
           "Demo booking for sales teams",
           "Consistent with package type setup",
         ]}
