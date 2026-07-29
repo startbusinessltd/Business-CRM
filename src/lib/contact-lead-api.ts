@@ -9,10 +9,11 @@ const DEV_GATEWAY_API_BASE = "http://localhost:8013/api/";
  * API base resolution (same order as template iframes fed by Angular parent):
  * 1. Parent postMessage SET_API_BASE (environment.apiUrl from startbusinessltd-ui)
  * 2. VITE_API_BASE
- * 3. Dev standalone: direct gateway http://localhost:8013/api/ (not /api/ on :5180)
- * 4. Production build: api.bsoft.ltd
+ * 3. Dev browser: same-origin `/api/` (Vite proxies to :8013 — avoids CORS)
+ * 4. Dev SSR: direct gateway http://localhost:8013/api/
+ * 5. Production build: api.bsoft.ltd
  */
-function resolveApiBase(): string {
+export function resolveApiBase(): string {
   const fromParent = getCrmApiBase();
   if (fromParent) return fromParent.endsWith("/") ? fromParent : `${fromParent}/`;
 
@@ -22,6 +23,9 @@ function resolveApiBase(): string {
   if (fromEnv) return fromEnv.endsWith("/") ? fromEnv : `${fromEnv}/`;
 
   if (typeof import.meta !== "undefined" && import.meta.env?.DEV) {
+    // Browser must use the Vite proxy — calling :8013 directly is blocked by CORS
+    // and fails hard when the gateway is down ("Provisional headers are shown").
+    if (typeof window !== "undefined") return "/api/";
     return DEV_GATEWAY_API_BASE;
   }
 

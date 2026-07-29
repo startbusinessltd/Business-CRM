@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
+import { PartnerCta } from "@/components/site/PartnerJourney";
 
 const MOBILE_MAX = 920;
 
@@ -78,13 +79,7 @@ export function SiteHeader() {
         }}
       >
         <Link to="/" className="site-brand-lockup">
-          <img
-            src="/logo.png"
-            alt="B-SOFT"
-            width={56}
-            height={56}
-            className="site-brand-logo"
-          />
+          <img src="/logo.png" alt="B-SOFT" width={56} height={56} className="site-brand-logo" />
           <BrandTitle className="site-brand-title--header" />
         </Link>
 
@@ -96,15 +91,13 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="site-header-desktop-ctas" style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+        <div
+          className="site-header-desktop-ctas"
+          style={{ display: "flex", gap: 10, flexShrink: 0 }}
+        >
           <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-          <CtaLink to="/partner" label="Become Partner" className="btn btn-ghost" />
-          <CtaLink
-            to="/pricing"
-            label="Register now"
-            className="btn btn-primary"
-            crm="register"
-          />
+          <PartnerCta label="Become Partner" className="btn btn-ghost" />
+          <CtaLink to="/pricing" label="Register now" className="btn btn-primary" crm="register" />
         </div>
 
         <button
@@ -137,8 +130,13 @@ export function SiteHeader() {
           </div>
           <div className="site-mobile-ctas">
             <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-            <CtaLink to="/partner" label="Become Partner" className="btn btn-ghost" />
-            <CtaLink to="/pricing" label="Register now" className="btn btn-primary" crm="register" />
+            <PartnerCta label="Become Partner" className="btn btn-ghost" onClick={close} />
+            <CtaLink
+              to="/pricing"
+              label="Register now"
+              className="btn btn-primary"
+              crm="register"
+            />
           </div>
         </div>
       )}

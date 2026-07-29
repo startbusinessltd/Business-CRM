@@ -12,6 +12,7 @@ import {
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { PartnerJourneyProvider } from "@/components/site/PartnerJourney";
 import { installCrmParentBridge } from "@/lib/crm-parent-bridge";
 
 function NotFoundComponent() {
@@ -124,11 +125,13 @@ function RootComponent() {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <SiteHeader />
-      <main>
-        <Outlet />
-      </main>
-      <SiteFooter />
+      <PartnerJourneyProvider>
+        <SiteHeader />
+        <main>
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </PartnerJourneyProvider>
     </QueryClientProvider>
   );
 }
