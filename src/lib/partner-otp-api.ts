@@ -211,12 +211,102 @@ export async function verifyPartnerMobileOtp(
 }
 
 /**
+ * Phone-keyed LOGIN OTP — for a visitor whose mobile is already registered. Same endpoints the
+ * CRM login screen's "SMS OTP" tab uses; both are public on the gateway.
+ *
+ * Send   → POST auth/login/send-otp-phone?phone=
+ * Verify → POST auth/login/verify-otp-phone?phone=&otp=   (returns a full login payload)
+ */
+export async function sendLoginOtpToPhone(phone: string): Promise<ApiResult> {
+  const url = `${resolveApiBase()}auth/login/send-otp-phone?phone=${encodeURIComponent(phone.trim())}`;
+  let res: Response;
+  try {
+    res = await fetch(url, { method: "POST", headers: { Accept: "application/json" }, body: null });
+  } catch {
+    return networkFail(
+      typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
+    );
+  }
+
+  const json = await parseJson(res);
+  if (!isApiOk(res, json)) {
+    if (res.status === 500 || res.status === 502 || res.status === 504) {
+      return networkFail(
+        typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
+      );
+    }
+    return { ok: false, message: extractErrorMessage(json, res.status) };
+  }
+
+  return {
+    ok: true,
+    message: (json?.message as string | undefined) || "Sign-in OTP sent to your mobile.",
+  };
+}
+
+/** Verify a phone login OTP; returns the account's login session on success. */
+export async function verifyLoginOtpForPhone(
+  phone: string,
+  otp: string,
+): Promise<VerifyOtpResult> {
+  const url =
+    `${resolveApiBase()}auth/login/verify-otp-phone` +
+    `?phone=${encodeURIComponent(phone.trim())}` +
+    `&otp=${encodeURIComponent(otp.trim())}`;
+
+  let res: Response;
+  try {
+    res = await fetch(url, { method: "POST", headers: { Accept: "application/json" }, body: null });
+  } catch {
+    return networkFail(
+      typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
+    );
+  }
+
+  const json = await parseJson(res);
+  if (!isApiOk(res, json)) {
+    if (res.status === 500 || res.status === 502 || res.status === 504) {
+      return networkFail(
+        typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
+      );
+    }
+    return { ok: false, message: extractErrorMessage(json, res.status) };
+  }
+
+  const payload = json?.responsePayload;
+  let session: Record<string, unknown> | undefined;
+  if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+    const obj = payload as Record<string, unknown>;
+    if (typeof obj.token === "string" && obj.token) {
+      session = obj;
+    }
+  }
+
+  return {
+    ok: true,
+    message: (json?.message as string | undefined) || "Signed in.",
+    session,
+  };
+}
+
+/**
  * Fragment for the CRM sign-in bridge: `{crm}/auth/partner-handoff#session=<this>`.
  * Must stay decodable by PartnerHandoffComponent.readSessionFromHash — base64url of
  * the UTF-8 JSON (atob + escape/decodeURIComponent on the Angular side).
  */
 export function encodePartnerHandoffSession(session: Record<string, unknown>): string {
   const json = JSON.stringify(slimPartnerSession(session));
+  const base64 = btoa(unescape(encodeURIComponent(json)));
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/**
+ * Same bridge, but WITHOUT slimming — for signing a NON-partner (e.g. CRM) account into its own
+ * dashboard. A CRM session needs fields the slim partner payload drops (website[], crmId,
+ * accessModules…); fragments comfortably carry a full login payload in modern browsers.
+ */
+export function encodeFullHandoffSession(session: Record<string, unknown>): string {
+  const json = JSON.stringify(session);
   const base64 = btoa(unescape(encodeURIComponent(json)));
   return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
