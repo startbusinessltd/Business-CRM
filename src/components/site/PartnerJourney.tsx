@@ -114,12 +114,9 @@ export function PartnerJourneyProvider({ children }: { children: ReactNode }) {
     [open, openReview, close],
   );
 
-  // OTP verified and a login session issued → hand it to the CRM sign-in bridge
-  // (/auth/partner-handoff), which routes by role: partners → /onboarding/welcome, any other
-  // account (CRM/client whose mobile or email was already registered) → its own dashboard.
-  // Partners travel slim (fragment stays small); non-partners travel FULL because a CRM session
-  // needs fields the slim payload drops (website[], accessModules…).
-  // Without a session at all (older backend / storage blocked) fall back to the login page.
+  // OTP verified → hand session to CRM bridge immediately (no success / countdown screen).
+  // Partners → /onboarding/welcome; other roles → their dashboard. Slim fragment for partners;
+  // full payload for CRM sessions. No session → login fallback.
   const handleUnlocked = useCallback(() => {
     setIsOpen(false);
     const session = readPartnerSession();
@@ -326,7 +323,7 @@ function DetailsStep({
   setLead: (l: PartnerLead) => void;
   onDone: () => void;
 }) {
-  const [phase, setPhase] = useState<"form" | "otp" | "registered">("form");
+  const [phase, setPhase] = useState<"form" | "otp">("form");
   const [errors, setErrors] = useState<Partial<Record<keyof PartnerLead, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -334,13 +331,11 @@ function DetailsStep({
   const [otpError, setOtpError] = useState<string | null>(null);
   const [resendIn, setResendIn] = useState(0);
   /**
-   * 'register': fresh sign-up — email-keyed OTP from auth/partner/register.
-   * 'phone-login': the mobile already belongs to an account, so the visitor chose "Send OTP &
-   * sign in" — phone-keyed LOGIN OTP against that existing account instead of a dead-end error.
+   * 'register': fresh sign-up (or existing email) — email-keyed OTP.
+   * 'phone-login': mobile already belongs to an account — phone-keyed LOGIN OTP.
+   * Chosen silently; the visitor never sees "already registered".
    */
   const [otpMode, setOtpMode] = useState<"register" | "phone-login">("register");
-  /** Mobile already registered — offer OTP sign-in instead of an error. */
-  const [mobileTaken, setMobileTaken] = useState(false);
 
   useEffect(() => {
     if (phase !== "otp" || resendIn <= 0) return;
@@ -379,6 +374,10 @@ function DetailsStep({
     }
   };
 
+  /**
+   * Always try to land on OTP. New users: register (+ SMS). Existing email/mobile: send the
+   * matching OTP silently — never surface "already registered" to the visitor.
+   */
   const sendOtp = async (): Promise<boolean> => {
     const { firstName, lastName } = splitFullName(lead.fullName);
     const phone = normalizeIndianMobile(lead.mobile);
@@ -395,30 +394,51 @@ function DetailsStep({
       district: lead.district.trim(),
     });
 
-    if (reg.ok) return true;
-
-    // Only "email already exists" means we can OTP an existing account by email.
-    // "Mobile number already exists" cannot fall through the same way — that email was never
-    // created, so send-mobile-otp would return "User not found".
-    const msg = reg.message || "";
-    const emailTaken = /email.*(already|exist|registered|duplicate)|(already|exist|registered|duplicate).*email/i.test(
-      msg,
-    );
-    if (emailTaken) {
-      const resent = await sendPartnerMobileOtp(email);
-      if (resent.ok) return true;
-      setApiError(friendlyError(resent.message));
-      return false;
+    if (reg.ok) {
+      setOtpMode("register");
+      return true;
     }
 
-    // Mobile already belongs to an account → offer "Send OTP & sign in" for THAT account
-    // (phone-keyed login OTP) instead of a dead-end "already registered" error.
+    const msg = reg.message || "";
+    const emailTaken =
+      /email.*(already|exist|registered|duplicate)|(already|exist|registered|duplicate).*email/i.test(
+        msg,
+      );
     const takenByMobile =
       /(mobile|phone).*?(already|exist|registered|duplicate)|(already|exist|registered|duplicate).*?(mobile|phone)/i.test(
         msg,
       );
-    if (takenByMobile) {
-      setMobileTaken(true);
+    const genericExists =
+      /already\s*(registered|exists?)|(user|account).*(exists?|registered)/i.test(msg);
+
+    if (emailTaken || takenByMobile || genericExists) {
+      if (emailTaken) {
+        const resent = await sendPartnerMobileOtp(email);
+        if (resent.ok) {
+          setOtpMode("register");
+          return true;
+        }
+        const phoneRes = await sendLoginOtpToPhone(phone);
+        if (phoneRes.ok) {
+          setOtpMode("phone-login");
+          return true;
+        }
+        setApiError(friendlyError(resent.message || phoneRes.message));
+        return false;
+      }
+
+      // Mobile taken or generic "already exists" → phone login OTP, then email OTP as fallback.
+      const phoneRes = await sendLoginOtpToPhone(phone);
+      if (phoneRes.ok) {
+        setOtpMode("phone-login");
+        return true;
+      }
+      const emailRes = await sendPartnerMobileOtp(email);
+      if (emailRes.ok) {
+        setOtpMode("register");
+        return true;
+      }
+      setApiError(friendlyError(phoneRes.message || emailRes.message));
       return false;
     }
 
@@ -426,34 +446,9 @@ function DetailsStep({
     return false;
   };
 
-  /** "Send OTP & sign in" — logs the existing account in via its registered mobile. */
-  const handleExistingMobileSignIn = async () => {
-    if (submitting) return;
-    setApiError(null);
-    setSubmitting(true);
-    try {
-      const res = await sendLoginOtpToPhone(normalizeIndianMobile(lead.mobile));
-      if (!res.ok) {
-        setApiError(friendlyError(res.message));
-        return;
-      }
-      persist();
-      setOtpMode("phone-login");
-      setOtp("");
-      setOtpError(null);
-      setPhase("otp");
-      setResendIn(60);
-    } catch {
-      setApiError("Something went wrong while sending the OTP. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setApiError(null);
-    setMobileTaken(false);
     setOtpMode("register");
     if (!validate()) return;
 
@@ -509,9 +504,6 @@ function DetailsStep({
       }
 
       if (verified.session?.token) {
-        // Partner OR non-partner: store the session and continue. The CRM hand-off routes by
-        // role — partners → /onboarding/welcome, everyone else → their own dashboard — so a
-        // CRM/client account signing back in is welcomed, not shown a dead-end error.
         storePartnerSession(verified.session);
         if (window.parent && window.parent !== window) {
           try {
@@ -525,9 +517,8 @@ function DetailsStep({
         }
       }
 
-      // Registration done → success screen, then straight into the CRM
-      // (/auth/partner-handoff → /onboarding/welcome; login page only as fallback).
-      setPhase("registered");
+      // Seamless hand-off — no success / redirect countdown screen.
+      onDone();
     } catch {
       setOtpError("Something went wrong while verifying the OTP. Please try again.");
     } finally {
@@ -557,16 +548,6 @@ function DetailsStep({
       setSubmitting(false);
     }
   };
-
-  if (phase === "registered") {
-    return (
-      <RegistrationSuccess
-        lead={lead}
-        onContinue={onDone}
-        existingAccount={otpMode === "phone-login"}
-      />
-    );
-  }
 
   if (phase === "otp") {
     return (
@@ -625,7 +606,6 @@ function DetailsStep({
               setOtpError(null);
               setApiError(null);
               setOtpMode("register");
-              setMobileTaken(false);
             }}
             disabled={submitting}
           >
@@ -712,24 +692,6 @@ function DetailsStep({
         Provide district or address (at least one).
       </p>
 
-      {mobileTaken ? (
-        <div className="pj-alert" role="alert">
-          <strong>This mobile number is already registered.</strong> No problem — we can text a
-          one-time password to <strong>+91 {normalizeIndianMobile(lead.mobile)}</strong> and sign
-          you straight in.
-          <div className="pj-actions__buttons" style={{ marginTop: 10 }}>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleExistingMobileSignIn}
-              disabled={submitting}
-            >
-              {submitting ? "Sending OTP…" : "Send OTP & sign in →"}
-            </button>
-          </div>
-        </div>
-      ) : null}
-
       {apiError ? (
         <div className="pj-alert" role="alert">
           <strong>Could not send OTP.</strong> {apiError}
@@ -747,136 +709,6 @@ function DetailsStep({
         </div>
       </div>
     </form>
-  );
-}
-
-/* ---------------------- 02 registration successful ---------------------- */
-
-/** Seconds the success screen stays before moving on into the CRM. */
-const REGISTERED_REDIRECT_SECONDS = 5;
-
-/**
- * Shown right after OTP verification: registration confirmed, then hand-off to the CRM.
- * With an OTP session → signed in directly on /onboarding/welcome; otherwise → login page.
- */
-function RegistrationSuccess({
-  lead,
-  onContinue,
-  existingAccount = false,
-}: {
-  lead: PartnerLead;
-  onContinue: () => void;
-  /** True when an already-registered mobile signed in via OTP (no new account was created). */
-  existingAccount?: boolean;
-}) {
-  const [secondsLeft, setSecondsLeft] = useState(REGISTERED_REDIRECT_SECONDS);
-  const [signedIn] = useState(() => {
-    const session = readPartnerSession();
-    return typeof session?.token === "string" && !!session.token;
-  });
-  /** Non-partner (CRM/client) sign-in → the hand-off opens THEIR dashboard, not partner onboarding. */
-  const [partnerAccount] = useState(() => isPartnerPortalSession(readPartnerSession()));
-  const destination = partnerAccount ? "partner program" : "dashboard";
-
-  useEffect(() => {
-    if (secondsLeft <= 0) {
-      onContinue();
-      return;
-    }
-    const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-  }, [secondsLeft, onContinue]);
-
-  return (
-    <div className="pj-success">
-      <div className="pj-success__mark" aria-hidden="true">
-        ✅
-      </div>
-      <h3 className="pj-success__h">
-        {existingAccount ? "Welcome back!" : "Registration successful!"}
-      </h3>
-      <p className="pj-lede">
-        {lead.fullName ? `Welcome, ${lead.fullName}. ` : ""}
-        {existingAccount
-          ? "Your mobile number is verified and you're signed in to your existing account. "
-          : "Your mobile number is verified and your partner account has been created. "}
-        {signedIn
-          ? partnerAccount
-            ? "We're signing you in and opening your partner program — compare Associate vs Franchise and complete payment there."
-            : "We're signing you in and opening your dashboard."
-          : "Sign in to compare Associate vs Franchise and complete payment."}
-      </p>
-
-      <div className="pj-creds">
-        <h4 className="pj-h4">Your login details</h4>
-        <dl className="pj-dl">
-          <div>
-            <dt>Name</dt>
-            <dd>{lead.fullName || "—"}</dd>
-          </div>
-          {lead.companyName ? (
-            <div>
-              <dt>Company</dt>
-              <dd>{lead.companyName}</dd>
-            </div>
-          ) : null}
-          <div>
-            <dt>Login email</dt>
-            <dd className="pj-break">{lead.email || "—"}</dd>
-          </div>
-          <div>
-            <dt>Registered mobile</dt>
-            <dd>{lead.mobile ? `+91 ${lead.mobile}` : "—"}</dd>
-          </div>
-        </dl>
-        <p className="pj-fineprint">
-          {signedIn
-            ? "Save these details — use this email whenever you sign in again, with your password or a one-time code sent to your registered mobile."
-            : "Use this email on the login page. You can sign in with your password or a one-time code sent to your registered mobile."}
-        </p>
-      </div>
-
-      <div className="pj-actions" style={{ justifyContent: "center" }}>
-        <div className="pj-actions__buttons">
-          <button type="button" className="btn btn-primary" onClick={onContinue}>
-            {signedIn ? `Open my ${destination} →` : "Continue to login →"}
-          </button>
-        </div>
-      </div>
-      <p className="pj-fineprint" role="status">
-        {signedIn
-          ? `Opening your ${destination} in ${secondsLeft}s…`
-          : `Taking you to the login page in ${secondsLeft}s…`}
-      </p>
-    </div>
-  );
-}
-
-/** Registered user's name + details, confirmed above the program comparison. */
-function RegisteredBanner({ lead }: { lead: PartnerLead }) {
-  const firstName = splitFullName(lead.fullName).firstName;
-  return (
-    <div className="pj-registered" role="status">
-      <span className="pj-registered__tick" aria-hidden="true">
-        ✓
-      </span>
-      <div>
-        <p className="pj-registered__title">
-          {firstName ? `Welcome, ${firstName} — ` : "Welcome — "}you are registered as a B Soft
-          partner
-        </p>
-        <p className="pj-registered__sub">
-          {[
-            lead.fullName,
-            lead.companyName,
-            lead.email,
-            lead.mobile ? `+91 ${lead.mobile}` : "",
-          ]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
-      </div>
-    </div>
   );
 }
 
