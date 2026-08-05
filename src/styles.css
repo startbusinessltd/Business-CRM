@@ -1488,19 +1488,6 @@
   /* Landing-page variant of the support block */
   .pj-support--page .pj-h4 { margin-top: 0; }
 
-  /* --- registration successful: login details card --- */
-  .pj-creds {
-    margin: 22px auto 0;
-    max-width: 460px;
-    padding: 18px 20px;
-    border-radius: 12px;
-    text-align: left;
-    background: var(--card);
-    border: 1px solid var(--line);
-  }
-  .pj-creds .pj-h4 { margin-top: 0; }
-  .pj-creds .pj-fineprint { margin-top: 12px; }
-
   /* --- "you are registered" banner above the programs --- */
   .pj-registered {
     display: flex;

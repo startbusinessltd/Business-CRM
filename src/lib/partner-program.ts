@@ -198,9 +198,9 @@ export type FranchisePackage = {
   label: string;
   amount: number;
   multiplier: number;
-  /** Extra wallet money B Soft adds on top of the package amount. */
+  /** Extra wallet money B Soft adds on top of the package amount (walletValue − amount). */
   bonusValue: number;
-  /** Total credited to the business wallet: the package amount itself + the bonus. */
+  /** Total credited to the business wallet: amount × multiplier. */
   walletValue: number;
   bestFor: string;
 };
@@ -215,7 +215,10 @@ const PACKAGE_BEST_FOR: Record<number, string> = {
  * Franchise packages from the live admin recharge ladder.
  * If the ladder is missing, fall back to a single package using the plan joining fee.
  *
- * Wallet maths: package amount + (amount × multiplier) bonus when multiplier > 1.
+ * Wallet maths: the multiplier is the TOTAL credited, not a bonus on top — pay ₹25,000 at 4×
+ * and the wallet holds ₹1,00,000 (₹25,000 package + ₹75,000 bonus). This matches the admin
+ * recharge-pack rule ("credits amount × multiplier") and the server's `creditAmount`, so the
+ * landing page can never quote a different balance from the one the partner is actually given.
  */
 export function franchisePackages(plan: PartnerPlan): FranchisePackage[] {
   const rows = ladder(plan).filter((t) => t.minAmount > 0);
@@ -228,14 +231,15 @@ export function franchisePackages(plan: PartnerPlan): FranchisePackage[] {
 
   return amounts.map((amount, i) => {
     const multiplier = Math.max(multiplierFor(plan, amount), 1);
-    const bonusValue = multiplier > 1 ? amount * multiplier : 0;
+    const walletValue = amount * multiplier;
+    const bonusValue = walletValue - amount;
     return {
       id: `PKG_${amount}`,
       label: `Package ${i + 1}`,
       amount,
       multiplier,
       bonusValue,
-      walletValue: amount + bonusValue,
+      walletValue,
       bestFor: PACKAGE_BEST_FOR[i] ?? PACKAGE_BEST_FOR[2],
     };
   });

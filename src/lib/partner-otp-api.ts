@@ -63,59 +63,76 @@ function networkFail(hint?: string): ApiResult {
   };
 }
 
+function isTransientEntityManagerError(body: Record<string, unknown> | null, status: number): boolean {
+  if (status < 500) return false;
+  const msg = String(body?.message ?? body?.responsePayload ?? body?.error ?? "");
+  return /Could not open JPA EntityManager for transaction|Unable to acquire JDBC Connection/i.test(msg);
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const DEV_GATEWAY_HINT =
   "Start SB-GATEWAY-SERVICE on port 8013 (API), then retry.";
 
 /** Register partner and trigger SMS OTP to the given mobile. */
 export async function registerPartnerAndSendOtp(body: PartnerRegisterBody): Promise<ApiResult> {
   const url = `${resolveApiBase()}auth/partner/register`;
-  let res: Response;
-  try {
-    res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({
-        firstName: body.firstName.trim(),
-        lastName: body.lastName.trim() || ".",
-        email: body.email.trim(),
-        phoneNumber: body.phoneNumber,
-        address: body.address.trim(),
-        companyName: body.companyName.trim(),
-        state: body.state.trim(),
-        district: body.district.trim(),
-      }),
-    });
-  } catch {
-    return networkFail(
-      typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
-    );
-  }
-
-  const json = await parseJson(res);
-  if (!isApiOk(res, json)) {
-    // Vite proxy returns 500/502 when nothing is listening on :8013.
-    if (res.status === 500 || res.status === 502 || res.status === 504) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          firstName: body.firstName.trim(),
+          lastName: body.lastName.trim() || ".",
+          email: body.email.trim(),
+          phoneNumber: body.phoneNumber,
+          address: body.address.trim(),
+          companyName: body.companyName.trim(),
+          state: body.state.trim(),
+          district: body.district.trim(),
+        }),
+      });
+    } catch {
       return networkFail(
         typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
       );
     }
-    return { ok: false, message: extractErrorMessage(json, res.status) };
-  }
 
-  const payload = json?.responsePayload as Record<string, unknown> | null;
-  if (payload?.otpSent === false) {
+    const json = await parseJson(res);
+    if (!isApiOk(res, json)) {
+      if (attempt === 0 && isTransientEntityManagerError(json, res.status)) {
+        await sleep(1200);
+        continue;
+      }
+      // Vite proxy returns 500/502 when nothing is listening on :8013.
+      if (res.status === 500 || res.status === 502 || res.status === 504) {
+        return networkFail(
+          typeof import.meta !== "undefined" && import.meta.env?.DEV ? DEV_GATEWAY_HINT : undefined,
+        );
+      }
+      return { ok: false, message: extractErrorMessage(json, res.status) };
+    }
+
+    const payload = json?.responsePayload as Record<string, unknown> | null;
+    if (payload?.otpSent === false) {
+      return {
+        ok: false,
+        message:
+          (json?.message as string | undefined) ||
+          "Partner registered, but OTP SMS could not be sent. Please try Resend OTP.",
+      };
+    }
+
     return {
-      ok: false,
-      message:
-        (json?.message as string | undefined) ||
-        "Partner registered, but OTP SMS could not be sent. Please try Resend OTP.",
+      ok: true,
+      message: (json?.message as string | undefined) || "OTP sent to your mobile number.",
     };
   }
-
-  return {
-    ok: true,
-    message: (json?.message as string | undefined) || "OTP sent to your mobile number.",
-  };
+  return { ok: false, message: "Could not complete partner registration. Please try again." };
 }
 
 /** Resend mobile OTP for a partner/register email. */
