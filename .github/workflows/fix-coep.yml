@@ -24,6 +24,7 @@ on:
         options:
           - inspect
           - apply
+          - audit
 
 concurrency:
   group: cloudfront-coep
@@ -43,13 +44,36 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
+      # Response headers policies are account-level and can be shared across
+      # distributions. bolt.diy needs COEP for WebContainer, so we must know
+      # every distribution this policy is attached to before changing it.
+      - name: Audit policy usage across all distributions
+        if: inputs.mode == 'audit'
+        run: |
+          set -euo pipefail
+          aws cloudfront list-distributions > all.json
+          jq -r '.DistributionList.Items[]?
+                 | . as $d
+                 | ($d.Aliases.Items // ["<no alias>"] | join(",")) as $al
+                 | [ {b:"default", r:($d.DefaultCacheBehavior.ResponseHeadersPolicyId // "-")} ]
+                   + [ ($d.CacheBehaviors.Items[]? | {b:.PathPattern, r:(.ResponseHeadersPolicyId // "-")}) ]
+                 | .[] | "\($d.Id)  \($al)  \(.b)  ->  \(.r)"' all.json
+          echo "--- distributions using 1c2f27a5-23d5-42d3-8eee-5d5b12737eaa ---"
+          jq -r '.DistributionList.Items[]?
+                 | select( ([.DefaultCacheBehavior.ResponseHeadersPolicyId]
+                          + [.CacheBehaviors.Items[]?.ResponseHeadersPolicyId])
+                          | index("1c2f27a5-23d5-42d3-8eee-5d5b12737eaa") )
+                 | "\(.Id)  \((.Aliases.Items // ["<no alias>"]) | join(","))"' all.json
+
       - name: Header as currently served
+        if: inputs.mode != 'audit'
         run: curl -sI "$SITE_URL/contact" | grep -i '^cross-origin' || echo '(no cross-origin headers)'
 
       # Everything below prints to stdout, not just the job summary, so a failed
       # run can be diagnosed from the log alone.
       - name: Inspect distribution
         id: locate
+        if: inputs.mode != 'audit'
         run: |
           set -euo pipefail
           aws cloudfront get-distribution-config --id "${{ secrets.CF_DIST_ID }}" > dist.json
@@ -68,7 +92,7 @@ jobs:
 
       - name: Read policy and find COEP
         id: check
-        if: steps.locate.outputs.rhp != ''
+        if: inputs.mode != 'audit' && steps.locate.outputs.rhp != ''
         run: |
           set -euo pipefail
           RHP="${{ steps.locate.outputs.rhp }}"
