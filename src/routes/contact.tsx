@@ -207,6 +207,20 @@ function Contact() {
                     referrerPolicy="strict-origin-when-cross-origin"
                     title="B-SOFT office location — Channapatna"
                   />
+                  <a
+                    href={CONTACT.officeMapLinkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "inline-block",
+                      marginTop: 8,
+                      fontSize: 12,
+                      color: "var(--purple)",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Open in Google Maps ↗
+                  </a>
                 </div>
               </form>
             </div>

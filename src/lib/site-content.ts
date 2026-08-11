@@ -108,6 +108,10 @@ export const CONTACT = {
   // (12.645694, 77.203722); !5e1 selects satellite view (!5e0 is the road map).
   officeMapEmbedUrl:
     "https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d7045.988339020517!2d77.203722!3d12.64569!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTLCsDM4JzQ0LjUiTiA3N8KwMTInMTMuNCJF!5e1!3m2!1sen!2sus!4v1786454455913!5m2!1sen!2sus",
+  // Always-visible escape hatch. Ad blockers, privacy extensions and enterprise
+  // policies routinely refuse to frame google.com, which leaves the embed as a bare
+  // "refused to connect" box — this keeps the location reachable when that happens.
+  officeMapLinkUrl: "https://www.google.com/maps/search/?api=1&query=12.645694%2C77.203722",
   replyTime: "We typically reply within 24 hours.",
 };
 
