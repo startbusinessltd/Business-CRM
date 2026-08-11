@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { type FormEvent, type IframeHTMLAttributes, type ReactNode, useState } from "react";
 import { IMG, PageHero } from "@/components/site/PageBlocks";
 import { CONTACT } from "@/lib/site-content";
 import {
@@ -197,6 +197,13 @@ function Contact() {
                   We respect your inbox. No newsletters, no third-party sharing.
                 </p>
                 <div className="contact-map-slot">
+                  {/*
+                    Production CloudFront sends COEP: credentialless. Under COEP,
+                    cross-origin iframes are refused unless they also send COEP/CORP
+                    (Google Maps does not) — Chrome shows "refused to connect".
+                    The HTML iframe `credentialless` attribute opts this frame out of
+                    that rule. Removing COEP site-wide (fix-coep.yml) is the long-term fix.
+                  */}
                   <iframe
                     src={CONTACT.officeMapEmbedUrl}
                     width="100%"
@@ -206,6 +213,8 @@ function Contact() {
                     loading="lazy"
                     referrerPolicy="strict-origin-when-cross-origin"
                     title="B-SOFT office location — Channapatna"
+                    // React's DOM types lag the HTML attribute; cast keeps TS quiet.
+                    {...({ credentialless: true } as IframeHTMLAttributes<HTMLIFrameElement>)}
                   />
                   <a
                     href={CONTACT.officeMapLinkUrl}
