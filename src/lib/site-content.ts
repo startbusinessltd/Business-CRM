@@ -100,10 +100,14 @@ export const CONTACT = {
     "Karnataka – 562160, India.",
   ].join("\n"),
   // Google cannot geocode the "#454, 1st Cross" street address — it falls back to a
-  // low-confidence match ~25km away and renders a pin-less search map. Embed by
-  // coordinates instead so the marker lands on the office.
-  officeLatLng: "12.6456903,77.2037216",
-  officeMapZoom: 16,
+  // low-confidence match ~25km away and renders a pin-less search map. Use Google's
+  // official embed URL (Maps → Share → Embed a map), which pins an exact point.
+  //
+  // The pb blob is opaque: to move the pin, regenerate it from Google Maps rather than
+  // hand-editing. Decoded from this one — marker 12°38'44.5"N 77°12'13.4"E
+  // (12.645694, 77.203722); !5e1 selects satellite view (!5e0 is the road map).
+  officeMapEmbedUrl:
+    "https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d7045.988339020517!2d77.203722!3d12.64569!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTLCsDM4JzQ0LjUiTiA3N8KwMTInMTMuNCJF!5e1!3m2!1sen!2sus!4v1786454455913!5m2!1sen!2sus",
   replyTime: "We typically reply within 24 hours.",
 };
 

@@ -198,13 +198,13 @@ function Contact() {
                 </p>
                 <div className="contact-map-slot">
                   <iframe
-                    src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.officeLatLng)}&z=${CONTACT.officeMapZoom}&hl=en&output=embed`}
+                    src={CONTACT.officeMapEmbedUrl}
                     width="100%"
                     height="220"
                     className="contact-map-iframe"
                     allowFullScreen
                     loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
+                    referrerPolicy="strict-origin-when-cross-origin"
                     title="B-SOFT office location — Channapatna"
                   />
                 </div>
