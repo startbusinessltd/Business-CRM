@@ -1,0 +1,157 @@
+name: Fix CloudFront COEP
+
+# Cross-Origin-Embedder-Policy on the marketing distribution puts bsoft.ltd into
+# cross-origin isolation, which makes Chrome refuse ANY cross-origin iframe whose
+# document does not itself send a COEP header. Google's Maps embed does not send
+# one, so the contact-page map renders as "www.google.com refused to connect".
+#
+# The site uses no SharedArrayBuffer / Atomics / wasm threads, so it gains nothing
+# from isolation. This workflow removes just that one header.
+#
+# Run with mode=inspect first — it changes nothing and prints exactly what is set.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'inspect = report only, changes nothing. apply = remove COEP + invalidate.'
+        required: true
+        type: choice
+        default: inspect
+        options:
+          - inspect
+          - apply
+
+concurrency:
+  group: cloudfront-coep
+  cancel-in-progress: false
+
+jobs:
+  coep:
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      SITE_URL: https://bsoft.ltd
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Show header as currently served
+        run: |
+          echo "## COEP fix (${{ inputs.mode }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Before" >> "$GITHUB_STEP_SUMMARY"
+          BEFORE=$(curl -sI "$SITE_URL/contact" | grep -i '^cross-origin' || echo '(none)')
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "$BEFORE" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "$BEFORE"
+
+      # Find where the header comes from: a response headers policy, or an
+      # edge function. Only the former can be fixed by editing a policy.
+      - name: Locate the source of the header
+        id: locate
+        run: |
+          set -euo pipefail
+          aws cloudfront get-distribution-config --id "${{ secrets.CF_DIST_ID }}" > dist.json
+
+          RHP=$(jq -r '.DistributionConfig.DefaultCacheBehavior.ResponseHeadersPolicyId // ""' dist.json)
+          FN=$(jq -r '[.DistributionConfig.DefaultCacheBehavior.FunctionAssociations.Items[]?.FunctionARN] | join(", ")' dist.json)
+          LAMBDA=$(jq -r '[.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items[]?.LambdaFunctionARN] | join(", ")' dist.json)
+
+          echo "rhp=$RHP" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Source"
+            echo "| Item | Value |"
+            echo "|------|-------|"
+            echo "| Response headers policy | ${RHP:-none attached} |"
+            echo "| CloudFront Functions | ${FN:-none} |"
+            echo "| Lambda@Edge | ${LAMBDA:-none} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -z "$RHP" ]; then
+            echo "::warning::No response headers policy on the default behaviour."
+            echo "::warning::COEP is being added by an edge function above - this workflow cannot edit that."
+          fi
+
+      - name: Read the policy and check for COEP
+        id: check
+        if: steps.locate.outputs.rhp != ''
+        run: |
+          set -euo pipefail
+          RHP="${{ steps.locate.outputs.rhp }}"
+          aws cloudfront get-response-headers-policy-config --id "$RHP" > pol.json
+
+          jq '.ResponseHeadersPolicyConfig' pol.json > cfg.json
+          ETAG=$(jq -r '.ETag' pol.json)
+          NAME=$(jq -r '.Name' cfg.json)
+          HAS=$(jq -r 'if .SecurityHeadersConfig.CrossOriginEmbedderPolicy then "yes" else "no" end' cfg.json)
+          VALUE=$(jq -r '.SecurityHeadersConfig.CrossOriginEmbedderPolicy.value // "n/a"' cfg.json)
+
+          # Managed policies are read-only; they must be copied before editing.
+          MANAGED=$(aws cloudfront list-response-headers-policies --type managed \
+            | jq -r --arg id "$RHP" '[.ResponseHeadersPolicyList.Items[]?.ResponseHeadersPolicy.Id] | index($id) | if . then "yes" else "no" end')
+
+          echo "etag=$ETAG"      >> "$GITHUB_OUTPUT"
+          echo "has_coep=$HAS"   >> "$GITHUB_OUTPUT"
+          echo "managed=$MANAGED" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "| Policy name | $NAME |"
+            echo "| Managed (read-only) | $MANAGED |"
+            echo "| Has COEP | $HAS |"
+            echo "| COEP value | $VALUE |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$MANAGED" = "yes" ]; then
+            echo "::warning::This is an AWS-managed policy and cannot be edited in place."
+            echo "::warning::Copy it to a custom policy without COEP, then attach that copy."
+          fi
+
+      - name: Remove COEP
+        if: inputs.mode == 'apply' && steps.check.outputs.has_coep == 'yes' && steps.check.outputs.managed == 'no'
+        run: |
+          set -euo pipefail
+          # Drop only CrossOriginEmbedderPolicy. COOP is deliberately kept: it does
+          # not affect iframes, so removing it would weaken the site for no gain.
+          jq 'del(.SecurityHeadersConfig.CrossOriginEmbedderPolicy)' cfg.json > cfg.new.json
+          diff <(jq -S . cfg.json) <(jq -S . cfg.new.json) || true
+
+          aws cloudfront update-response-headers-policy \
+            --id "${{ steps.locate.outputs.rhp }}" \
+            --if-match "${{ steps.check.outputs.etag }}" \
+            --response-headers-policy-config file://cfg.new.json > /dev/null
+          echo "Removed Cross-Origin-Embedder-Policy from the policy."
+
+      - name: Invalidate CloudFront
+        if: inputs.mode == 'apply' && steps.check.outputs.has_coep == 'yes' && steps.check.outputs.managed == 'no'
+        run: |
+          ID=$(aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.CF_DIST_ID }}" \
+            --paths "/*" --query "Invalidation.Id" --output text)
+          echo "Invalidation: $ID"
+
+      # Header changes propagate to edge locations, so poll rather than check once.
+      - name: Verify the header is gone
+        if: inputs.mode == 'apply'
+        run: |
+          for i in $(seq 1 12); do
+            sleep 20
+            LEFT=$(curl -sI "$SITE_URL/contact" | grep -i '^cross-origin-embedder-policy' || true)
+            if [ -z "$LEFT" ]; then
+              echo "COEP gone after $((i*20))s - the map will now render."
+              { echo "### After"; echo '`Cross-Origin-Embedder-Policy` removed - map renders.'; } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "Attempt $i: still present - $LEFT"
+          done
+          echo "::error::COEP still served after 4 minutes."
+          echo "::error::If the policy updated cleanly, an edge function is re-adding it."
+          exit 1
+
+      - name: Inspect-only notice
+        if: inputs.mode == 'inspect'
+        run: echo "::notice::Inspect only - nothing was changed. Re-run with mode=apply to remove COEP."
