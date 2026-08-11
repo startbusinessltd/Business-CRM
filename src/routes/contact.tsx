@@ -198,7 +198,7 @@ function Contact() {
                 </p>
                 <div className="contact-map-slot">
                   <iframe
-                    src="https://www.google.com/maps?q=%23454%2C+1st+Cross%2C+Mahadeshwara+Nagar%2C+Channapatna%2C+Ramanagara+District%2C+Karnataka+562160%2C+India&output=embed"
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.officeLatLng)}&z=${CONTACT.officeMapZoom}&hl=en&output=embed`}
                     width="100%"
                     height="220"
                     className="contact-map-iframe"

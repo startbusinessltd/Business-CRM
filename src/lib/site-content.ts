@@ -99,6 +99,11 @@ export const CONTACT = {
     "Channapatna, Ramanagara District,",
     "Karnataka – 562160, India.",
   ].join("\n"),
+  // Google cannot geocode the "#454, 1st Cross" street address — it falls back to a
+  // low-confidence match ~25km away and renders a pin-less search map. Embed by
+  // coordinates instead so the marker lands on the office.
+  officeLatLng: "12.6456903,77.2037216",
+  officeMapZoom: 16,
   replyTime: "We typically reply within 24 hours.",
 };
 
