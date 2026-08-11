@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
+import { CONTACT } from "@/lib/site-content";
 
 export function SiteFooter() {
   const col = (title: string, items: { to: string; label: string; hash?: string }[]) => (
@@ -49,6 +50,18 @@ export function SiteFooter() {
             <p style={{ marginTop: 14, maxWidth: 320 }}>
               B-SOFT helps Indian SMBs run websites, leads, calls, social, team access, and
               billing from one CRM — with a built-in AI assistant.
+            </p>
+            <p
+              style={{
+                marginTop: 14,
+                maxWidth: 320,
+                fontSize: 13,
+                lineHeight: 1.55,
+                color: "var(--on-dark-muted)",
+                whiteSpace: "pre-line",
+              }}
+            >
+              {CONTACT.office}
             </p>
             <div className="footer-cta-row" style={{ marginTop: 18 }}>
               <CtaLink

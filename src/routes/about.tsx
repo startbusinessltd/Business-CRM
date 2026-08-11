@@ -82,7 +82,7 @@ function About() {
         bullets={[
           "Template library per business type",
           "Super-admin and partner roles for resellers",
-          "Bengaluru-based team with India-first payments",
+          "Channapatna-based team with India-first payments",
           "Continuous delivery on develop branch across services",
         ]}
       />

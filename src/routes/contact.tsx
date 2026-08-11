@@ -198,14 +198,14 @@ function Contact() {
                 </p>
                 <div className="contact-map-slot">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243.0620053629042!2d77.63206636805342!3d12.90823000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae149314b77195%3A0x5eae83dc056e8011!2sRoyal%20Space!5e0!3m2!1sen!2sin!4v1780078384210!5m2!1sen!2sin"
+                    src="https://www.google.com/maps?q=%23454%2C+1st+Cross%2C+Mahadeshwara+Nagar%2C+Channapatna%2C+Ramanagara+District%2C+Karnataka+562160%2C+India&output=embed"
                     width="100%"
                     height="220"
                     className="contact-map-iframe"
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Royal Space office location"
+                    title="B-SOFT office location — Channapatna"
                   />
                 </div>
               </form>
@@ -266,7 +266,7 @@ function Contact() {
               />
               <InfoCard
                 title="Office"
-                body="B-SOFT · Bengaluru"
+                body="B-SOFT · Channapatna"
                 lines={CONTACT.office.split("\n")}
               />
               <img

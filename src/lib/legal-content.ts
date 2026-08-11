@@ -123,7 +123,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
   {
     heading: "Governing Law",
     paragraphs: [
-      "These terms and conditions are governed by and construed in accordance with the laws of India, and you irrevocably submit to the exclusive jurisdiction of the courts in Bengaluru, Karnataka, India.",
+      "These terms and conditions are governed by and construed in accordance with the laws of India, and you irrevocably submit to the exclusive jurisdiction of the courts in Ramanagara District, Karnataka, India.",
     ],
   },
 ];
@@ -166,6 +166,7 @@ export const REFUND_SECTIONS: LegalSection[] = [
     heading: "Contact Us",
     paragraphs: [
       `If you have any questions about our refund policy or need assistance with a refund request, please contact our customer support team at ${CONTACT.supportEmail} or visit ${CONTACT.website}. You can also reach us through the Contact page on this website.`,
+      `Registered office: ${CONTACT.office.replace(/\n/g, ", ")}.`,
     ],
   },
 ];

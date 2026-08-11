@@ -94,9 +94,10 @@ export const CONTACT = {
   website: "Bsoft.ltd",
   websiteUrl: "https://bsoft.ltd",
   office: [
-    "Royal Space, No. 154, 5th Main, 7th Sector, Rajiv Gandhi Nagar",
-    "HSR Layout, Bengaluru – 560102",
-    "Karnataka, India",
+    "#454, 1st Cross,",
+    "Mahadeshwara Nagar,",
+    "Channapatna, Ramanagara District,",
+    "Karnataka – 562160, India.",
   ].join("\n"),
   replyTime: "We typically reply within 24 hours.",
 };

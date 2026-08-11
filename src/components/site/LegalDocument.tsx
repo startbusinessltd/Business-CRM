@@ -88,6 +88,10 @@ export function LegalDocument({
           </a>
           {" · "}
           <Link to="/contact">Contact form</Link>
+          <br />
+          <span style={{ display: "inline-block", marginTop: 8, whiteSpace: "pre-line" }}>
+            {CONTACT.office}
+          </span>
         </p>
       </div>
     </section>
