@@ -32,6 +32,7 @@ jobs:
         --exclude modeling/*
         --exclude salon-gold/*
         --exclude salon/*
+        --exclude shop/*
         --exclude startup/*
     steps:
       - uses: actions/checkout@v4
