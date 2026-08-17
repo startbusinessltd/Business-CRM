@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
+import { PartnerCta } from "@/components/site/PartnerJourney";
 import { CONTACT } from "@/lib/site-content";
 
 export function SiteFooter() {
@@ -77,6 +78,11 @@ export function SiteFooter() {
               >
                 Talk to sales
               </Link>
+              <PartnerCta
+                label="Become a Partner"
+                className="btn btn-outline"
+                style={{ color: "#fff", borderColor: "rgba(255,255,255,.4)" }}
+              />
             </div>
           </div>
           {col("Services", [

@@ -7,7 +7,6 @@ import {
   PageHero,
   StatStrip,
 } from "@/components/site/PageBlocks";
-import { PartnerProgramsBlock } from "@/components/site/PartnerJourney";
 import { PLATFORM_STATS, SERVICES } from "@/lib/site-content";
 
 export const Route = createFileRoute("/")({
@@ -154,9 +153,6 @@ function Home() {
           `}</style>
         </div>
       </section>
-
-      {/* Partner programs — appears here once the Become-Partner form is submitted */}
-      <PartnerProgramsBlock />
 
       <FeatureRow
         eyebrow="AI assistant"

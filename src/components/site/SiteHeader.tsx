@@ -2,7 +2,6 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
-import { PartnerCta } from "@/components/site/PartnerJourney";
 
 const MOBILE_MAX = 920;
 
@@ -95,7 +94,6 @@ export function SiteHeader() {
           style={{ display: "flex", gap: 10, flexShrink: 0 }}
         >
           <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-          <PartnerCta label="Become Partner" className="btn btn-ghost" />
           <CtaLink to="/pricing" label="Register now" className="btn btn-primary" crm="register" />
         </div>
 
@@ -129,7 +127,6 @@ export function SiteHeader() {
           </div>
           <div className="site-mobile-ctas">
             <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-            <PartnerCta label="Become Partner" className="btn btn-ghost" onClick={close} />
             <CtaLink
               to="/pricing"
               label="Register now"
