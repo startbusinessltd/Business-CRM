@@ -128,6 +128,11 @@
 @layer base {
   * { border-color: var(--color-border); }
   html { overflow-x: hidden; scroll-behavior: smooth; }
+  /* Site renders at 85% scale on desktop so a 100% browser zoom shows the
+     whole layout comfortably (less scrolling, denser feel). Phones keep 1:1. */
+  @media (min-width: 921px) {
+    html { zoom: 0.85; }
+  }
   html,
   body {
     background: var(--color-background);
