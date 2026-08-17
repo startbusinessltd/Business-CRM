@@ -59,13 +59,12 @@ export function SiteHeader() {
 
   return (
     <header
+      className={scrolled || open ? "site-header--solid" : "site-header--overlay"}
       style={{
         position: "sticky",
         top: 0,
         zIndex: 50,
-        background: scrolled ? "color-mix(in srgb, var(--ivory) 94%, transparent)" : "var(--ivory)",
-        borderBottom: scrolled ? "1px solid var(--line)" : "1px solid transparent",
-        backdropFilter: scrolled ? "saturate(180%) blur(10px)" : undefined,
+        transition: "background .35s, box-shadow .35s, border-color .35s",
       }}
     >
       <div
