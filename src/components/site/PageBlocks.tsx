@@ -20,6 +20,54 @@ export const HOME_HERO_CHIPS: HeroChip[] = [
   },
 ];
 
+/* Decorative drifting icon tiles behind the hero copy.
+   Positions hug the hero's periphery — below the header band, outside the
+   copy column and clear of the media panel — so nothing ever sits on text. */
+const CONSTELLATION: { i: string; top: string; left: string; s: number; dur: number; dl: number; rot: number }[] = [
+  // left gutter (clear of the copy column, which starts ~5%)
+  { i: "🌐", top: "12%", left: "0.5%", s: 46, dur: 9, dl: 0, rot: 5 },
+  { i: "📊", top: "42%", left: "1%", s: 40, dur: 11, dl: -2.5, rot: -6 },
+  { i: "🔒", top: "68%", left: "0.5%", s: 44, dur: 12, dl: -4, rot: 4 },
+  // band under the header, above the eyebrow
+  { i: "✉️", top: "11%", left: "30%", s: 40, dur: 12.5, dl: -1.5, rot: -5 },
+  { i: "💳", top: "10%", left: "44%", s: 44, dur: 13, dl: -3, rot: -4 },
+  // channel between the copy column and the media panel
+  { i: "🧾", top: "30%", left: "41%", s: 42, dur: 10.5, dl: -6, rot: 5 },
+  { i: "⭐", top: "58%", left: "42%", s: 40, dur: 11, dl: -8, rot: -5 },
+  // bottom band, below both copy and media
+  { i: "🔔", top: "88%", left: "12%", s: 44, dur: 9.5, dl: -5, rot: 6 },
+  { i: "🤖", top: "89%", left: "34%", s: 42, dur: 9, dl: -7, rot: 4 },
+  { i: "📅", top: "87%", left: "62%", s: 44, dur: 10, dl: -2, rot: -6 },
+  // right edge, outside the media panel
+  { i: "👥", top: "24%", left: "95%", s: 44, dur: 12, dl: -3.5, rot: -5 },
+  { i: "📞", top: "72%", left: "95%", s: 42, dur: 10.8, dl: -1, rot: 6 },
+];
+
+function Constellation() {
+  return (
+    <div className="constellation" aria-hidden="true">
+      {CONSTELLATION.map((t) => (
+        <span
+          key={t.i + t.left}
+          className="cnst-tile"
+          style={
+            {
+              top: t.top,
+              left: t.left,
+              "--s": `${t.s}px`,
+              "--dur": `${t.dur}s`,
+              "--dl": `${t.dl}s`,
+              "--rot": `${t.rot}deg`,
+            } as CSSProperties
+          }
+        >
+          {t.i}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function PageHero({
   eyebrow,
   title,
@@ -59,6 +107,7 @@ export function PageHero({
       <div className="orb orb--magenta" style={{ width: 360, height: 360, top: "30%", right: -100 }} />
       <div className="orb orb--gold" style={{ width: 300, height: 300, bottom: -120, left: "38%" }} />
       <div className="hero-grid-overlay" />
+      <Constellation />
       <div className="container-wide" style={{ position: "relative", zIndex: 2 }}>
         <div className="feature-row hero-row">
           <div className="page-hero-copy">
@@ -286,40 +335,29 @@ export function FeatureRow({
 
 export function CtaBand() {
   return (
-    <section className="surface-ink" style={{ overflow: "hidden", position: "relative" }}>
-      <div className="orb orb--violet" style={{ width: 380, height: 380, top: -140, right: "10%" }} />
-      <div className="orb orb--gold" style={{ width: 260, height: 260, bottom: -120, left: "6%" }} />
-      <div className="hero-grid-overlay" />
-      <div className="container-x cta-band-layout" style={{ position: "relative", zIndex: 2 }}>
-        <div>
-          <h2 className="h-section" style={{ color: "var(--ivory)" }}>
-            Run your business on{" "}
-            <span
-              className="grad-text"
-              style={{
-                background: "var(--grad-text)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
-              }}
+    <section className="cta-band-outer">
+      <div className="surface-warm" style={{ overflow: "hidden", position: "relative" }}>
+        <div className="orb orb--gold" style={{ width: 320, height: 320, top: -130, right: "12%", opacity: 0.35 }} />
+        <div className="container-x cta-band-layout" style={{ position: "relative", zIndex: 2 }}>
+          <div>
+            <h2 className="h-section" style={{ color: "#fff" }}>
+              Run your business on <span className="grad-text">one professional platform.</span>
+            </h2>
+            <p style={{ marginTop: 12, maxWidth: 560 }}>
+              Website, leads, calls, social, team access, and finance — the same services inside
+              B-SOFT, with in-app AI when you need guidance.
+            </p>
+          </div>
+          <div className="cta-band-actions">
+            <CtaLink to="/pricing" label="Register now" className="btn btn-brass" crm="register" />
+            <Link
+              to="/contact"
+              className="btn btn-outline"
+              style={{ color: "#fff", borderColor: "rgba(255,255,255,.55)" }}
             >
-              one professional platform.
-            </span>
-          </h2>
-          <p style={{ marginTop: 12, color: "var(--on-dark-muted)", maxWidth: 560 }}>
-            Website, leads, calls, social, team access, and finance — the same services inside
-            B-SOFT, with in-app AI when you need guidance.
-          </p>
-        </div>
-        <div className="cta-band-actions">
-          <CtaLink to="/pricing" label="Register now" className="btn btn-brass" crm="register" />
-          <Link
-            to="/contact"
-            className="btn btn-outline"
-            style={{ color: "#fff", borderColor: "rgba(255,255,255,.4)" }}
-          >
-            Book a demo
-          </Link>
+              Book a demo
+            </Link>
+          </div>
         </div>
       </div>
     </section>
@@ -339,7 +377,7 @@ export const IMG = {
   leads:
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80&auto=format&fit=crop",
   dashboard:
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1400&q=80&auto=format&fit=crop",
   featuresHero: "/images/features-hero.png",
   servicesHero: "/images/services-hero.png",
   /** Module imagery — local assets in `public/images` (finance / analytics / social / calls) */
@@ -349,9 +387,9 @@ export const IMG = {
     "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&q=80&auto=format&fit=crop",
   callcenter: "/images/module-calls.png",
   socialmarketing:
-    "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=1200&q=80&auto=format&fit=crop",
   website:
-    "https://images.unsplash.com/photo-1547658719-da2b51169166?w=1200&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&q=80&auto=format&fit=crop",
   finance:
     "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&q=80&auto=format&fit=crop",
   invoiceManagement: "/images/invoice-management.png",
