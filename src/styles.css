@@ -128,11 +128,13 @@
 @layer base {
   * { border-color: var(--color-border); }
   html { overflow-x: hidden; scroll-behavior: smooth; }
-  /* Site renders at 85% scale on desktop so a 100% browser zoom shows the
-     whole layout comfortably (less scrolling, denser feel). Phones keep 1:1. */
-  @media (min-width: 921px) {
-    html { zoom: 0.85; }
-  }
+  /* Compact feel without the old `zoom` hack: `zoom` shrank content but left the
+     1200px container cap in place, so wide screens showed a narrow centered
+     column. Instead the whole type/space scale is driven by --ui, and the
+     container below is fluid — content fills the screen at any width. */
+  :root { --ui: 1; }
+  @media (min-width: 921px) { :root { --ui: 0.88; } }
+  @media (min-width: 1800px) { :root { --ui: 0.94; } }
   html,
   body {
     background: var(--color-background);
@@ -155,13 +157,24 @@
 
 /* Reusable corporate utilities (solid, no gradients) */
 @layer components {
+  /* Fluid container — tracks the viewport instead of a hard 1200px cap, so
+     ultrawide screens are actually used. Gutters grow with the screen. */
   .container-x {
-    max-width: 1200px;
+    max-width: min(1720px, 94vw);
     margin-inline: auto;
-    padding-inline: clamp(16px, 4vw, 24px);
+    padding-inline: clamp(18px, 3vw, 48px);
     min-width: 0;
     width: 100%;
     box-sizing: border-box;
+  }
+  /* Opt-in wider band for hero / bento sections that should breathe further. */
+  .container-wide {
+    max-width: min(1920px, 96vw);
+    margin-inline: auto;
+    padding-inline: clamp(18px, 3vw, 56px);
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   /** Header / footer brand — flex children must shrink so the wordmark never overflows small viewports */
@@ -232,8 +245,8 @@
     box-shadow: 0 0 0 3px color-mix(in oklch, var(--purple) 14%, transparent);
     animation: pulse-dot 2.4s ease-in-out infinite;
   }
-  .h-display { font-family: var(--serif); font-weight: 600; font-size: clamp(42px, 6vw, 76px); line-height: 1.02; letter-spacing: -0.03em; color: var(--ink); max-width: 100%; overflow-wrap: anywhere; }
-  .h-section { font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 3.8vw, 48px); line-height: 1.08; letter-spacing: -0.025em; color: var(--ink); max-width: 100%; overflow-wrap: anywhere; }
+  .h-display { font-family: var(--serif); font-weight: 600; font-size: calc(clamp(40px, 4.2vw, 74px) * var(--ui)); line-height: 1.04; letter-spacing: -0.03em; color: var(--ink); max-width: 100%; overflow-wrap: anywhere; text-wrap: balance; }
+  .h-section { font-family: var(--serif); font-weight: 600; font-size: calc(clamp(30px, 3vw, 52px) * var(--ui)); line-height: 1.08; letter-spacing: -0.025em; color: var(--ink); max-width: 100%; overflow-wrap: anywhere; }
   .grad-text {
     background: var(--grad-text-ink);
     -webkit-background-clip: text;
@@ -289,8 +302,8 @@
   .divider { height: 1px; background: var(--line); width: 100%; }
   .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--slate); }
 
-  .section { padding-block: clamp(64px, 8vw, 112px); }
-  .section-tight { padding-block: clamp(48px, 6vw, 80px); }
+  .section { padding-block: calc(clamp(52px, 5vw, 96px) * var(--ui)); }
+  .section-tight { padding-block: calc(clamp(36px, 3.4vw, 64px) * var(--ui)); }
 
   .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
   .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 32px; align-items: center; }
@@ -474,11 +487,22 @@
   .surface-ink a:not(.btn) { color: var(--on-dark-link); }
   .surface-ink a:not(.btn):hover { color: var(--brass); }
 
-  .feature-row { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .feature-row { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(40px, 4vw, 80px); align-items: center; }
+  /* Hero: copy column stays readable while the media takes the extra width
+     that the fluid container now provides on large screens. */
+  .hero-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+  .hero-row .page-hero-copy { max-width: 50ch; }
+  .hero-row .hero-trust { max-width: none; flex-wrap: nowrap; white-space: nowrap; }
+  .hero-row .media-frame { width: 100%; }
+  @media (max-width: 920px) {
+    .hero-row { grid-template-columns: 1fr; }
+    .hero-row .page-hero-copy { max-width: none; }
+  }
   .feature-row .media-frame {
     max-width: 100%;
-    justify-self: start;
-    aspect-ratio: 5 / 4;
+    width: 100%;
+    justify-self: stretch;
+    aspect-ratio: 16 / 10;
   }
   .feature-row-media--contain {
     aspect-ratio: 858 / 566;
@@ -1866,6 +1890,116 @@
     backdrop-filter: blur(14px);
     border-radius: 22px;
     box-shadow: var(--shadow-soft);
+  }
+
+  /* ---------------------------------------------------------------
+     Bento service grid — asymmetric tiles that fill wide screens.
+     Tile 1 and 6 span two columns so the grid reads as a composition
+     instead of six identical boxes.
+     --------------------------------------------------------------- */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(14px, 1.2vw, 22px);
+    margin-top: calc(52px * var(--ui));
+  }
+  /* Spans tile the 6-col grid exactly: 4+2 / 2+4 / 3+3 — an alternating
+     rhythm with no leftover gaps. */
+  .bento > * { grid-column: span var(--span, 2); }
+  .bento > * { display: flex; flex-direction: column; }
+  .bento .bento__body { display: flex; flex-direction: column; flex: 1; }
+  .bento .svc-arrow { margin-top: auto; padding-top: 14px; }
+  @media (max-width: 1100px) {
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .bento > * { grid-column: span 1; }
+  }
+  @media (max-width: 700px) {
+    .bento { grid-template-columns: minmax(0, 1fr); }
+    .bento > * { grid-column: span 1; }
+  }
+
+  /* Cursor-following spotlight + gradient border on interactive cards. */
+  .spotlight { position: relative; isolation: isolate; }
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      220px circle at var(--mx, 50%) var(--my, 0%),
+      color-mix(in srgb, var(--purple) 75%, transparent),
+      color-mix(in srgb, var(--gold) 45%, transparent) 45%,
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 0%),
+      color-mix(in srgb, var(--purple) 12%, transparent),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .spotlight:hover::before,
+  .spotlight:focus-within::before,
+  .spotlight:hover::after,
+  .spotlight:focus-within::after { opacity: 1; }
+  .spotlight > * { position: relative; z-index: 3; }
+
+  /* Proof cards under the testimonial — concrete outcomes, three-up. */
+  .proof-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.2vw, 22px);
+    margin-top: calc(48px * var(--ui));
+    text-align: left;
+  }
+  @media (max-width: 760px) { .proof-row { grid-template-columns: 1fr; } }
+  .proof-card {
+    padding: clamp(20px, 1.8vw, 30px);
+    border-radius: 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-soft);
+    transition: transform .45s var(--ease-out), box-shadow .45s var(--ease-out);
+  }
+  .proof-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lift); }
+  .proof-card__n {
+    font-family: var(--serif);
+    font-size: calc(clamp(30px, 2.6vw, 44px) * var(--ui));
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    background: var(--grad-text-ink);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .proof-card__l {
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .proof-card__s {
+    margin-top: 6px;
+    font-size: 13.5px;
+    color: var(--slate);
+    line-height: 1.6;
   }
 
   /* --- Keyframes --- */

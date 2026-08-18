@@ -14,6 +14,7 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { PartnerJourneyProvider } from "@/components/site/PartnerJourney";
 import { installCrmParentBridge } from "@/lib/crm-parent-bridge";
+import { useSpotlight } from "@/hooks/use-spotlight";
 
 function NotFoundComponent() {
   return (
@@ -123,6 +124,7 @@ function RootComponent() {
   useEffect(() => {
     installCrmParentBridge();
   }, []);
+  useSpotlight();
   return (
     <QueryClientProvider client={queryClient}>
       <PartnerJourneyProvider>

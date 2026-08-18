@@ -59,8 +59,8 @@ export function PageHero({
       <div className="orb orb--magenta" style={{ width: 360, height: 360, top: "30%", right: -100 }} />
       <div className="orb orb--gold" style={{ width: 300, height: 300, bottom: -120, left: "38%" }} />
       <div className="hero-grid-overlay" />
-      <div className="container-x" style={{ position: "relative", zIndex: 2 }}>
-        <div className="feature-row">
+      <div className="container-wide" style={{ position: "relative", zIndex: 2 }}>
+        <div className="feature-row hero-row">
           <div className="page-hero-copy">
             <span className="eyebrow enter" style={{ "--d": "0.05s" } as CSSProperties}>
               {eyebrow}
@@ -274,10 +274,7 @@ export function FeatureRow({
             )}
           </div>
           <div className="feature-glow" style={{ direction: "ltr", minWidth: 0 }}>
-            <div
-              className={["media-frame", mediaClassName].filter(Boolean).join(" ")}
-              style={{ ...(mediaClassName ? {} : { aspectRatio: "5/4" }) }}
-            >
+            <div className={["media-frame", mediaClassName].filter(Boolean).join(" ")}>
               <img src={image} alt={title} loading="lazy" />
             </div>
           </div>

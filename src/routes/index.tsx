@@ -105,52 +105,44 @@ function Home() {
             </p>
           </div>
 
-          <div
-            style={{
-              marginTop: 48,
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              gap: 24,
-            }}
-            className="modules-grid"
-          >
-            {SERVICES.map((m, i) => (
-              <Link
-                key={m.to}
-                to={m.to}
-                className="card-flat"
-                style={{ overflow: "hidden", display: "block" }}
-              >
-                <div
-                  style={{
-                    aspectRatio: "16/10",
-                    overflow: "hidden",
-                    borderBottom: "1px solid var(--line)",
-                    position: "relative",
-                  }}
+          <div className="bento">
+            {SERVICES.map((m, i) => {
+              // 4+2 / 2+4 / 3+3 — tiles the 6-col grid exactly, alternating rhythm.
+              const span = [4, 2, 2, 4, 3, 3][i] ?? 2;
+              return (
+                <Link
+                  key={m.to}
+                  to={m.to}
+                  className="card-flat spotlight"
+                  style={{ overflow: "hidden", ["--span" as string]: span }}
                 >
-                  <span className="svc-num">{String(i + 1).padStart(2, "0")}</span>
-                  <img
-                    src={m.img}
-                    alt={m.t}
-                    loading="lazy"
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                </div>
-                <div style={{ padding: 24 }}>
-                  <h3 style={{ fontSize: 22, marginTop: 0 }}>{m.t}</h3>
-                  <p style={{ marginTop: 8 }}>{m.d}</p>
-                  <div className="svc-arrow" style={{ marginTop: 16 }}>
-                    View service <span aria-hidden>→</span>
+                  <div
+                    style={{
+                      aspectRatio: span >= 4 ? "2.6/1" : span === 3 ? "2/1" : "3/2",
+                      overflow: "hidden",
+                      borderBottom: "1px solid var(--line)",
+                      position: "relative",
+                    }}
+                  >
+                    <span className="svc-num">{String(i + 1).padStart(2, "0")}</span>
+                    <img
+                      src={m.img}
+                      alt={m.t}
+                      loading="lazy"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div className="bento__body" style={{ padding: "clamp(18px, 1.5vw, 28px)" }}>
+                    <h3 style={{ fontSize: "calc(23px * var(--ui))", marginTop: 0 }}>{m.t}</h3>
+                    <p style={{ marginTop: 8 }}>{m.d}</p>
+                    <div className="svc-arrow">
+                      View service <span aria-hidden>→</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-          <style>{`
-            @media (max-width: 980px) { .modules-grid { grid-template-columns: 1fr 1fr !important; } }
-            @media (max-width: 640px) { .modules-grid { grid-template-columns: 1fr !important; } }
-          `}</style>
         </div>
       </section>
 
@@ -233,6 +225,20 @@ function Home() {
                 Services firm · Chennai
               </span>
             </span>
+          </div>
+
+          <div className="proof-row">
+            {[
+              { n: "4", l: "tools replaced", s: "website, CRM, dialer, invoicing" },
+              { n: "48 hrs", l: "to go live", s: "template to published site" },
+              { n: "1", l: "login for the team", s: "roles decide who sees what" },
+            ].map((p) => (
+              <div key={p.l} className="proof-card spotlight">
+                <div className="proof-card__n">{p.n}</div>
+                <div className="proof-card__l">{p.l}</div>
+                <p className="proof-card__s">{p.s}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
