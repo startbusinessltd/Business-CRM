@@ -1,5 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  CSSProperties,
+  Fragment,
+  ReactElement,
+  ReactNode,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 
 export type HeroChip = { ico: string; title: string; sub: string; style: CSSProperties };
@@ -20,52 +30,44 @@ export const HOME_HERO_CHIPS: HeroChip[] = [
   },
 ];
 
-/* Decorative drifting icon tiles behind the hero copy.
-   Positions hug the hero's periphery — below the header band, outside the
-   copy column and clear of the media panel — so nothing ever sits on text. */
-const CONSTELLATION: { i: string; top: string; left: string; s: number; dur: number; dl: number; rot: number }[] = [
-  // left gutter (clear of the copy column, which starts ~5%)
-  { i: "🌐", top: "12%", left: "0.5%", s: 46, dur: 9, dl: 0, rot: 5 },
-  { i: "📊", top: "42%", left: "1%", s: 40, dur: 11, dl: -2.5, rot: -6 },
-  { i: "🔒", top: "68%", left: "0.5%", s: 44, dur: 12, dl: -4, rot: 4 },
-  // band under the header, above the eyebrow
-  { i: "✉️", top: "11%", left: "30%", s: 40, dur: 12.5, dl: -1.5, rot: -5 },
-  { i: "💳", top: "10%", left: "44%", s: 44, dur: 13, dl: -3, rot: -4 },
-  // channel between the copy column and the media panel
-  { i: "🧾", top: "30%", left: "41%", s: 42, dur: 10.5, dl: -6, rot: 5 },
-  { i: "⭐", top: "58%", left: "42%", s: 40, dur: 11, dl: -8, rot: -5 },
-  // bottom band, below both copy and media
-  { i: "🔔", top: "88%", left: "12%", s: 44, dur: 9.5, dl: -5, rot: 6 },
-  { i: "🤖", top: "89%", left: "34%", s: 42, dur: 9, dl: -7, rot: 4 },
-  { i: "📅", top: "87%", left: "62%", s: 44, dur: 10, dl: -2, rot: -6 },
-  // right edge, outside the media panel
-  { i: "👥", top: "24%", left: "95%", s: 44, dur: 12, dl: -3.5, rot: -5 },
-  { i: "📞", top: "72%", left: "95%", s: 42, dur: 10.8, dl: -1, rot: 6 },
-];
+/** Splits a headline into words wrapped in mask spans for the staggered rise. */
+function SplitWords({ children }: { children: ReactNode }) {
+  return <>{splitNode(children, { n: 0 })}</>;
+}
 
-function Constellation() {
-  return (
-    <div className="constellation" aria-hidden="true">
-      {CONSTELLATION.map((t) => (
-        <span
-          key={t.i + t.left}
-          className="cnst-tile"
-          style={
-            {
-              top: t.top,
-              left: t.left,
-              "--s": `${t.s}px`,
-              "--dur": `${t.dur}s`,
-              "--dl": `${t.dl}s`,
-              "--rot": `${t.rot}deg`,
-            } as CSSProperties
-          }
-        >
-          {t.i}
+function splitNode(node: ReactNode, counter: { n: number }, key: number | string = 0): ReactNode {
+  if (typeof node === "string") {
+    return node.split(/(\s+)/).map((part, i) => {
+      if (!part.trim()) return <Fragment key={`${key}-${i}-ws`}>{part}</Fragment>;
+      const d = 0.16 + counter.n++ * 0.045;
+      return (
+        <span className="word-rise" key={`${key}-${i}`} style={{ "--d": `${d}s` } as CSSProperties}>
+          <span>{part}</span>
         </span>
-      ))}
-    </div>
-  );
+      );
+    });
+  }
+  if (Array.isArray(node)) {
+    return node.map((c, i) => (
+      <Fragment key={`g-${i}`}>{splitNode(c, counter, i)}</Fragment>
+    ));
+  }
+  if (isValidElement(node)) {
+    const el = node as ReactElement<{ children?: ReactNode; className?: string }>;
+    // Gradient text paints via background-clip on this element, which does not
+    // reach nested inline-block children — splitting inside would render the
+    // words invisible. Animate the whole phrase as one unit instead.
+    if (el.props.className?.includes("grad-text")) {
+      const d = 0.16 + counter.n++ * 0.045;
+      return (
+        <span className="word-rise" key={`${key}-grad`} style={{ "--d": `${d}s` } as CSSProperties}>
+          <span>{el}</span>
+        </span>
+      );
+    }
+    return cloneElement(el, undefined, splitNode(el.props.children, counter));
+  }
+  return node;
 }
 
 export function PageHero({
@@ -107,15 +109,14 @@ export function PageHero({
       <div className="orb orb--magenta" style={{ width: 360, height: 360, top: "30%", right: -100 }} />
       <div className="orb orb--gold" style={{ width: 300, height: 300, bottom: -120, left: "38%" }} />
       <div className="hero-grid-overlay" />
-      <Constellation />
       <div className="container-wide" style={{ position: "relative", zIndex: 2 }}>
         <div className="feature-row hero-row">
           <div className="page-hero-copy">
             <span className="eyebrow enter" style={{ "--d": "0.05s" } as CSSProperties}>
               {eyebrow}
             </span>
-            <h1 className="h-display enter" style={{ marginTop: 22, "--d": "0.15s" } as CSSProperties}>
-              {title}
+            <h1 className="h-display hero-title" style={{ marginTop: 22 }}>
+              <SplitWords>{title}</SplitWords>
             </h1>
             <p
               className="lead enter"
@@ -165,11 +166,15 @@ export function PageHero({
             </div>
           </div>
           <div
-            className="enter"
+            className="enter hero-media-wrap"
             style={{ position: "relative", "--d": "0.35s" } as CSSProperties}
           >
-            {floatChips.map((c) => (
-              <div key={c.title} className="float-chip" style={c.style}>
+            {floatChips.map((c, ci) => (
+              <div
+                key={c.title}
+                className={`float-chip parallax-chip parallax-chip--${ci % 2 ? "b" : "a"}`}
+                style={c.style}
+              >
                 <span className="chip-ico">{c.ico}</span>
                 <span>
                   {c.title}
@@ -178,7 +183,7 @@ export function PageHero({
               </div>
             ))}
             <div
-              className="media-frame"
+              className="media-frame tilt"
               style={{ aspectRatio: "4/5", maxHeight: 560, ...mediaStyle }}
             >
               {video ? (
@@ -323,7 +328,7 @@ export function FeatureRow({
             )}
           </div>
           <div className="feature-glow" style={{ direction: "ltr", minWidth: 0 }}>
-            <div className={["media-frame", mediaClassName].filter(Boolean).join(" ")}>
+            <div className={["media-frame", "reveal-wipe", "tilt", mediaClassName].filter(Boolean).join(" ")}>
               <img src={image} alt={title} loading="lazy" />
             </div>
           </div>

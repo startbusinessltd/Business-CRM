@@ -93,8 +93,13 @@ export function SiteHeader() {
           className="site-header-desktop-ctas"
           style={{ display: "flex", gap: 10, flexShrink: 0 }}
         >
-          <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
-          <CtaLink to="/pricing" label="Register now" className="btn btn-primary" crm="register" />
+          <CtaLink to="/contact" label="Login" className="btn btn-ghost" crm="login" />
+          <CtaLink
+            to="/pricing"
+            label="Register now"
+            className="btn btn-primary magnetic"
+            crm="register"
+          />
         </div>
 
         <button
@@ -126,7 +131,7 @@ export function SiteHeader() {
             ))}
           </div>
           <div className="site-mobile-ctas">
-            <CtaLink to="/contact" label="Sign in" className="btn btn-ghost" crm="login" />
+            <CtaLink to="/contact" label="Login" className="btn btn-ghost" crm="login" />
             <CtaLink
               to="/pricing"
               label="Register now"

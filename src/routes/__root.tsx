@@ -128,6 +128,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <PartnerJourneyProvider>
+        <div className="scroll-progress" aria-hidden="true" />
         <SiteHeader />
         <main>
           <Outlet />

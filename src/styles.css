@@ -321,8 +321,10 @@
   .card-flat:focus-within {
     border-color: color-mix(in oklch, var(--purple) 34%, var(--line));
     box-shadow: var(--shadow-lift), 0 0 0 1px color-mix(in oklch, var(--purple) 20%, transparent);
-    transform: translateY(-6px);
   }
+  a.card-flat:not(.tilt):hover,
+  .card-flat:not(.tilt):focus-within { transform: translateY(-6px); }
+  a.card-flat.tilt:hover { --tilt-lift: -6px; }
   a.card-flat:hover img,
   .card-flat:focus-within img { transform: scale(1.06); }
   .divider { height: 1px; background: var(--line); width: 100%; }
@@ -476,7 +478,7 @@
     box-shadow: var(--shadow-media);
     transition: transform .6s var(--ease-out), box-shadow .6s var(--ease-out);
   }
-  .media-frame:hover { transform: translateY(-4px); }
+  .media-frame:not(.tilt):hover { transform: translateY(-4px); }
   .media-frame img, .media-frame video { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--ease-out); }
   .media-frame:hover img { transform: scale(1.035); }
   .about-mission-media {
@@ -1825,75 +1827,128 @@
   }
   @media (max-width: 920px) { .float-chip { display: none; } }
 
-  /* ---------------------------------------------------------------
-     Floating icon constellation — soft white tiles drifting behind the
-     hero copy, each on its own slow loop so the field never pulses in
-     unison. Purely decorative: hidden from AT and from small screens.
-     --------------------------------------------------------------- */
-  .constellation {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
-  }
-  .cnst-tile {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    width: var(--s, 54px);
-    height: var(--s, 54px);
-    border-radius: 30%;
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    box-shadow:
-      0 10px 24px -8px rgba(27, 63, 168, 0.28),
-      0 2px 6px rgba(27, 63, 168, 0.08);
-    font-size: calc(var(--s, 54px) * 0.46);
-    line-height: 1;
-    animation: cnst-float var(--dur, 9s) ease-in-out infinite;
-    animation-delay: var(--dl, 0s);
-    will-change: transform;
-  }
-  @media (max-width: 1100px) { .constellation { display: none; } }
-  @keyframes cnst-float {
-    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-    50% { transform: translate3d(0, -18px, 0) rotate(var(--rot, 4deg)); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cnst-tile { animation: none; }
-  }
+  /* ================================================================
+     Motion system — native scroll-driven animations (animation-timeline).
+     Runs on the compositor, no JS scroll listeners, and every effect is
+     wrapped in @supports so unsupported browsers get the static layout.
+     ================================================================ */
 
-  /* staggered headline words */
+  /* Headline: words rise out of a mask, staggered. */
   .word-rise { display: inline-block; overflow: hidden; vertical-align: bottom; }
   .word-rise > span {
     display: inline-block;
     transform: translateY(110%);
-    animation: word-up 0.9s var(--ease-out) forwards;
+    animation: word-up 0.85s var(--ease-out) forwards;
     animation-delay: var(--d, 0s);
   }
+
+  /* Scroll progress bar pinned to the top of the viewport. */
+  .scroll-progress {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 3px;
+    z-index: 60;
+    background: var(--grad-brand);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    pointer-events: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+  @keyframes progress-grow { to { transform: scaleX(1); } }
+
+  /* Hero parallax — media and chips drift at different rates as the hero
+     scrolls away, which reads as depth rather than a flat slab moving. */
+  @supports (animation-timeline: view()) {
+    @media (min-width: 921px) and (prefers-reduced-motion: no-preference) {
+      .hero-media-wrap {
+        animation: parallax-up linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 100%;
+      }
+      .parallax-chip--a {
+        animation: parallax-chip-a linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 100%;
+      }
+      .parallax-chip--b {
+        animation: parallax-chip-b linear both;
+        animation-timeline: view();
+        animation-range: exit-crossing 0% exit 100%;
+      }
+    }
+  }
+  @keyframes parallax-up { to { transform: translateY(-46px); } }
+  @keyframes parallax-chip-a { to { transform: translateY(-96px); } }
+  @keyframes parallax-chip-b { to { transform: translateY(-136px); } }
+
+  /* Media wipes open behind a clip-path as it enters the viewport. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal-wipe {
+        animation: wipe-in 1s var(--ease-out) both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 32%;
+      }
+    }
+  }
+  @keyframes wipe-in {
+    from { clip-path: inset(0 0 100% 0); transform: scale(1.04); }
+    to { clip-path: inset(0 0 0 0); transform: scale(1); }
+  }
+
+  /* Cards rise, scale and settle — driven by their own view timeline so the
+     stagger comes from position on screen, not a JS-assigned delay. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .rise-in {
+        animation: rise-settle 1s var(--ease-out) both;
+        animation-timeline: view();
+        animation-range: entry 2% cover 26%;
+      }
+    }
+  }
+  @keyframes rise-settle {
+    from { opacity: 0; transform: translateY(48px) scale(0.965); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Pointer-driven 3D tilt (--rx/--ry written by use-spotlight.ts).
+     The lift is folded into the same transform so a hover translate on the
+     element cannot overwrite the rotation. */
+  .tilt {
+    transform:
+      perspective(1000px)
+      translateY(var(--tilt-lift, 0px))
+      rotateX(var(--rx, 0deg))
+      rotateY(var(--ry, 0deg));
+    transition: transform 0.5s var(--ease-out);
+    transform-style: preserve-3d;
+  }
+  .tilt:hover { --tilt-lift: -5px; }
+
+  /* Magnetic buttons — translate toward the cursor. */
+  .magnetic { transition: transform 0.35s var(--ease-out); }
+  .magnetic:hover { transition-duration: 0.12s; }
 
   /* --- Scroll-choreographed reveals (pure CSS, hydration-safe) ---
      Browsers with scroll-driven animation support fade/rise shared primitives
      as they enter the viewport; everything else just renders statically. */
   @supports (animation-timeline: view()) {
-    main :is(.section, .section-tight) :is(h2.h-section, .eyebrow):not(.hero-canvas *),
-    main .card-flat:not(.hero-canvas *),
-    main .feature-row .media-frame:not(.hero-canvas *),
-    main .feature-row-copy,
-    main .stat-strip > div {
-      animation: fade-rise 1s var(--ease-out) both;
-      animation-timeline: view();
-      animation-range: entry 8% entry 55%;
-    }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion: no-preference) {
       main :is(.section, .section-tight) :is(h2.h-section, .eyebrow):not(.hero-canvas *),
       main .card-flat:not(.hero-canvas *),
-      main .feature-row .media-frame:not(.hero-canvas *),
       main .feature-row-copy,
+      main .proof-card,
       main .stat-strip > div {
-        animation: none;
+        animation: rise-settle 1s var(--ease-out) both;
+        animation-timeline: view();
+        animation-range: entry 2% cover 28%;
       }
     }
   }
@@ -2049,6 +2104,113 @@
   .spotlight:hover::after,
   .spotlight:focus-within::after { opacity: 1; }
   .spotlight > * { position: relative; z-index: 3; }
+
+  /* ---------------------------------------------------------------
+     Partner program band — dark inset card that breaks up the bright
+     page and gives the reseller pitch its own moment.
+     --------------------------------------------------------------- */
+  .partner-band-outer {
+    padding-inline: clamp(12px, 3vw, 48px);
+    padding-block: calc(clamp(28px, 3vw, 56px) * var(--ui));
+  }
+  .partner-band {
+    max-width: min(1720px, 94vw);
+    margin-inline: auto;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    padding-block: calc(clamp(52px, 5vw, 92px) * var(--ui));
+  }
+  .eyebrow--on-dark {
+    color: #dce8ff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.24);
+    box-shadow: none;
+  }
+  .partner-band .grad-text {
+    background: var(--grad-text);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.2vw, 22px);
+    margin-top: calc(52px * var(--ui));
+  }
+  @media (max-width: 1080px) { .partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 620px) { .partner-grid { grid-template-columns: 1fr; } }
+
+  .partner-card {
+    padding: clamp(20px, 1.7vw, 30px);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(10px);
+    transition: transform .45s var(--ease-out), background .45s, border-color .45s;
+  }
+  .partner-card:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.11);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  .partner-card__ico {
+    display: inline-grid;
+    place-items: center;
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 22px;
+    line-height: 1;
+  }
+  .partner-card__t {
+    margin: 16px 0 0;
+    font-size: calc(18px * var(--ui));
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .partner-card__d {
+    margin: 8px 0 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--on-dark-muted);
+  }
+
+  .partner-foot {
+    margin-top: calc(48px * var(--ui));
+    padding-top: clamp(26px, 2.4vw, 40px);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(20px, 3vw, 40px);
+  }
+  .partner-foot__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(24px, 3vw, 52px);
+  }
+  .partner-foot__n {
+    font-family: var(--serif);
+    font-size: calc(clamp(26px, 2.2vw, 38px) * var(--ui));
+    font-weight: 600;
+    line-height: 1;
+    background: var(--grad-text);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .partner-foot__l {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--on-dark-muted);
+    max-width: 22ch;
+  }
+  .partner-foot__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 780px) {
+    .partner-foot { flex-direction: column; align-items: flex-start; }
+    .partner-foot__cta { width: 100%; }
+    .partner-foot__cta .btn { flex: 1 1 auto; justify-content: center; }
+  }
 
   /* Proof cards under the testimonial — concrete outcomes, three-up. */
   .proof-row {
