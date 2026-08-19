@@ -1,31 +1,29 @@
 import { Link } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
 import { PartnerCta } from "@/components/site/PartnerJourney";
 import { CONTACT } from "@/lib/site-content";
 
 export function SiteFooter() {
-  const col = (title: string, items: { to: string; label: string; hash?: string }[]) => (
-    <div>
-      <div
-        style={{
-          fontSize: 12,
-          letterSpacing: ".14em",
-          textTransform: "uppercase",
-          color: "var(--on-dark-muted)",
-          marginBottom: 14,
-        }}
-      >
-        {title}
-      </div>
-      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+  /** `extra` renders after the links — used for the Become Partner action,
+      which opens the partner journey rather than navigating to a route. */
+  const col = (
+    title: string,
+    items: { to: string; label: string; hash?: string }[],
+    extra?: ReactNode,
+  ) => (
+    <div className="footer-col">
+      <div className="footer-col__title">{title}</div>
+      <ul className="footer-col__list">
         {items.map((i) => (
           <li key={`${i.to}${i.hash ? `#${i.hash}` : ""}-${i.label}`}>
-            <Link to={i.to} hash={i.hash} style={{ color: "var(--on-dark-link)", fontSize: 14 }}>
+            <Link to={i.to} hash={i.hash} className="footer-link">
               {i.label}
             </Link>
           </li>
         ))}
+        {extra ? <li>{extra}</li> : null}
       </ul>
     </div>
   );
@@ -33,11 +31,8 @@ export function SiteFooter() {
   return (
     <footer className="surface-ink" style={{ marginTop: 0 }}>
       <div className="container-x" style={{ paddingBlock: 72 }}>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr", gap: 40 }}
-          className="footer-grid"
-        >
-          <div style={{ minWidth: 0 }}>
+        <div className="footer-grid">
+          <div className="footer-brand-col" style={{ minWidth: 0 }}>
             <div className="site-footer-brand">
               <img
                 src="/logo.png"
@@ -78,11 +73,6 @@ export function SiteFooter() {
               >
                 Talk to sales
               </Link>
-              <PartnerCta
-                label="Become a Partner"
-                className="btn btn-outline"
-                style={{ color: "#fff", borderColor: "rgba(255,255,255,.4)" }}
-              />
             </div>
           </div>
           {col("Services", [
@@ -93,12 +83,16 @@ export function SiteFooter() {
             { to: "/modules/employees", label: "Team & permissions" },
             { to: "/modules/finance", label: "Finance & billing" },
           ])}
-          {col("Company", [
-            { to: "/about", label: "About" },
-            { to: "/customers", label: "Customers" },
-            { to: "/features", label: "Features" },
-            { to: "/contact", label: "Contact" },
-          ])}
+          {col(
+            "Company",
+            [
+              { to: "/about", label: "About" },
+              { to: "/customers", label: "Customers" },
+              { to: "/features", label: "Features" },
+              { to: "/contact", label: "Contact" },
+            ],
+            <PartnerCta label="Become Partner" className="footer-link footer-link--action" />,
+          )}
           {col("Resources", [
             { to: "/services", label: "All services" },
             { to: "/features", label: "Features" },
@@ -128,10 +122,6 @@ export function SiteFooter() {
           <span>Made for operators who want one platform, not ten.</span>
         </div>
       </div>
-      <style>{`
-        @media (max-width: 920px) { .footer-grid { grid-template-columns: 1fr 1fr !important; } }
-        @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr !important; } }
-      `}</style>
     </footer>
   );
 }

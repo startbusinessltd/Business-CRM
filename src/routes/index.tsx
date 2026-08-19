@@ -7,7 +7,6 @@ import {
   PageHero,
   StatStrip,
 } from "@/components/site/PageBlocks";
-import { PartnerCta } from "@/components/site/PartnerJourney";
 import { PLATFORM_STATS, SERVICES } from "@/lib/site-content";
 
 export const Route = createFileRoute("/")({
@@ -244,90 +243,8 @@ function Home() {
         </div>
       </section>
 
-      <PartnerSection />
-
       <CtaBand />
     </>
   );
 }
 
-const PARTNER_BENEFITS: { ico: string; t: string; d: string }[] = [
-  {
-    ico: "🚀",
-    t: "Start with zero build cost",
-    d: "Websites, CRM, leads, calls, social and AI are already built and running. You bring customers, not engineers.",
-  },
-  {
-    ico: "💰",
-    t: "You set the price, you keep the profit",
-    d: "Sell every website and CRM at your own rate. B-SOFT charges a small fixed cost — the margin above it is yours.",
-  },
-  {
-    ico: "🎛️",
-    t: "One dashboard for every client",
-    d: "Onboard, manage and bill all your customers from a single partner panel instead of juggling logins.",
-  },
-  {
-    ico: "🤝",
-    t: "You never sell alone",
-    d: "Sales collateral, demo support and a dedicated partner line — plus a team that handles the tech behind you.",
-  },
-];
-
-function PartnerSection() {
-  return (
-    <section className="partner-band-outer">
-      <div className="surface-ink partner-band">
-        <div className="orb orb--violet" style={{ width: 380, height: 380, top: -150, left: "8%" }} />
-        <div className="orb orb--gold" style={{ width: 300, height: 300, bottom: -140, right: "10%" }} />
-        <div className="hero-grid-overlay" />
-        <div className="container-x" style={{ position: "relative", zIndex: 2 }}>
-          <div style={{ maxWidth: 780, marginInline: "auto", textAlign: "center" }}>
-            <span className="eyebrow eyebrow--on-dark">Partner program</span>
-            <h2 className="h-section" style={{ marginTop: 18, color: "#fff" }}>
-              Build your own software business — <span className="grad-text">we run the tech.</span>
-            </h2>
-            <p style={{ marginTop: 16, fontSize: 17, color: "var(--on-dark-muted)" }}>
-              Agencies, consultants and local resellers use B-SOFT to sell websites and CRM to the
-              businesses around them. Two ways in — Associate to start light, Franchise for an
-              exclusive territory.
-            </p>
-          </div>
-
-          <div className="partner-grid">
-            {PARTNER_BENEFITS.map((b) => (
-              <div key={b.t} className="partner-card spotlight">
-                <span className="partner-card__ico" aria-hidden>
-                  {b.ico}
-                </span>
-                <h3 className="partner-card__t">{b.t}</h3>
-                <p className="partner-card__d">{b.d}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="partner-foot">
-            <div className="partner-foot__stats">
-              {[
-                { n: "2", l: "programs — Associate & Franchise" },
-                { n: "0", l: "developers you need to hire" },
-                { n: "100%", l: "of your margin stays yours" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <div className="partner-foot__n">{s.n}</div>
-                  <div className="partner-foot__l">{s.l}</div>
-                </div>
-              ))}
-            </div>
-            <div className="partner-foot__cta">
-              <PartnerCta label="Become a Partner" className="btn btn-brass btn-lg magnetic" />
-              <Link to="/partner" className="btn btn-outline" style={{ color: "#fff", borderColor: "rgba(255,255,255,.45)" }}>
-                See how it works
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}

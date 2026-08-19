@@ -716,6 +716,71 @@
     justify-content: center;
   }
 
+  /* Footer link columns — link rows and the Become Partner action share one
+     baseline grid so every column lines up regardless of item type. */
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(4, minmax(0, 1fr));
+    gap: clamp(28px, 3vw, 48px);
+    align-items: start;
+  }
+  /* Below desktop the brand block spans the full row so the four link
+     columns stay on one line instead of orphaning behind a tall column. */
+  @media (max-width: 1080px) {
+    .footer-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .footer-brand-col { grid-column: 1 / -1; margin-bottom: 8px; }
+  }
+  @media (max-width: 780px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 460px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+
+  .footer-col { min-width: 0; }
+  .footer-col__title {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--on-dark-muted);
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  .footer-col__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 11px;
+  }
+  .footer-link {
+    color: var(--on-dark-link);
+    font-size: 14px;
+    line-height: 1.45;
+    display: inline-block;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--gold); }
+  /* The partner action is a <button>; strip its chrome so it sits flush with
+     the anchor rows above it. */
+  .footer-link--action {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+  }
+  .footer-link:focus-visible,
+  .footer-link--action:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
   .footer-cta-row {
     display: flex;
     gap: 10px;
