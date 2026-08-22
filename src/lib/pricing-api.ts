@@ -38,6 +38,16 @@ export type PricingPlan = {
   price: number;
   discountedPrice: number | null;
   period: number;
+  /**
+   * Per-term pricing (op V52). Optional, not merely nullable: the hard-coded offline fallback
+   * plans below have no per-term prices at all, and a plan that has never been given a monthly
+   * price should read as "not sold monthly" rather than force a placeholder into every literal.
+   */
+  monthlyPrice?: number | null;
+  yearlyPrice?: number | null;
+  /** Server-computed price actually charged per term, honouring the plan's discount flag. */
+  monthlySellingPrice?: number | null;
+  yearlySellingPrice?: number | null;
   packagesTypeId: number;
   packagesTypeName: string;
   color?: string | null;
@@ -55,6 +65,10 @@ type RawPackage = {
   price: number;
   discountedPrice?: number | null;
   period: number;
+  monthlyPrice?: number | null;
+  yearlyPrice?: number | null;
+  monthlySellingPrice?: number | string | null;
+  yearlySellingPrice?: number | string | null;
   packagesTypeId?: number;
   packagesTypeName?: string;
   color?: string | null;
@@ -77,6 +91,12 @@ function normalize(raw: RawPackage): PricingPlan {
     price: raw.price,
     discountedPrice: raw.discountedPrice ?? null,
     period: raw.period ?? 12,
+    monthlyPrice: raw.monthlyPrice ?? null,
+    yearlyPrice: raw.yearlyPrice ?? null,
+    // num(): the server sends these as BigDecimal, which serialises as a number but can arrive as
+    // a string through some proxies.
+    monthlySellingPrice: num(raw.monthlySellingPrice),
+    yearlySellingPrice: num(raw.yearlySellingPrice),
     packagesTypeId: raw.packagesTypeId ?? 0,
     packagesTypeName: raw.packagesTypeName ?? "",
     color: raw.color ?? null,

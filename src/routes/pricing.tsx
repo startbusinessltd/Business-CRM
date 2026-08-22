@@ -4,6 +4,17 @@ import { CtaBand, IMG, PageHero } from "@/components/site/PageBlocks";
 import { CardMarquee } from "@/components/site/CardMarquee";
 import { useCrmAppBase, crmAbsUrl } from "@/lib/crm-parent-bridge";
 import { fetchPricingPlans, formatINR, type PricingPlan } from "@/lib/pricing-api";
+import { BillingPeriodToggle } from "@/components/site/BillingPeriodToggle";
+import {
+  anyPlanOfferedOnBothTerms,
+  bestSavingPercent,
+  isOfferedOn,
+  listPriceFor,
+  perMonth,
+  periodOfLegacyPlan,
+  sellingPriceFor,
+  type BillingPeriod,
+} from "@/lib/billing-period";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -123,14 +134,21 @@ function periodLabel(period: number): string {
   return `/ ${period} mo`;
 }
 
-function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
+function PlanCard({ plan, ctaHref, period = "YEARLY" }: { plan: PricingPlan; ctaHref: string; period?: BillingPeriod }) {
   const meta = metaFor(plan);
   const featured = !!meta.featured;
   const muted = featured ? "var(--on-dark-muted)" : "var(--slate)";
-  const has = plan.discountedPrice != null && plan.discountedPrice < plan.price;
-  const shown = plan.discountedPrice ?? plan.price;
+  // Falls back to the plan's own single price when it is not sold on the selected term, so a card
+  // never renders blank — the caption below says which term it is actually quoting.
+  const offered = isOfferedOn(plan, period);
+  const shown = sellingPriceFor(plan, period) ?? plan.discountedPrice ?? plan.price;
+  const listed = listPriceFor(plan, period) ?? plan.price;
+  const has = listed != null && listed > shown;
   const priceText = meta.priceLabel ? meta.priceLabel(plan) : formatINR(shown);
-  const save = has ? plan.price - (plan.discountedPrice as number) : 0;
+  const save = has ? listed - shown : 0;
+  const shownPeriod: BillingPeriod = offered ? period : periodOfLegacyPlan(plan);
+  const perMonthText =
+    shownPeriod === "YEARLY" ? `${formatINR(perMonth(shown, "YEARLY"))} / month` : null;
   // Accent = the admin-configured plan colour (business_type.bt_color) from the backend.
   // When the API sends no colour, every card falls back to the same dark accent.
   const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : "#1f2937";
@@ -197,14 +215,24 @@ function PlanCard({ plan, ctaHref }: { plan: PricingPlan; ctaHref: string }) {
         >
           {priceText}
         </span>
-        <span style={{ fontSize: 14, color: muted }}>{periodLabel(plan.period)}</span>
+        <span style={{ fontSize: 14, color: muted }}>
+          {shownPeriod === "MONTHLY" ? "/ month" : "/ year"}
+        </span>
       </div>
+
+      {perMonthText && (
+        /* Buyers compare terms per month, so a yearly price says what it works out to. Display
+           only — the charge is the yearly figure, never this multiplied back up. */
+        <div style={{ marginTop: 4, fontSize: 13, color: muted }}>
+          {perMonthText} · billed yearly
+        </div>
+      )}
 
       <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minHeight: 46 }}>
         {has ? (
           <>
             <span style={{ fontSize: 14, color: muted, textDecoration: "line-through" }}>
-              Was {formatINR(plan.price)} {periodLabel(plan.period)}
+              Was {formatINR(listed)} {shownPeriod === "MONTHLY" ? "/ month" : "/ year"}
             </span>
             <span
               style={{
@@ -284,6 +312,12 @@ function Pricing() {
   const registerHref = crmAbsUrl("/auth/register", crmShell);
 
   const [plans, setPlans] = useState<PricingPlan[]>(FALLBACK_PLANS);
+  // Yearly first: it is the better-value term, and the one every plan predating per-term pricing
+  // is sold on.
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("YEARLY");
+
+  const showToggle = anyPlanOfferedOnBothTerms(plans);
+  const headlineSaving = bestSavingPercent(plans);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -309,11 +343,27 @@ function Pricing() {
 
       <section className="section-tight">
         <div className="container-x">
+          {showToggle && (
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 26 }}>
+              <BillingPeriodToggle
+                value={billingPeriod}
+                onChange={setBillingPeriod}
+                savingPercent={headlineSaving}
+                ariaLabel="Choose monthly or yearly billing"
+              />
+            </div>
+          )}
+
           <CardMarquee items={plans} speed={26} render={(plan) => (
-            <PlanCard plan={plan} ctaHref={ctaHrefFor(plan)} />
+            <PlanCard plan={plan} ctaHref={ctaHrefFor(plan)} period={billingPeriod} />
           )} />
           <p style={{ textAlign: "center", marginTop: 20, color: "var(--slate)", fontSize: 13 }}>
-            Hover to pause · Prices in INR, billed yearly. GST applied on invoice where applicable.
+            Hover to pause · Prices in INR, excluding GST.
+            {showToggle
+              ? billingPeriod === "YEARLY"
+                ? " Billed once a year."
+                : " Billed every month."
+              : " Billed yearly."}
           </p>
         </div>
       </section>
