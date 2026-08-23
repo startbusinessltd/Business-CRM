@@ -147,8 +147,13 @@ function PlanCard({ plan, ctaHref, period = "YEARLY" }: { plan: PricingPlan; cta
   const priceText = meta.priceLabel ? meta.priceLabel(plan) : formatINR(shown);
   const save = has ? listed - shown : 0;
   const shownPeriod: BillingPeriod = offered ? period : periodOfLegacyPlan(plan);
-  const perMonthText =
-    shownPeriod === "YEARLY" ? `${formatINR(perMonth(shown, "YEARLY"))} / month` : null;
+  // The headline is ALWAYS a per-month figure. On yearly that is the annual price over twelve —
+  // the number a buyer weighs against a monthly plan. Leading with the annual total makes the
+  // cheaper option look like the expensive one, which defeats the point of offering it.
+  const headline = perMonth(shown, shownPeriod);
+  const headlineWas = listed != null ? perMonth(listed, shownPeriod) : null;
+  const billedText =
+    shownPeriod === "YEARLY" ? `${formatINR(shown)} billed yearly` : "billed monthly";
   // Accent = the admin-configured plan colour (business_type.bt_color) from the backend.
   // When the API sends no colour, every card falls back to the same dark accent.
   const accent = plan.color && /^#[0-9a-fA-F]{3,8}$/.test(plan.color) ? plan.color : "#1f2937";
@@ -213,26 +218,19 @@ function PlanCard({ plan, ctaHref, period = "YEARLY" }: { plan: PricingPlan; cta
             color: featured ? "var(--ivory)" : accent,
           }}
         >
-          {priceText}
+          {meta.priceLabel ? priceText : formatINR(headline)}
         </span>
-        <span style={{ fontSize: 14, color: muted }}>
-          {shownPeriod === "MONTHLY" ? "/ month" : "/ year"}
-        </span>
+        <span style={{ fontSize: 14, color: muted }}>/ month</span>
       </div>
 
-      {perMonthText && (
-        /* Buyers compare terms per month, so a yearly price says what it works out to. Display
-           only — the charge is the yearly figure, never this multiplied back up. */
-        <div style={{ marginTop: 4, fontSize: 13, color: muted }}>
-          {perMonthText} · billed yearly
-        </div>
-      )}
+      {/* What it actually costs to buy, directly under the headline so nothing is concealed. */}
+      <div style={{ marginTop: 4, fontSize: 13, color: muted }}>{billedText}</div>
 
       <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minHeight: 46 }}>
         {has ? (
           <>
             <span style={{ fontSize: 14, color: muted, textDecoration: "line-through" }}>
-              Was {formatINR(listed)} {shownPeriod === "MONTHLY" ? "/ month" : "/ year"}
+              Was {formatINR(headlineWas ?? headline)} / month
             </span>
             <span
               style={{
