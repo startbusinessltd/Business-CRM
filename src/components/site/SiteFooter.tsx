@@ -1,18 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
-import { PartnerCta } from "@/components/site/PartnerJourney";
 import { CONTACT } from "@/lib/site-content";
 
 export function SiteFooter() {
-  /** `extra` renders after the links — used for the Become Partner action,
-      which opens the partner journey rather than navigating to a route. */
-  const col = (
-    title: string,
-    items: { to: string; label: string; hash?: string }[],
-    extra?: ReactNode,
-  ) => (
+  const col = (title: string, items: { to: string; label: string; hash?: string }[]) => (
     <div className="footer-col">
       <div className="footer-col__title">{title}</div>
       <ul className="footer-col__list">
@@ -23,7 +15,6 @@ export function SiteFooter() {
             </Link>
           </li>
         ))}
-        {extra ? <li>{extra}</li> : null}
       </ul>
     </div>
   );
@@ -83,16 +74,12 @@ export function SiteFooter() {
             { to: "/modules/employees", label: "Team & permissions" },
             { to: "/modules/finance", label: "Finance & billing" },
           ])}
-          {col(
-            "Company",
-            [
-              { to: "/about", label: "About" },
-              { to: "/customers", label: "Customers" },
-              { to: "/features", label: "Features" },
-              { to: "/contact", label: "Contact" },
-            ],
-            <PartnerCta label="Become Partner" className="footer-link footer-link--action" />,
-          )}
+          {col("Company", [
+            { to: "/about", label: "About" },
+            { to: "/customers", label: "Customers" },
+            { to: "/features", label: "Features" },
+            { to: "/contact", label: "Contact" },
+          ])}
           {col("Resources", [
             { to: "/services", label: "All services" },
             { to: "/features", label: "Features" },
