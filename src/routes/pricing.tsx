@@ -226,6 +226,26 @@ function PlanCard({ plan, ctaHref, period = "YEARLY" }: { plan: PricingPlan; cta
       {/* What it actually costs to buy, directly under the headline so nothing is concealed. */}
       <div style={{ marginTop: 4, fontSize: 13, color: muted }}>{billedText}</div>
 
+      {!offered && (
+        /* The plan is not sold on the term the visitor selected — the professional website is
+           yearly only. Say so, rather than showing the yearly price under a "Monthly" toggle and
+           letting them think that is the monthly rate. */
+        <div
+          style={{
+            marginTop: 8,
+            alignSelf: "flex-start",
+            padding: "3px 10px",
+            borderRadius: 999,
+            background: featured ? "rgba(255,255,255,.14)" : "var(--sand, #f1f5f9)",
+            color: muted,
+            fontSize: 12,
+            fontWeight: 600,
+          }}
+        >
+          Available on a yearly plan only
+        </div>
+      )}
+
       <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minHeight: 46 }}>
         {has ? (
           <>
