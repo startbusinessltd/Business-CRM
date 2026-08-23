@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import type { BillingPeriod } from "@/lib/billing-period";
 
 /**
@@ -25,6 +25,34 @@ export function BillingPeriodToggle({
   ariaLabel?: string;
 }) {
   const groupRef = useRef<HTMLDivElement>(null);
+  const monthlyRef = useRef<HTMLButtonElement>(null);
+  const yearlyRef = useRef<HTMLButtonElement>(null);
+  const [thumb, setThumb] = useState<{ left: number; width: number } | null>(null);
+
+  /**
+   * Measure the checked option rather than assuming the two are equal halves.
+   *
+   * They are not: the Yearly label carries the saving badge, so it is materially wider than
+   * Monthly, and `flex: 1 1 0` cannot equalise them because each option's min-content width
+   * floors it. A fixed 50% indicator therefore sat about 30px off the option it was meant to be
+   * highlighting.
+   */
+  const measure = useCallback(() => {
+    const group = groupRef.current;
+    const active = (value === "MONTHLY" ? monthlyRef : yearlyRef).current;
+    if (!group || !active) return;
+    setThumb({ left: active.offsetLeft, width: active.offsetWidth });
+  }, [value]);
+
+  useLayoutEffect(() => {
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    // Re-measure when the row reflows — a breakpoint change or a font swapping in both move the
+    // option boundaries after first paint.
+    const ro = new ResizeObserver(measure);
+    if (groupRef.current) ro.observe(groupRef.current);
+    return () => ro.disconnect();
+  }, [measure]);
 
   const select = (next: BillingPeriod) => {
     if (disabled || next === value) return;
@@ -89,13 +117,15 @@ export function BillingPeriodToggle({
           position: "absolute",
           top: 4,
           bottom: 4,
-          left: 4,
-          width: "calc(50% - 4px)",
+          left: 0,
+          // Hidden until measured, so it can never flash at the wrong place on first paint.
+          width: thumb ? thumb.width : 0,
+          opacity: thumb ? 1 : 0,
+          transform: `translateX(${thumb ? thumb.left : 0}px)`,
           borderRadius: 999,
           background: "var(--ivory, #ffffff)",
           boxShadow: "0 1px 3px rgba(15,23,42,.16)",
-          transform: value === "YEARLY" ? "translateX(100%)" : "translateX(0)",
-          transition: "transform 220ms cubic-bezier(.4,0,.2,1)",
+          transition: "transform 220ms cubic-bezier(.4,0,.2,1), width 220ms cubic-bezier(.4,0,.2,1)",
         }}
       />
 
@@ -105,6 +135,7 @@ export function BillingPeriodToggle({
         aria-checked={value === "MONTHLY"}
         tabIndex={value === "MONTHLY" ? 0 : -1}
         disabled={disabled}
+        ref={monthlyRef}
         onClick={() => select("MONTHLY")}
         style={optionStyle(value === "MONTHLY")}
       >
@@ -117,6 +148,7 @@ export function BillingPeriodToggle({
         aria-checked={value === "YEARLY"}
         tabIndex={value === "YEARLY" ? 0 : -1}
         disabled={disabled}
+        ref={yearlyRef}
         onClick={() => select("YEARLY")}
         style={optionStyle(value === "YEARLY")}
       >
