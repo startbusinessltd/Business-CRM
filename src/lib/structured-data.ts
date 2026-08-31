@@ -76,7 +76,7 @@ export function organization(): Json {
       clean({
         "@type": "ContactPoint",
         contactType: "sales",
-        email: NAP.email,
+        email: NAP.salesEmail,
         telephone: NAP.telephone,
         areaServed: "IN",
         availableLanguage: ["en", "hi", "kn"],

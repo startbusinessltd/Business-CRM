@@ -247,6 +247,14 @@ function Contact() {
                     {CONTACT.salesEmail}
                   </a>,
                   <a
+                    key="phone"
+                    href={CONTACT.phoneHref}
+                    title="Call our sales team"
+                    style={{ color: "var(--purple)", fontWeight: 600 }}
+                  >
+                    {CONTACT.phone}
+                  </a>,
+                  <a
                     key="web"
                     href={CONTACT.websiteUrl}
                     target="_blank"

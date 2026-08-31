@@ -89,8 +89,11 @@ export const SERVICES = [
 ] as const;
 
 export const CONTACT = {
-  salesEmail: "support@bsoft.ltd",
+  salesEmail: "connect@bsoft.ltd",
   supportEmail: "support@bsoft.ltd",
+  /** Display format of the Google Business Profile number (+91 99649 96599). */
+  phone: "+91 99649 96599",
+  phoneHref: "tel:+919964996599",
   website: "Bsoft.ltd",
   websiteUrl: "https://bsoft.ltd",
   office: [

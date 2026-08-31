@@ -58,7 +58,8 @@ export const SITE = {
  * treats them as two different businesses and neither ranks.
  */
 export const NAP = {
-  name: "B-SOFT",
+  /** Exactly as on the Google Business Profile — "BSOFT", no hyphen (user-confirmed 2026-08-31). */
+  name: "BSOFT",
   streetAddress: "#454, 1st Cross, Mahadeshwara Nagar",
   addressLocality: "Channapatna",
   addressRegion: "Karnataka",
@@ -66,14 +67,11 @@ export const NAP = {
   addressCountry: "IN",
   /** District line — kept out of `streetAddress` so the schema stays parseable. */
   district: "Ramanagara District",
-  /**
-   * E.164 phone. REQUIRED for Google Business Profile verification and for
-   * LocalBusiness rich results.
-   * TODO(business): set the public sales number, e.g. "+91XXXXXXXXXX". Left empty
-   * on purpose — a wrong number is far worse for local SEO than a missing one.
-   */
-  telephone: "",
+  /** E.164 — same number as on the Google Business Profile (set 2026-08-31). */
+  telephone: "+919964996599",
   email: "support@bsoft.ltd",
+  /** Sales enquiries — shown as the sales contactPoint; support stays on `email`. */
+  salesEmail: "connect@bsoft.ltd",
   /** Decoded from the Google Maps embed in site-content.ts — verified pin. */
   latitude: 12.645694,
   longitude: 77.203722,
