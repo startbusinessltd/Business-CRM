@@ -15,24 +15,19 @@ import {
   sellingPriceFor,
   type BillingPeriod,
 } from "@/lib/billing-period";
+import { pageHead } from "@/lib/page-head";
+import { PRICING_FAQ } from "@/lib/faq-content";
+import { jsonLd, pricingOffers } from "@/lib/structured-data";
+import { absoluteUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Pricing — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Simple INR yearly pricing. Website, CRM, calls, social, employees and finance — pick the plan that fits your business.",
-      },
-      { property: "og:title", content: "Pricing — B-SOFT" },
-      {
-        property: "og:description",
-        content: "Website, full CRM suite and custom development plans — transparent yearly pricing.",
-      },
-      { property: "og:image", content: IMG.pricing },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/pricing",
+      title: "B-SOFT Pricing - CRM & Website Builder Plans in INR",
+      description:
+        "Transparent B-SOFT pricing in INR - Website Pro, CRM Business Suite and Custom Development plans, monthly or yearly. GST invoices, UPI and card payments.",
+    }),
   component: Pricing,
 });
 
@@ -348,8 +343,24 @@ function Pricing() {
   const ctaHrefFor = (plan: PricingPlan): string =>
     metaFor(plan).ctaKind === "contact" ? "/contact" : registerHref;
 
+  // Product/AggregateOffer markup from the plans this page is actually showing,
+  // priced on the currently selected term so schema and screen always agree.
+  const offerMarkup = pricingOffers(
+    plans
+      .map((p) => ({
+        name: p.packagesName,
+        description: p.description,
+        price: sellingPriceFor(p, billingPeriod) ?? 0,
+        url: absoluteUrl("/pricing"),
+      }))
+      .filter((p) => p.price > 0),
+  );
+
   return (
     <>
+      {offerMarkup && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(offerMarkup) }} />
+      )}
       <PageHero
         eyebrow="Pricing"
         title={<>Simple plans. Full platform.</>}
@@ -396,32 +407,8 @@ function Pricing() {
             style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 32 }}
             className="faq-grid"
           >
-            {[
-              [
-                "Which plan is right for me?",
-                "Choose Website Pro for a professional site with lead capture, CRM Business Suite for the complete platform (calls, social, team and finance), or Custom Development Studio for bespoke modules and integrations.",
-              ],
-              [
-                "How do I get started?",
-                "Click Register now on any plan to create your account. Our team will help you pick templates and configure your workspace. For custom work, talk to sales.",
-              ],
-              [
-                "Can I upgrade later?",
-                "Yes — start on Website Pro and upgrade to the CRM Business Suite any time. Contact us to add partner and reseller options.",
-              ],
-              [
-                "Are taxes included?",
-                "Listed prices are exclusive of applicable GST or taxes unless stated otherwise on your invoice.",
-              ],
-              [
-                "Do you offer non-profit or startup pricing?",
-                "We offer discounts for registered non-profits and early-stage startups. Reach out via the contact page.",
-              ],
-              [
-                "Where is my data stored?",
-                "Production APIs run on B-SOFT infrastructure with encryption in transit; contact us for security and data questions.",
-              ],
-            ].map(([q, a]) => (
+            {/* PRICING_FAQ also feeds this page's FAQPage JSON-LD — keep them one array. */}
+            {PRICING_FAQ.map(({ q, a }) => (
               <div key={q} className="card-flat" style={{ padding: 24 }}>
                 <div
                   style={{

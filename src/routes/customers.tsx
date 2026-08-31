@@ -1,16 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/customers")({
-  head: () => ({
-    meta: [
-      { title: "Customers — B-SOFT" },
-      { name: "description", content: "How modern teams use B-SOFT to replace four tools, save hours per week and grow revenue." },
-      { property: "og:title", content: "Customers — B-SOFT" },
-      { property: "og:description", content: "Real businesses, real numbers, one platform." },
-      { property: "og:image", content: IMG.team },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/customers",
+      title: "B-SOFT Customer Stories - Indian SMBs Running on One CRM",
+      description:
+        "See how Indian businesses use B-SOFT to replace four separate tools, launch websites in 48 hours and run sales, calls and billing from one CRM.",
+    }),
   component: Customers,
 });
 

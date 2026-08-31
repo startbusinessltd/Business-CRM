@@ -1,21 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
 import { PLATFORM_STATS } from "@/lib/site-content";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "B-SOFT helps Indian SMBs run websites, leads, calls, social, team access, and billing from one CRM platform.",
-      },
-      { property: "og:title", content: "About B-SOFT" },
-      { property: "og:description", content: "One platform for websites, CRM, calls, social, and finance." },
-      { property: "og:image", content: IMG.aboutWhatWeShip },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/about",
+      title: "About B-SOFT - The Company Behind the All-in-One CRM",
+      description:
+        "Meet B-SOFT: the Karnataka-based team building one platform for Indian small businesses to run websites, leads, calls, social media and billing together.",
+    }),
   component: About,
 });
 

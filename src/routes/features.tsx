@@ -1,21 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand, IMG, PageHero } from "@/components/site/PageBlocks";
 import { SERVICES } from "@/lib/site-content";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/features")({
-  head: () => ({
-    meta: [
-      { title: "Platform Features — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Feature list across B-SOFT services — websites, leads, call tracker, social hub, team, and finance.",
-      },
-      { property: "og:title", content: "Features — B-SOFT" },
-      { property: "og:description", content: "Every capability in the product, one platform." },
-      { property: "og:image", content: IMG.featuresHero },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/features",
+      title: "B-SOFT Features - Website Builder, CRM, Calls, Social & Billing",
+      description:
+        "Explore every B-SOFT feature: AI website builder, lead pipelines, call tracker with recordings, social publishing, WhatsApp, team roles and GST billing.",
+    }),
   component: Features,
 });
 

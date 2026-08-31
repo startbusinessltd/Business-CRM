@@ -2,23 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LegalDocument } from "@/components/site/LegalDocument";
 import { IMG } from "@/components/site/PageBlocks";
 import { LEGAL_LAST_UPDATED, TERMS_INTRO, TERMS_SECTIONS } from "@/lib/legal-content";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms of Service — B-SOFT" },
-      {
-        name: "description",
-        content: "Terms governing use of the B-SOFT platform and related services.",
-      },
-      { property: "og:title", content: "Terms of Service — B-SOFT" },
-      {
-        property: "og:description",
-        content: "Terms of Service for B-SOFT.",
-      },
-      { property: "og:image", content: IMG.team },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/terms",
+      title: "Terms of Service | B-SOFT",
+      description:
+        "The terms governing use of the B-SOFT platform and related services - accounts, acceptable use, payments, and your rights as a customer.",
+    }),
   component: TermsPage,
 });
 

@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/modules/calls")({
-  head: () => ({
-    meta: [
-      { title: "Call Tracker — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Native call tracking: dashboard, history, hourly and day-wise reports, employee views, sync log, and leads.",
-      },
-      { property: "og:title", content: "Call Tracker" },
-      { property: "og:image", content: IMG.callcenter },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/modules/calls",
+      title: "Call Tracking Software for Sales Teams | B-SOFT",
+      description:
+        "Track every sales call with B-SOFT: call history and recordings sync, hourly and day-wise reports, per-employee performance, and calls linked to leads.",
+    }),
   component: CallsModule,
 });
 

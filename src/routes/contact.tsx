@@ -7,20 +7,16 @@ import {
   normalizeIndianMobile,
   submitContactLead,
 } from "@/lib/contact-lead-api";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — B-SOFT" },
-      {
-        name: "description",
-        content: "Talk to sales, book a demo or reach support. We answer in hours, not days.",
-      },
-      { property: "og:title", content: "Contact B-SOFT" },
-      { property: "og:description", content: "Reach our sales, support or partnerships team." },
-      { property: "og:image", content: IMG.contact },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/contact",
+      title: "Contact B-SOFT - Sales, Support & Demo Booking",
+      description:
+        "Talk to B-SOFT sales, book a demo or reach support. Office in Channapatna, Karnataka, India. We usually reply within 24 hours - support@bsoft.ltd.",
+    }),
   component: Contact,
 });
 

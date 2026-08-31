@@ -1,0 +1,30 @@
+# bsoft.ltd — B-SOFT marketing site
+# All marketing pages are public and indexable.
+
+User-agent: *
+Allow: /
+
+# AI answer-engine crawlers are explicitly welcome (GEO): being citable in
+# ChatGPT, Perplexity, Gemini and Claude answers is part of the strategy.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://bsoft.ltd/sitemap.xml

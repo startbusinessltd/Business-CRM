@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/modules/finance")({
-  head: () => ({
-    meta: [
-      { title: "Finance & Billing — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Packages, coupons, payments, incentive wallet, invoices, and payment gateway — Finance in B-SOFT.",
-      },
-      { property: "og:title", content: "Finance & Billing" },
-      { property: "og:image", content: IMG.finance },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/modules/finance",
+      title: "GST Invoicing & Billing Software | B-SOFT",
+      description:
+        "Handle money in B-SOFT: packages and pricing, coupons, UPI and card payments, GST invoices as PDFs, transaction history and incentive wallet payouts.",
+    }),
   component: FinanceModule,
 });
 

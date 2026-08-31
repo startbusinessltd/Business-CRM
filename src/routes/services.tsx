@@ -1,20 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand, IMG, PageHero } from "@/components/site/PageBlocks";
 import { SERVICES } from "@/lib/site-content";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/services")({
-  head: () => ({
-    meta: [
-      { title: "Services — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Website builder, leads & CRM, call tracker, social hub, team permissions, and finance — the same services you get inside B-SOFT.",
-      },
-      { property: "og:title", content: "Services — B-SOFT" },
-      { property: "og:image", content: IMG.servicesHero },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/services",
+      title: "B-SOFT Services - 6 Business Modules in One Platform",
+      description:
+        "Six connected services in one B-SOFT login: website builder, leads & CRM, call tracker, social hub, team permissions and finance. See what each one does.",
+    }),
   component: ServicesPage,
 });
 

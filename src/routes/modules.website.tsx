@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/modules/website")({
-  head: () => ({
-    meta: [
-      { title: "Website & Web Builder — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Website type, templates, settings, form builder, SEO & GEO, website admin, and AI chat — in B-SOFT.",
-      },
-      { property: "og:title", content: "Website & Web Builder" },
-      { property: "og:image", content: IMG.website },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/modules/website",
+      title: "AI Website Builder for Small Business | B-SOFT",
+      description:
+        "Build and publish a professional website with B-SOFT: industry templates, drag-and-drop forms, SEO tools, custom domain, SSL and free hosting - leads flow straight into your CRM.",
+    }),
   component: WebsiteModule,
 });
 

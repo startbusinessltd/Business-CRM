@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/modules/employees")({
-  head: () => ({
-    meta: [
-      { title: "Team & Permissions — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Roles & permissions and employee management — Team & Permissions in B-SOFT.",
-      },
-      { property: "og:title", content: "Team & Permissions" },
-      { property: "og:image", content: IMG.employees },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/modules/employees",
+      title: "Team Roles & Permissions Management | B-SOFT",
+      description:
+        "Control who sees what in B-SOFT: roles and access profiles, employee management and package-based menu access - the right screens for the right people.",
+    }),
   component: EmployeesModule,
 });
 

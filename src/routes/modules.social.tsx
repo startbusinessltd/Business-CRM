@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/modules/social")({
-  head: () => ({
-    meta: [
-      { title: "Social Hub — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Social Hub: connect accounts, posts, reels, ad campaigns, WhatsApp, and analytics in B-SOFT.",
-      },
-      { property: "og:title", content: "Social Hub" },
-      { property: "og:image", content: IMG.socialmarketing },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/modules/social",
+      title: "Social Media Management & WhatsApp Hub | B-SOFT",
+      description:
+        "Run social from your CRM with B-SOFT Social Hub: connect Facebook and Instagram, publish posts and reels, run Meta ads and manage WhatsApp in one inbox.",
+    }),
   component: SocialModule,
 });
 

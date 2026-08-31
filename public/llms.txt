@@ -1,0 +1,69 @@
+# B-SOFT
+
+> B-SOFT is an all-in-one business CRM platform for Indian small and medium
+> businesses. It combines six core services in a single login: an AI website
+> builder, lead and pipeline CRM, call tracking, a social media hub, team roles
+> and permissions, and finance with GST invoicing.
+
+Company: B-SOFT
+Website: https://bsoft.ltd
+Email: support@bsoft.ltd
+Location: #454, 1st Cross, Mahadeshwara Nagar, Channapatna, Ramanagara District, Karnataka 562160, India
+Market: Indian SMBs — agencies, consultants, clinics, real estate, education, salons, insurance and local service businesses. Pricing is in INR.
+
+## What B-SOFT does
+
+- Website & Web Builder: industry templates, website settings, drag-and-drop
+  form builder, SEO tools, publishing with custom domain, SSL and free hosting.
+  Website lead forms feed directly into the CRM.
+- Leads & CRM: pipelines and stages, form builder, table and kanban lead views,
+  tasks and follow-ups, automation over email, WhatsApp and SMS.
+- Call Tracker: call history and recordings sync from team devices, hourly and
+  day-wise reports, per-employee call performance, calls linked to leads.
+- Social Hub: connect Facebook and Instagram, publish posts and reels, run Meta
+  ad campaigns, WhatsApp business inbox, engagement analytics.
+- Team & Permissions: roles and access profiles, employee management,
+  package-based menu access.
+- Finance & Billing: packages and pricing, coupons, payment transactions
+  (UPI, cards, net banking via Indian payment gateway), GST invoices as PDFs,
+  incentive wallet and payouts.
+
+## Plans
+
+- Website Pro — AI-built professional website with custom domain, lead forms
+  and free hosting.
+- CRM Business Suite — the complete platform: website, CRM, calls, social,
+  team and finance. Most popular plan.
+- Custom Development Studio — bespoke modules and integrations built by a
+  dedicated engineering team.
+
+Current INR prices, and the Monthly | Yearly toggle: https://bsoft.ltd/pricing
+
+## Partner program
+
+Partners resell B-SOFT under their own pricing, manage all customers from one
+panel, and earn commission per sale. No technical team needed.
+Details: https://bsoft.ltd/partner
+
+## Key pages
+
+- [Home](https://bsoft.ltd/): platform overview
+- [Features](https://bsoft.ltd/features): full feature list by module
+- [Services](https://bsoft.ltd/services): the six service areas
+- [Pricing](https://bsoft.ltd/pricing): plans and INR prices
+- [Customers](https://bsoft.ltd/customers): customer outcomes
+- [About](https://bsoft.ltd/about): company background
+- [Contact](https://bsoft.ltd/contact): sales, demo and support
+- [Partner Program](https://bsoft.ltd/partner): reseller program
+- [Website & Web Builder](https://bsoft.ltd/modules/website)
+- [Leads & CRM](https://bsoft.ltd/modules/leads)
+- [Call Tracker](https://bsoft.ltd/modules/calls)
+- [Social Hub](https://bsoft.ltd/modules/social)
+- [Team & Permissions](https://bsoft.ltd/modules/employees)
+- [Finance & Billing](https://bsoft.ltd/modules/finance)
+
+## Policies
+
+- [Privacy Policy](https://bsoft.ltd/privacy)
+- [Terms of Service](https://bsoft.ltd/terms)
+- [Refund Policy](https://bsoft.ltd/refund)

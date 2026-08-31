@@ -2,24 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LegalDocument } from "@/components/site/LegalDocument";
 import { IMG } from "@/components/site/PageBlocks";
 import { LEGAL_LAST_UPDATED, PRIVACY_INTRO, PRIVACY_SECTIONS } from "@/lib/legal-content";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "How B-SOFT collects, uses, and protects personal information for the platform and marketing site.",
-      },
-      { property: "og:title", content: "Privacy Policy — B-SOFT" },
-      {
-        property: "og:description",
-        content: "Privacy practices for B-SOFT.",
-      },
-      { property: "og:image", content: IMG.team },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/privacy",
+      title: "Privacy Policy | B-SOFT",
+      description:
+        "How B-SOFT collects, uses and protects personal information across the platform - data we store, how it is used, and the choices you have.",
+    }),
   component: PrivacyPage,
 });
 

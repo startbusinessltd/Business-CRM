@@ -1,19 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand, FeatureRow, IMG, PageHero, StatStrip } from "@/components/site/PageBlocks";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/modules/leads")({
-  head: () => ({
-    meta: [
-      { title: "Leads & CRM — B-SOFT" },
-      {
-        name: "description",
-        content:
-          "Pipelines, forms, lead management, tasks, automation (email, WhatsApp, SMS), and website leads in B-SOFT.",
-      },
-      { property: "og:title", content: "Leads & CRM" },
-      { property: "og:image", content: IMG.leads },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/modules/leads",
+      title: "Lead Management & Sales Pipeline CRM | B-SOFT",
+      description:
+        "Manage every lead in B-SOFT: pipelines and stages, table and kanban views, tasks and follow-ups, and automation over email, WhatsApp and SMS.",
+    }),
   component: LeadsModule,
 });
 

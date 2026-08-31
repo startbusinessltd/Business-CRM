@@ -8,24 +8,18 @@ import {
   StatStrip,
 } from "@/components/site/PageBlocks";
 import { PLATFORM_STATS, SERVICES } from "@/lib/site-content";
+import { HOME_FAQ } from "@/lib/faq-content";
+import { FaqSection } from "@/components/site/FaqSection";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "B-SOFT — One Platform to Run Your Entire Business" },
-      {
-        name: "description",
-        content:
-          "B-SOFT: websites, leads, call tracker, social hub, team permissions, and finance — one CRM for Indian SMBs.",
-      },
-      { property: "og:title", content: "B-SOFT — Run Your Business Smarter" },
-      {
-        property: "og:description",
-        content: "Six core services. In-app AI assistant. One professional workspace.",
-      },
-      { property: "og:image", content: IMG.hero },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/",
+      title: "B-SOFT | All-in-One Business CRM Software for Indian SMBs",
+      description:
+        "B-SOFT is an all-in-one CRM for Indian SMBs - AI website builder, lead pipelines, call tracking, social media hub, team permissions and GST invoicing in one login.",
+    }),
   component: Home,
 });
 
@@ -242,6 +236,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <FaqSection items={HOME_FAQ} title="Common questions about B-SOFT." />
 
       <CtaBand />
     </>

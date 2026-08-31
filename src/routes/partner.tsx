@@ -13,25 +13,16 @@ import {
   inr,
   type PartnerPlan,
 } from "@/lib/partner-program";
+import { pageHead } from "@/lib/page-head";
 
 export const Route = createFileRoute("/partner")({
-  head: () => ({
-    meta: [
-      { title: "Become a B Soft Partner — Start Your Own Software Business" },
-      {
-        name: "description",
-        content:
-          "Join the B Soft Partner Program. Two programs — Associate and Franchise. Sell ready-made websites, CRM and AI products to businesses around you at your own price and keep the profit.",
-      },
-      { property: "og:title", content: "Become a B Soft Business Partner" },
-      {
-        property: "og:description",
-        content:
-          "Sell software that businesses already need. You set the price, you keep the profit — B Soft runs everything behind the scenes.",
-      },
-      { property: "og:image", content: IMG.handshake },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/partner",
+      title: "Become a B-SOFT Partner - Start Your Own Software Business",
+      description:
+        "Join the B-SOFT Partner Program: resell the CRM platform at your own price, manage every customer from one panel and earn commission on each sale.",
+    }),
   component: PartnerPage,
 });
 
