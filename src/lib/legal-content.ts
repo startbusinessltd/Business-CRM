@@ -170,3 +170,57 @@ export const REFUND_SECTIONS: LegalSection[] = [
     ],
   },
 ];
+
+export const DATA_DELETION_INTRO =
+  "This page explains how to delete the data that B-SOFT holds about you, including any information we receive from Meta (Facebook, Instagram and WhatsApp) when you connect a social account to B-SOFT Social Hub. You can remove this data yourself at any time from inside the product, or ask us to do it for you.";
+
+export const DATA_DELETION_SECTIONS: LegalSection[] = [
+  {
+    id: "what-we-receive",
+    heading: "What We Receive From Meta",
+    paragraphs: [
+      "When you connect a Facebook Page, Instagram professional account or WhatsApp Business account to B-SOFT Social Hub, you grant us access through Meta's official Login for Business flow. With that access we store only what is needed to operate the features you asked for: your Page and Instagram account IDs, account name and handle, profile and cover images, the access tokens that let us act on your behalf, the posts and campaigns you create or schedule through B-SOFT, and the engagement and insights metrics we read back to show you your analytics.",
+      "We do not sell this data, we do not share it with other B-SOFT customers, and we do not use it to build advertising profiles.",
+    ],
+  },
+  {
+    id: "self-serve",
+    heading: "Delete Your Data From Inside B-SOFT",
+    paragraphs: [
+      "The fastest way to remove your Meta data is to disconnect the account yourself. Sign in to B-SOFT, open Social Hub, go to Accounts, and choose Disconnect on the Facebook, Instagram or WhatsApp account you want removed.",
+      "Disconnecting immediately revokes and deletes the stored access tokens, and removes the account profile data, cached posts, comments and analytics we hold for that account. This action cannot be undone; reconnecting later starts a fresh authorisation.",
+    ],
+  },
+  {
+    id: "request-deletion",
+    heading: "Request Deletion By Email",
+    paragraphs: [
+      `If you cannot sign in, or you want your entire B-SOFT account and all associated data erased, email ${CONTACT.supportEmail} from the email address registered on your B-SOFT account with the subject line "Data deletion request".`,
+      "Please tell us which account you want deleted — your B-SOFT login email, and where relevant the Facebook Page name, Instagram handle or WhatsApp business number. We may ask you to confirm ownership before we act, so that nobody else can delete your data.",
+    ],
+  },
+  {
+    id: "timeline",
+    heading: "What Happens Next",
+    paragraphs: [
+      "We acknowledge every request within 3 business days and complete verified deletions within 30 days. Once a request is completed, the data is removed from our live systems and the access tokens are revoked with Meta so B-SOFT can no longer act on your behalf.",
+      "Encrypted backups are retained on a rolling schedule and are overwritten within 90 days. We may keep the minimum records we are legally required to keep, such as invoices and tax records, which are held separately from your social account data.",
+    ],
+  },
+  {
+    id: "revoke-at-meta",
+    heading: "Removing B-SOFT's Access At Meta",
+    paragraphs: [
+      "You can also revoke B-SOFT's access directly from Meta at any time, independently of us. On Facebook, go to Settings & Privacy, then Settings, then Apps and Websites, select B SOFT and choose Remove. Instagram and WhatsApp access granted through the same business login is removed with it.",
+      "Revoking at Meta stops any further access immediately. To also erase the data we have already stored, use one of the two methods above.",
+    ],
+  },
+  {
+    id: "contact",
+    heading: "Contact Us",
+    paragraphs: [
+      `Questions about this page, or about how we handle your data, can go to ${CONTACT.supportEmail} or ${CONTACT.websiteUrl}.`,
+      `Registered office: ${CONTACT.office.replace(/\n/g, " ")}`,
+    ],
+  },
+];

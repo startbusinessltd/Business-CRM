@@ -16,6 +16,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as FeaturesRouteImport } from './routes/features'
+import { Route as DataDeletionRouteImport } from './routes/data-deletion'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
@@ -60,6 +61,11 @@ const PartnerRoute = PartnerRouteImport.update({
 const FeaturesRoute = FeaturesRouteImport.update({
   id: '/features',
   path: '/features',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataDeletionRoute = DataDeletionRouteImport.update({
+  id: '/data-deletion',
+  path: '/data-deletion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersRoute = CustomersRouteImport.update({
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/customers': typeof CustomersRoute
+  '/data-deletion': typeof DataDeletionRoute
   '/features': typeof FeaturesRoute
   '/partner': typeof PartnerRoute
   '/pricing': typeof PricingRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/customers': typeof CustomersRoute
+  '/data-deletion': typeof DataDeletionRoute
   '/features': typeof FeaturesRoute
   '/partner': typeof PartnerRoute
   '/pricing': typeof PricingRoute
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/customers': typeof CustomersRoute
+  '/data-deletion': typeof DataDeletionRoute
   '/features': typeof FeaturesRoute
   '/partner': typeof PartnerRoute
   '/pricing': typeof PricingRoute
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/customers'
+    | '/data-deletion'
     | '/features'
     | '/partner'
     | '/pricing'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/customers'
+    | '/data-deletion'
     | '/features'
     | '/partner'
     | '/pricing'
@@ -216,6 +227,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/customers'
+    | '/data-deletion'
     | '/features'
     | '/partner'
     | '/pricing'
@@ -236,6 +248,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   CustomersRoute: typeof CustomersRoute
+  DataDeletionRoute: typeof DataDeletionRoute
   FeaturesRoute: typeof FeaturesRoute
   PartnerRoute: typeof PartnerRoute
   PricingRoute: typeof PricingRoute
@@ -300,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/features'
       fullPath: '/features'
       preLoaderRoute: typeof FeaturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-deletion': {
+      id: '/data-deletion'
+      path: '/data-deletion'
+      fullPath: '/data-deletion'
+      preLoaderRoute: typeof DataDeletionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers': {
@@ -380,6 +400,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   CustomersRoute: CustomersRoute,
+  DataDeletionRoute: DataDeletionRoute,
   FeaturesRoute: FeaturesRoute,
   PartnerRoute: PartnerRoute,
   PricingRoute: PricingRoute,
