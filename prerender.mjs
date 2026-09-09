@@ -23,6 +23,7 @@ const ROUTES = [
   "/privacy",
   "/terms",
   "/refund",
+  "/data-deletion",
   "/modules/calls",
   "/modules/employees",
   "/modules/finance",
@@ -50,7 +51,7 @@ function writeSitemap() {
     const priority =
       route === "/" ? "1.0" : ["/pricing", "/features", "/services"].includes(route)
         ? "0.9"
-        : ["/privacy", "/terms", "/refund"].includes(route)
+        : ["/privacy", "/terms", "/refund", "/data-deletion"].includes(route)
           ? "0.3"
           : "0.7";
     return [
