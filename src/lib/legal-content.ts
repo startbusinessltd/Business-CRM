@@ -67,6 +67,17 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
     ],
   },
   {
+    id: "meta-platform-data",
+    heading: "Data We Receive From Meta (Facebook, Instagram and WhatsApp)",
+    paragraphs: [
+      "B-SOFT Social Hub lets you connect your own Facebook Page, Instagram professional account, Meta ad account and WhatsApp Business Account to your B-SOFT workspace using Facebook Login for Business. Connecting is entirely your choice, you select which assets to grant, and nothing is connected unless you complete that consent screen.",
+      "When you connect, Meta gives us what its Platform Terms call Platform Data. For B-SOFT that means: your Meta user ID, name and profile picture; the list of Pages you manage and the Page IDs, names and access tokens for the Pages you select; your linked Instagram professional account ID, username and media; posts, comments and ratings on the Pages and Instagram accounts you connected; aggregated insights for those accounts; the ad accounts, campaigns and their spend and results that you grant; and your WhatsApp Business Account, its phone numbers, message templates and the messages sent and received on it.",
+      "We use this data for one purpose only: to operate the Social Hub features you asked for inside your own workspace - showing your connected accounts, publishing and scheduling the content you write, displaying and letting you answer comments and messages, and reporting how your content performed. We do not sell Platform Data, we do not use it for advertising of our own, we do not combine it across different B-SOFT customers, and we do not transfer it to anyone other than the infrastructure provider that hosts your workspace.",
+      "Platform Data is stored only inside your own tenant, encrypted in transit, on servers in the Asia Pacific (Mumbai) region operated by Amazon Web Services, Inc. Access tokens are stored encrypted and are used only to serve your own requests.",
+      "You stay in control. Disconnecting an account in Social Hub > Accounts immediately revokes our stored tokens and stops all further access, and we delete the Platform Data held for that account. You can also remove B-SOFT at any time from your Facebook settings under Settings & privacy > Settings > Apps and websites. Full instructions, including how to ask us to delete everything we hold, are on our Data Deletion page at https://bsoft.ltd/data-deletion, and we action such requests within 30 days.",
+    ],
+  },
+  {
     heading: "Information Collected Through Our Mobile App",
     paragraphs: [
       "We only access the device microphone when necessary to provide specific features of the app. Audio data is processed for functionality purposes and is not stored or shared with third parties unless explicitly stated.",

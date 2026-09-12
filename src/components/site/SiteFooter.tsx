@@ -104,6 +104,9 @@ export function SiteFooter() {
             { to: "/privacy", label: "Privacy" },
             { to: "/terms", label: "Terms" },
             { to: "/refund", label: "Refunds" },
+            // Meta's Platform Terms require the data-deletion route to be reachable by a
+            // user, not just declared in the app dashboard. It was an orphan page until now.
+            { to: "/data-deletion", label: "Data deletion" },
             { to: "/privacy", label: "Security", hash: "data-security" },
           ])}
         </div>
