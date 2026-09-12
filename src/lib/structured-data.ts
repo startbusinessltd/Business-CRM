@@ -54,6 +54,10 @@ export function organization(): Json {
     name: SITE.name,
     legalName: SITE.legalName,
     alternateName: ["B Soft", "BSOFT", "B-SOFT CRM"],
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "CIN", value: SITE.cin },
+      { "@type": "PropertyValue", propertyID: "PAN", value: SITE.pan },
+    ],
     url: `${SITE_ORIGIN}/`,
     description: SITE.definition,
     foundingDate: SITE.foundingDate,

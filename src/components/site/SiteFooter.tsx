@@ -4,6 +4,7 @@ import { CtaLink } from "@/lib/crm-parent-bridge";
 import { BrandTitle } from "@/components/site/BrandTitle";
 import { PartnerCta } from "@/components/site/PartnerJourney";
 import { CONTACT } from "@/lib/site-content";
+import { SITE } from "@/lib/seo";
 
 export function SiteFooter() {
   /** `extra` renders after the links — used for the Become Partner action,
@@ -113,6 +114,7 @@ export function SiteFooter() {
             paddingTop: 24,
             borderTop: "1px solid rgba(255,255,255,.1)",
             display: "flex",
+            flexWrap: "wrap",
             gap: 12,
             fontSize: 13,
             color: "var(--on-dark-muted)",
@@ -120,6 +122,21 @@ export function SiteFooter() {
         >
           <span>© {new Date().getFullYear()} B-SOFT — All rights reserved.</span>
           <span>Made for operators who want one platform, not ten.</span>
+        </div>
+        {/* Registered-entity disclosure. Section 12(3)(c) of the Companies Act, 2013
+            requires the CIN on the company website, and it is also what lets Meta,
+            payment processors and answer engines tie bsoft.ltd to the company on the
+            MCA register — the trading name "B-SOFT" alone matches nothing there. */}
+        <div
+          style={{
+            marginTop: 14,
+            fontSize: 12.5,
+            lineHeight: 1.6,
+            color: "var(--on-dark-muted)",
+          }}
+        >
+          B-SOFT is a brand of <strong style={{ fontWeight: 600 }}>{SITE.legalName}</strong>, a company
+          incorporated in India. CIN: {SITE.cin} · PAN: {SITE.pan} · Registered office: {CONTACT.officeOneLine}
         </div>
       </div>
     </footer>

@@ -20,11 +20,24 @@ export const SITE = {
   /** Brand name exactly as it must appear in Google Business Profile and every citation. */
   name: "B-SOFT",
   /**
-   * Registered entity name for schema.org `legalName`.
-   * TODO(business): replace with the name on the GST / incorporation certificate
-   * once confirmed — it must match Google Business Profile character for character.
+   * Registered entity name, exactly as on the Certificate of Incorporation
+   * (CIN U63999KA2026PTC223573, issued 8 July 2026). Deliberately different from
+   * `name`: `name` is the trading name that must match the Google Business Profile
+   * byte for byte, while `legalName` is the string that Meta, payment processors and
+   * answer engines match against MCA / public company records. Changing `name` to
+   * this would split the local-SEO entity in two — see the note on `NAP.name`.
    */
-  legalName: "B-SOFT",
+  legalName: "BSOFT DIGITAL PRIVATE LIMITED",
+  /**
+   * Corporate Identity Number. Section 12(3)(c) of the Companies Act, 2013 requires
+   * it on the company's website and letterhead, and Meta's business verification
+   * cross-checks the portfolio's legal name against whatever the site publishes —
+   * a site that names no legal entity is why a portfolio gets "we can't determine
+   * that this portfolio belongs to an actual business".
+   */
+  cin: "U63999KA2026PTC223573",
+  /** Company PAN, also the GST-linked Tax ID recorded on the Meta business portfolio. */
+  pan: "AAOCB9093R",
   /** One-line definitional sentence. Answer engines quote this verbatim — keep it factual. */
   definition:
     "B-SOFT is an all-in-one business CRM platform for Indian small and medium businesses that combines an AI website builder, lead and pipeline CRM, call tracking, a social media hub, team roles and permissions, and finance with GST invoicing in a single login.",

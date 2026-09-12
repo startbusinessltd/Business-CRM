@@ -88,6 +88,14 @@ export const SERVICES = [
   },
 ] as const;
 
+/** Registered office, one array so the multi-line and single-line forms never drift. */
+const OFFICE_LINES = [
+  "#454, 1st Cross,",
+  "Mahadeshwara Nagar,",
+  "Channapatna, Ramanagara District,",
+  "Karnataka – 562160, India.",
+] as const;
+
 export const CONTACT = {
   salesEmail: "connect@bsoft.ltd",
   supportEmail: "support@bsoft.ltd",
@@ -96,12 +104,9 @@ export const CONTACT = {
   phoneHref: "tel:+919964996599",
   website: "Bsoft.ltd",
   websiteUrl: "https://bsoft.ltd",
-  office: [
-    "#454, 1st Cross,",
-    "Mahadeshwara Nagar,",
-    "Channapatna, Ramanagara District,",
-    "Karnataka – 562160, India.",
-  ].join("\n"),
+  office: OFFICE_LINES.join("\n"),
+  /** The same address on one line, for the footer legal-entity disclosure. */
+  officeOneLine: OFFICE_LINES.join(" "),
   // Google cannot geocode the "#454, 1st Cross" street address — it falls back to a
   // low-confidence match ~25km away and renders a pin-less search map. Use Google's
   // official embed URL (Maps → Share → Embed a map), which pins an exact point.
